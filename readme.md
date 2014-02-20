@@ -6,7 +6,7 @@ Galileo-io is a Firmata-compatibility IO class for writing node programs that in
 
 ### Getting Started
 
-See Intel Galileo setup.
+See Intel Galileo setup. Galileo-io scripts are run _on_ the Galileo board itself, via its "full Linux" installation.
 
 ### Usage
 
