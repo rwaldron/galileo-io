@@ -198,6 +198,21 @@ exports["Galileo"] = {
     sent = isAnalog ? [5, 10, 2] : // continuous, analog 0, analog
     [5, 0, 1]; // continuous, digital 0, digital
 
+    exports[entry].modeIsInput = function(test) {
+      test.expect(2);
+
+      // Set pin to OUTPUT...
+      this.galileo.pinMode(pin, 1);
+      test.equal(this.galileo.pins[index].mode, 1);
+
+      // Writing to a pin should change its mode to 1
+      this.galileo[fn](pin, function() {});
+      test.equal(this.galileo.pins[index].mode, 0);
+
+      test.done();
+    };
+
+
     exports[entry].port = function(test) {
       test.expect(1);
 
@@ -246,6 +261,20 @@ exports["Galileo"] = {
     // *Write Tests
     value = isAnalog ? 255 : 1;
     sent = isAnalog ? ["/sys/class/gpio/gpio37/value", 255] : ["/sys/class/gpio/gpio19/value", 1];
+
+    exports[entry].modeIsOutput = function(test) {
+      test.expect(2);
+
+      // Set pin to INPUT...
+      this.galileo.pinMode(pin, 0);
+      test.equal(this.galileo.pins[index].mode, 0);
+
+      // Writing to a pin should change its mode to 1
+      this.galileo[fn](pin, value);
+      test.equal(this.galileo.pins[index].mode, 1);
+
+      test.done();
+    };
 
     exports[entry].write = function(test) {
       test.expect(2);
