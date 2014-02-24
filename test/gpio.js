@@ -30,7 +30,7 @@ exports["GPIO"] = {
 
     this.clock = sinon.useFakeTimers();
 
-    this.gpio = new GPIO({ modes: [0, 1, 4] });
+    this.gpio = new GPIO({ index: 1, modes: [0, 1, 4] });
 
     this.proto = {};
 
@@ -54,6 +54,8 @@ exports["GPIO"] = {
       name: "report"
     }, {
       name: "value"
+    }, {
+      name: "index"
     }];
 
     this.instance = [{

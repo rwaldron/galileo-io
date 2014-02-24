@@ -12,6 +12,12 @@ var fsStub = {
     if (cb) {
       cb(null, "Success!");
     }
+  },
+
+  writeFileSync: function(path, encoding, cb) {
+    if (cb) {
+      cb(null, "Success!");
+    }
   }
 };
 
@@ -323,7 +329,7 @@ exports["Galileo.prototype.pinMode"] = {
   setUp: function(done) {
 
     this.clock = sinon.useFakeTimers();
-    this.writeFile = sinon.stub(fsStub, "writeFile", function() {
+    this.writeFileSync = sinon.stub(fsStub, "writeFileSync", function() {
 
     });
 
@@ -337,42 +343,40 @@ exports["Galileo.prototype.pinMode"] = {
     done();
   },
   analogOut: function(test) {
-    test.expect(3);
-
-    var sent = [0, 11, 1];
+    test.expect(2);
 
     this.galileo.pinMode("A1", 1);
 
-    test.ok(this.writeFile.calledTwice);
+    test.ok(this.writeFileSync.calledOnce);
+
+    // test.deepEqual(
+    //   this.writeFileSync.firstCall.args,
+    //   ["/sys/class/gpio/export", "36"]
+    // );
 
     test.deepEqual(
-      this.writeFile.firstCall.args,
-      ["/sys/class/gpio/export", "36"]
-    );
-
-    test.deepEqual(
-      this.writeFile.secondCall.args,
+      this.writeFileSync.firstCall.args,
       ["/sys/class/gpio/gpio36/direction", "out"]
     );
 
     test.done();
   },
   analogIn: function(test) {
-    test.expect(3);
+    test.expect(2);
 
     var sent = [0, 11, 1];
 
     this.galileo.pinMode("A1", 0);
 
-    test.ok(this.writeFile.calledTwice);
+    test.ok(this.writeFileSync.calledOnce);
+
+    // test.deepEqual(
+    //   this.writeFileSync.firstCall.args,
+    //   ["/sys/class/gpio/export", "36"]
+    // );
 
     test.deepEqual(
-      this.writeFile.firstCall.args,
-      ["/sys/class/gpio/export", "36"]
-    );
-
-    test.deepEqual(
-      this.writeFile.secondCall.args,
+      this.writeFileSync.firstCall.args,
       ["/sys/class/gpio/gpio36/direction", "in"]
     );
 
@@ -380,41 +384,43 @@ exports["Galileo.prototype.pinMode"] = {
   },
 
   digitalOut: function(test) {
-    test.expect(3);
+    test.expect(2);
 
     var sent = [0, 11, 1];
 
     this.galileo.pinMode(9, 1);
 
-    test.ok(this.writeFile.calledTwice);
+    test.ok(this.writeFileSync.calledOnce);
+
+    // test.deepEqual(
+    //   this.writeFileSync.firstCall.args,
+    //   ["/sys/class/gpio/export", "19"]
+    // );
 
     test.deepEqual(
-      this.writeFile.firstCall.args,
-      ["/sys/class/gpio/export", "19"]
-    );
-
-    test.deepEqual(
-      this.writeFile.secondCall.args,
+      this.writeFileSync.firstCall.args,
       ["/sys/class/gpio/gpio19/direction", "out"]
     );
 
     test.done();
   },
   digitalIn: function(test) {
-    test.expect(3);
+    test.expect(2);
 
     var sent = [0, 11, 1];
 
     this.galileo.pinMode(9, 0);
 
-    test.ok(this.writeFile.calledTwice);
+    test.ok(this.writeFileSync.calledOnce);
+
+    // test.deepEqual(
+    //   this.writeFileSync.firstCall.args,
+    //   ["/sys/class/gpio/export", "19"]
+    // );
 
     test.deepEqual(
-      this.writeFile.firstCall.args, ["/sys/class/gpio/export", "19"]
-    );
-
-    test.deepEqual(
-      this.writeFile.secondCall.args, ["/sys/class/gpio/gpio19/direction", "in"]
+      this.writeFileSync.firstCall.args,
+      ["/sys/class/gpio/gpio19/direction", "in"]
     );
 
     test.done();
