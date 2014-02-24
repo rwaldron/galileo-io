@@ -162,7 +162,7 @@ exports["Galileo"] = {
 
   var index = isAnalog ? 14 : 9;
   var pin = isAnalog ? "A0" : 9;
-  var event, sent, value, port;
+  var event, sent, value, scaled, port;
 
   exports[entry] = {
     setUp: function(done) {
@@ -191,23 +191,24 @@ exports["Galileo"] = {
   if (/read/.test(action)) {
     event = (isAnalog ? "analog" : "digital") + "-read-" + pin;
     value = isAnalog ? 1024 : 1;
+    scaled = isAnalog ? value >> 2 : 1;
     port = isAnalog ?
-      "/sys/class/gpio/gpio37/value" :
+      "/sys/bus/iio/devices/iio:device0/in_voltage0_raw" :
       "/sys/class/gpio/gpio19/value";
 
-    sent = isAnalog ? [5, 10, 2] : // continuous, analog 0, analog
-    [5, 0, 1]; // continuous, digital 0, digital
+    exports[entry].correctMode = function(test) {
+      test.expect(1);
 
-    exports[entry].modeIsInput = function(test) {
-      test.expect(2);
+      if (isAnalog) {
+        // Reading from an ANALOG pin should set its mode to 1 ("out")
+        this.galileo[fn](pin, function() {});
+        test.equal(this.galileo.pins[index].mode, 1);
 
-      // Set pin to OUTPUT...
-      this.galileo.pinMode(pin, 1);
-      test.equal(this.galileo.pins[index].mode, 1);
-
-      // Writing to a pin should change its mode to 1
-      this.galileo[fn](pin, function() {});
-      test.equal(this.galileo.pins[index].mode, 0);
+      } else {
+        // Reading from a DIGITAL pin should set its mode to 0 ("in")
+        this.galileo[fn](pin, function() {});
+        test.equal(this.galileo.pins[index].mode, 0);
+      }
 
       test.done();
     };
@@ -234,7 +235,7 @@ exports["Galileo"] = {
       });
 
       var handler = function(data) {
-        test.equal(data, value);
+        test.equal(data, scaled);
         test.done();
       };
 
@@ -249,7 +250,7 @@ exports["Galileo"] = {
       });
 
       this.galileo.once(event, function(data) {
-        test.equal(data, value);
+        test.equal(data, scaled);
         test.done();
       });
 
