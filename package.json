@@ -35,8 +35,7 @@
   },
   "dependencies": {
     "es6-shim": "~0.9.2",
-    "nanotimer": "0.3.0",
-    "restler": "~3.1.0"
+    "nanotimer": "0.3.0"
   },
   "devDependencies": {
     "rewire": "~2.0.0",
