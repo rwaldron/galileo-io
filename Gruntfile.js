@@ -17,7 +17,8 @@ module.exports = function(grunt) {
     pkg: grunt.file.readJSON("package.json"),
     nodeunit: {
       tests: [
-        "test/galileo.js"
+        "test/galileo.js",
+        "test/gpio.js"
       ]
     },
     jshint: {
