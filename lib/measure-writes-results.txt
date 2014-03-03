@@ -1,0 +1,138 @@
+$ node measure-writes.js --i=1 --value=1
+1 Writes
+---------------------
+0 s, 93.224 ms - exec/echo
+0 s, 2.196 ms - writeFile
+writeFileSync failed
+---------------------
+0 s, 123.886 ms - Total
+
+
+$ node measure-writes.js --i=10 --value=1
+10 Writes
+---------------------
+0 s, 460.933 ms - exec/echo
+0 s, 6.643 ms - writeFile
+writeFileSync failed
+---------------------
+0 s, 514.285 ms - Total
+
+
+$ node measure-writes.js --i=100 --value=1
+100 Writes
+---------------------
+4 s, 33.949 ms - exec/echo
+0 s, 86.118 ms - writeFile
+writeFileSync failed
+---------------------
+4 s, 161.210 ms - Total
+
+
+$ node measure-writes.js --i=1000 --value=1
+1000 Writes
+---------------------
+exec/echo failed
+0 s, 898.204 ms - writeFile
+writeFileSync failed
+---------------------
+15 s, 23.217 ms - Total
+
+
+$ node measure-writes.js --i=10000 --value=1
+10000 Iterations
+---------------------
+exec/echo failed
+8 s, 765.069 ms - writeFile
+writeFileSync failed
+---------------------
+22 s, 886.339 ms - Total
+
+
+$ node measure-writes.js --i=100000 --value=1
+100000 Writes
+---------------------
+exec/echo failed
+90 s, 639.428 ms - writeFile
+writeFileSync failed
+---------------------
+104 s, 789.034 ms - Total
+
+
+$ node measure-writes.js --i=1 --value=11
+1 Writes
+---------------------
+0 s, 92.123 ms - exec/echo
+0 s, 2.429 ms - writeFile
+writeFileSync failed
+---------------------
+0 s, 119.677 ms - Total
+
+
+$ node measure-writes.js --i=10 --value=11
+10 Writes
+---------------------
+0 s, 458.893 ms - exec/echo
+0 s, 10.645 ms - writeFile
+writeFileSync failed
+---------------------
+0 s, 514.529 ms - Total
+
+
+$ node measure-writes.js --i=100 --value=11
+100 Writes
+---------------------
+4 s, 10.648 ms - exec/echo
+0 s, 92.182 ms - writeFile
+writeFileSync failed
+---------------------
+4 s, 139.432 ms - Total
+
+
+$ node measure-writes.js --i=1000 --value=11
+1000 Writes
+---------------------
+exec/echo failed
+0 s, 900.998 ms - writeFile
+writeFileSync failed
+---------------------
+15 s, 55.528 ms - Total
+
+
+$ node measure-writes.js --i=1 --value=111
+1 Writes
+---------------------
+0 s, 92.690 ms - exec/echo
+0 s, 2.445 ms - writeFile
+writeFileSync failed
+---------------------
+0 s, 122.202 ms - Total
+
+
+$ node measure-writes.js --i=10 --value=111
+10 Writes
+---------------------
+0 s, 467.775 ms - exec/echo
+0 s, 17.490 ms - writeFile
+writeFileSync failed
+---------------------
+0 s, 522.981 ms - Total
+
+
+$ node measure-writes.js --i=100 --value=111
+100 Writes
+---------------------
+4 s, 45.972 ms - exec/echo
+0 s, 90.759 ms - writeFile
+writeFileSync failed
+---------------------
+4 s, 174.744 ms - Total
+
+
+$ node measure-writes.js --i=1000 --value=111
+1000 Writes
+---------------------
+exec/echo failed
+0 s, 905.383 ms - writeFile
+writeFileSync failed
+---------------------
+14 s, 983.532 ms - Total
