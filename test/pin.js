@@ -144,14 +144,12 @@ exports["Pin"] = {
 
     test.equal(this.write.callCount, 5);
 
-    console.log(this.write);
-
     test.deepEqual(
       this.write.args, [
         ["/sys/class/gpio/gpio51/drive", "strong"],
         ["/sys/class/gpio/gpio51/direction", "out"],
         ["/sys/class/gpio/gpio51/value", "0"],
-        ["/sys/class/gpio/gpio51/drive", " "],
+        ["/sys/class/gpio/gpio51/drive", "pullup"],
         ["/sys/class/gpio/gpio51/direction", "in"]
       ]
     );
