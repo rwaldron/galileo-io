@@ -1,7 +1,7 @@
 {
   "name": "galileo-io",
   "description": "Galileo IO",
-  "version": "0.0.5",
+  "version": "0.0.6",
   "homepage": "https://github.com/rwaldron/galileo-io",
   "author": {
     "name": "Rick Waldron <waldron.rick@gmail.com>",
@@ -37,7 +37,8 @@
     "es6-shim": "~0.9.2",
     "nanotimer": "0.3.0",
     "remapped": "~0.2.1",
-    "es6-promise": "~0.1.1"
+    "es6-promise": "~0.1.1",
+    "graceful-fs": "~2.0.2"
   },
   "devDependencies": {
     "rewire": "~2.0.0",
