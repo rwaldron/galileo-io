@@ -18,15 +18,15 @@ module.exports = function(grunt) {
     nodeunit: {
       tests: [
         "test/galileo.js",
-        "test/gpio.js"
+        "test/pin.js"
       ]
     },
     jshint: {
       options: {
+        latedef: false,
         curly: true,
         eqeqeq: true,
         immed: true,
-        latedef: true,
         newcap: false,
         noarg: true,
         sub: true,
@@ -35,11 +35,13 @@ module.exports = function(grunt) {
         eqnull: true,
         node: true,
         strict: false,
+        esnext: true,
         globals: {
           rewire: true,
           exports: true,
           document: true,
           WeakMap: true,
+          Map: true,
           window: true
         }
       },
