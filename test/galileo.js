@@ -6,7 +6,7 @@ var sinon = require("sinon");
 
 var fsStub = {
   readFile: function(path, encoding, cb) {
-    cb(null, "Success!");
+    cb(null, path, encoding);
   },
   writeFile: function(path, encoding, cb) {
     if (cb) {
@@ -21,7 +21,111 @@ var fsStub = {
   }
 };
 
+function Pin(dummy) {
+  Emitter.call(this);
+
+  if (Pin.DUMMY) {
+    dummy = Pin.DUMMY;
+  }
+
+  this.addr = dummy.addr || 3;
+  this.alias = typeof dummy.alias !== "undefined" ?
+    dummy.alias : 3;
+  this.analogChannel = typeof dummy.analogChannel !== "undefined" ?
+    dummy.analogChannel : 3;
+  this.direction = dummy.direction || "out";
+  this.gpio = dummy.gpio || 18;
+  this.isAnalog = dummy.isAnalog || false;
+  this.isPwm = dummy.isPwm || false;
+  this.pin = dummy.pin || 3;
+  this.supportedModes = dummy.supportedModes || [ 0, 1, 3, 4 ];
+
+  this.value = 0;
+  this.report = 0;
+  this.mode = null;
+
+  this.paths = dummy.paths || {
+    value: "/sys/class/gpio/gpio18/value",
+    direction: "/sys/class/gpio/gpio18/direction",
+    drive: "/sys/class/gpio/gpio18/drive",
+    exported: "/sys/class/gpio/gpio18/"
+  };
+
+  this.mux = dummy.mux || [
+    {
+      gpio: 30,
+      paths: {
+        value: "/sys/class/gpio/gpio30/value",
+        direction: "/sys/class/gpio/gpio30/direction",
+        exported: "/sys/class/gpio/gpio30/",
+        drive: "/sys/class/gpio/gpio30/drive"
+      }
+    }
+  ];
+
+  this.pwm = dummy.pwm || {
+    gpio: 3,
+    paths: {
+      duty_cycle: "/sys/class/pwm/pwmchip0/pwm3/duty_cycle",
+      enable: "/sys/class/pwm/pwmchip0/pwm3/enable",
+      period: "/sys/class/pwm/pwmchip0/pwm3/period",
+      exported: "/sys/class/pwm/pwmchip0/pwm3/"
+    }
+  };
+
+  process.nextTick(function() {
+    this.emit("ready");
+  }.bind(this));
+}
+
+
+Pin.DUMMY = null;
+
+Pin.prototype = Object.create(Emitter.prototype, {
+  constructor: {
+    value: Pin
+  }
+});
+Pin.prototype.setup = function() {};
+Pin.prototype.write = function(value) {
+  this.value = value;
+};
+
+
+var analog = {
+  addr: "A0",
+  supportedModes: [ 0, 1, 2 ],
+  analogChannel: 0,
+  pin: "A0",
+  gpio: 44,
+  alias: 0,
+  mux: [
+    {
+      gpio: 37,
+      paths: {
+        exported: "/sys/class/gpio/gpio37/",
+        drive: "/sys/class/gpio/gpio37/drive",
+        direction: "/sys/class/gpio/gpio37/direction",
+        value: "/sys/class/gpio/gpio37/value"
+      }
+    }
+  ],
+  pwm: {},
+  paths: {
+    exported: "/sys/class/gpio/gpio44/",
+    drive: "/sys/class/gpio/gpio44/drive",
+    direction: "/sys/class/gpio/gpio44/direction",
+    value: "/sys/class/gpio/gpio44/value"
+  },
+  isAnalog: true,
+  report: 0,
+  value: 0,
+  mode: null
+};
+
 Galileo.__set__("fs", fsStub);
+
+Galileo.__set__("Pin", Pin);
 
 function restore(target) {
   for (var prop in target) {
@@ -71,6 +175,7 @@ exports["Galileo"] = {
     done();
   },
   tearDown: function(done) {
+    Galileo.reset();
     restore(this);
     done();
   },
@@ -156,156 +261,304 @@ exports["Galileo"] = {
   }
 };
 
-[
-  "analogWrite",
-  "digitalWrite",
-  "analogRead",
-  "digitalRead"
-].forEach(function(fn) {
-  var entry = "Galileo.prototype." + fn;
-  var action = fn.toLowerCase();
-  var isAnalog = /^analog/.test(fn);
 
-  var index = isAnalog ? 14 : 9;
-  var pin = isAnalog ? "A0" : 9;
-  var event, sent, value, scaled, port;
+exports["Galileo.prototype.analogRead"] = {
+  setUp: function(done) {
+    this.clock = sinon.useFakeTimers();
 
-  exports[entry] = {
-    setUp: function(done) {
+    Pin.DUMMY = analog;
 
-      this.clock = sinon.useFakeTimers();
+    this.write = sinon.spy(Pin.prototype, "write");
+    this.port = "/sys/bus/iio/devices/iio:device0/in_voltage0_raw";
 
-      this.write = sinon.stub(Galileo.prototype, "write", function() {
+    this.galileo = new Galileo();
 
-      });
+    done();
+  },
+  tearDown: function(done) {
+    Galileo.reset();
 
-      this.galileo = new Galileo();
+    restore(this);
 
-      done();
-    },
-    tearDown: function(done) {
-      restore(this);
+    this.galileo.removeAllListeners("analog-read-A0");
+    this.galileo.removeAllListeners("digital-read-9");
 
-      this.galileo.removeAllListeners("analog-read-A0");
-      this.galileo.removeAllListeners("digital-read-9");
+    done();
+  },
+  correctMode: function(test) {
+    test.expect(1);
 
-      done();
-    }
-  };
+    // Reading from an ANALOG pin should set its mode to 1 ("out")
+    this.galileo.analogRead("A0", function() {});
 
-  // *Read Tests
-  if (/read/.test(action)) {
-    event = (isAnalog ? "analog" : "digital") + "-read-" + pin;
-    value = isAnalog ? 1024 : 1;
-    scaled = isAnalog ? value >> 2 : 1;
-    port = isAnalog ?
-      "/sys/bus/iio/devices/iio:device0/in_voltage0_raw" :
-      "/sys/class/gpio/gpio19/value";
+    test.equal(this.galileo.pins[14].mode, 1);
 
-    exports[entry].correctMode = function(test) {
-      test.expect(1);
+    test.done();
+  },
 
-      if (isAnalog) {
-        // Reading from an ANALOG pin should set its mode to 1 ("out")
-        this.galileo[fn](pin, function() {});
-        test.equal(this.galileo.pins[index].mode, 1);
+  port: function(test) {
+    test.expect(1);
 
-      } else {
-        // Reading from a DIGITAL pin should set its mode to 0 ("in")
-        this.galileo[fn](pin, function() {});
-        test.equal(this.galileo.pins[index].mode, 0);
-      }
+    var port = this.port;
 
+    this.readFile = sinon.stub(fsStub, "readFile", function(path, flags, cb) {
+      test.equal(port, path);
+      test.done();
+    });
+
+    var handler = function(data) {};
+
+    this.galileo.analogRead("A0", handler);
+  },
+
+  handler: function(test) {
+    test.expect(1);
+
+    var value = 1024;
+    var scaled = value >> 2;
+
+
+    this.readFile = sinon.stub(fsStub, "readFile", function(path, flags, cb) {
+      cb(null, value);
+    });
+
+    var handler = function(data) {
+      test.equal(data, scaled);
       test.done();
     };
 
+    this.galileo.analogRead("A0", handler);
+  },
 
-    exports[entry].port = function(test) {
-      test.expect(1);
+  event: function(test) {
+    test.expect(1);
 
-      this.readFile = sinon.stub(fsStub, "readFile", function(path, flags, cb) {
-        test.equal(port, path);
-        test.done();
-      });
+    var value = 1024;
+    var scaled = value >> 2;
+    var event = "analog-read-A0";
 
-      var handler = function(data) {};
+    this.readFile = sinon.stub(fsStub, "readFile", function(path, flags, cb) {
+      cb(null, value);
+    });
 
-      this.galileo[fn](pin, handler);
-    };
-
-    exports[entry].handler = function(test) {
-      test.expect(1);
-
-      this.readFile = sinon.stub(fsStub, "readFile", function(path, flags, cb) {
-        cb(null, value);
-      });
-
-      var handler = function(data) {
-        test.equal(data, scaled);
-        test.done();
-      };
-
-      this.galileo[fn](pin, handler);
-    };
-
-    exports[entry].event = function(test) {
-      test.expect(1);
-
-      this.readFile = sinon.stub(fsStub, "readFile", function(path, flags, cb) {
-        cb(null, value);
-      });
-
-      this.galileo.once(event, function(data) {
-        test.equal(data, scaled);
-        test.done();
-      });
-
-      var handler = function(data) {};
-
-      this.galileo[fn](pin, handler);
-    };
-  } else {
-    // *Write Tests
-    value = isAnalog ? 255 : 1;
-    sent = isAnalog ? ["/sys/class/gpio/gpio37/value", 255] : ["/sys/class/gpio/gpio19/value", 1];
-
-    exports[entry].modeIsOutput = function(test) {
-      test.expect(2);
-
-      // Set pin to INPUT...
-      this.galileo.pinMode(pin, 0);
-      test.equal(this.galileo.pins[index].mode, 0);
-
-      // Writing to a pin should change its mode to 1
-      this.galileo[fn](pin, value);
-      test.equal(this.galileo.pins[index].mode, 1);
-
+    this.galileo.once(event, function(data) {
+      test.equal(data, scaled);
       test.done();
-    };
+    });
 
-    exports[entry].write = function(test) {
-      test.expect(2);
+    var handler = function(data) {};
 
-      this.galileo[fn](pin, value);
-
-      test.ok(this.write.calledOnce);
-      test.deepEqual(this.write.firstCall.args, sent);
-
-      test.done();
-    };
-
-    exports[entry].stored = function(test) {
-      test.expect(1);
-
-      this.galileo[fn](pin, value);
-
-      test.equal(this.galileo.pins[index].value, value);
-
-      test.done();
-    };
+    this.galileo.analogRead("A0", handler);
   }
-});
+};
 
+exports["Galileo.prototype.digitalRead"] = {
+  setUp: function(done) {
+    this.clock = sinon.useFakeTimers();
+
+    Pin.DUMMY = null;
+    this.write = sinon.spy(Pin.prototype, "write");
+    this.port = "/sys/class/gpio/gpio18/value";
+
+    this.galileo = new Galileo();
+
+    done();
+  },
+  tearDown: function(done) {
+    Galileo.reset();
+    restore(this);
+
+    this.galileo.removeAllListeners("analog-read-A0");
+    this.galileo.removeAllListeners("digital-read-3");
+
+    done();
+  },
+  correctMode: function(test) {
+    test.expect(1);
+
+    // Reading from a DIGITAL pin should set its mode to 0 ("in")
+    this.galileo.digitalRead(3, function() {});
+
+    test.equal(this.galileo.pins[3].mode, 0);
+
+    test.done();
+  },
+
+  port: function(test) {
+    test.expect(1);
+
+    var port = this.port;
+
+    this.readFile = sinon.stub(fsStub, "readFile", function(path, flags, cb) {
+      test.equal(port, path);
+
+      test.done();
+    });
+
+    var handler = function(data) {};
+
+    this.galileo.digitalRead(3, handler);
+  },
+
+  handler: function(test) {
+    test.expect(1);
+
+    var value = 256;
+
+    this.readFile = sinon.stub(fsStub, "readFile", function(path, flags, cb) {
+      cb(null, value);
+    });
+
+    var handler = function(data) {
+      test.equal(data, value);
+      test.done();
+    };
+
+    this.galileo.digitalRead(3, handler);
+  },
+
+  event: function(test) {
+    test.expect(1);
+
+    var value = 256;
+    var event = "digital-read-3";
+
+    this.readFile = sinon.stub(fsStub, "readFile", function(path, flags, cb) {
+      cb(null, value);
+    });
+
+    this.galileo.once(event, function(data) {
+      test.equal(data, value);
+      test.done();
+    });
+
+    var handler = function(data) {};
+
+    this.galileo.digitalRead(3, handler);
+  }
+};
+
+
+exports["Galileo.prototype.analogWrite"] = {
+  setUp: function(done) {
+    this.clock = sinon.useFakeTimers();
+
+    Pin.DUMMY = analog;
+    this.write = sinon.spy(Pin.prototype, "write");
+    // this.port = "/sys/class/gpio/gpio18/value";
+
+    this.galileo = new Galileo();
+
+    done();
+  },
+  tearDown: function(done) {
+    Galileo.reset();
+    restore(this);
+    done();
+  },
+
+  mode: function(test) {
+    test.expect(3);
+
+    var value = 255;
+
+    // Set pin to INPUT...
+    this.galileo.pinMode("A0", 0);
+    test.equal(this.galileo.pins[14].mode, 0);
+
+    // Writing to a pin should change its mode to 1
+    this.galileo.analogWrite("A0", value);
+    test.equal(this.galileo.pins[14].mode, 3);
+    test.equal(this.galileo.pins[14].isPwm, true);
+
+    test.done();
+  },
+
+  write: function(test) {
+    test.expect(2);
+
+    var value = 255;
+
+    this.galileo.analogWrite("A0", value);
+
+    test.ok(this.write.calledOnce);
+    test.deepEqual(this.write.firstCall.args, [ value ]);
+
+    test.done();
+  },
+
+  stored: function(test) {
+    test.expect(1);
+
+    var value = 255;
+    this.galileo.analogWrite("A0", value);
+
+    test.equal(this.galileo.pins[14].value, value);
+
+    test.done();
+  }
+};
+
+
+exports["Galileo.prototype.digitalWrite"] = {
+  setUp: function(done) {
+    this.clock = sinon.useFakeTimers();
+
+    Pin.DUMMY = null;
+    this.write = sinon.spy(Pin.prototype, "write");
+    // this.port = "/sys/class/gpio/gpio18/value";
+
+    this.galileo = new Galileo();
+
+    done();
+  },
+  tearDown: function(done) {
+    Galileo.reset();
+    restore(this);
+    done();
+  },
+
+  mode: function(test) {
+    test.expect(3);
+
+    var value = 1;
+
+    // Set pin to INPUT...
+    this.galileo.pinMode(3, 0);
+    test.equal(this.galileo.pins[3].mode, 0);
+
+    // Writing to a pin should change its mode to 1
+    this.galileo.digitalWrite(3, value);
+    test.equal(this.galileo.pins[3].mode, 1);
+    test.equal(this.galileo.pins[3].isPwm, false);
+
+    test.done();
+  },
+
+  write: function(test) {
+    test.expect(2);
+
+    var value = 1;
+
+    this.galileo.digitalWrite(3, value);
+
+    test.ok(this.write.calledOnce);
+    test.deepEqual(this.write.firstCall.args, [ value ]);
+
+    test.done();
+  },
+
+  stored: function(test) {
+    test.expect(1);
+
+    var value = 1;
+    this.galileo.digitalWrite(3, value);
+
+    test.equal(this.galileo.pins[3].value, value);
+
+    test.done();
+  }
+};
 
 exports["Galileo.prototype.servoWrite"] = {
   setUp: function(done) {
@@ -325,13 +578,13 @@ exports["Galileo.prototype.servoWrite"] = {
 };
 
 
-exports["Galileo.prototype.pinMode"] = {
+exports["Galileo.prototype.pinMode (analog)"] = {
   setUp: function(done) {
-
     this.clock = sinon.useFakeTimers();
-    this.writeFileSync = sinon.stub(fsStub, "writeFileSync", function() {
 
-    });
+    Pin.DUMMY = analog;
+
+    // this.write = sinon.spy(Pin.prototype, "write");
 
     this.galileo = new Galileo();
 
@@ -343,86 +596,54 @@ exports["Galileo.prototype.pinMode"] = {
     done();
   },
   analogOut: function(test) {
-    test.expect(2);
+    test.expect(1);
 
-    this.galileo.pinMode("A1", 1);
+    this.galileo.pinMode("A0", 1);
 
-    test.ok(this.writeFileSync.calledOnce);
-
-    // test.deepEqual(
-    //   this.writeFileSync.firstCall.args,
-    //   ["/sys/class/gpio/export", "36"]
-    // );
-
-    test.deepEqual(
-      this.writeFileSync.firstCall.args,
-      ["/sys/class/gpio/gpio36/direction", "out"]
-    );
+    test.equal(this.galileo.pins[14].mode, 1);
 
     test.done();
   },
   analogIn: function(test) {
-    test.expect(2);
+    test.expect(1);
 
-    var sent = [0, 11, 1];
+    this.galileo.pinMode("A0", 0);
 
-    this.galileo.pinMode("A1", 0);
-
-    test.ok(this.writeFileSync.calledOnce);
-
-    // test.deepEqual(
-    //   this.writeFileSync.firstCall.args,
-    //   ["/sys/class/gpio/export", "36"]
-    // );
-
-    test.deepEqual(
-      this.writeFileSync.firstCall.args,
-      ["/sys/class/gpio/gpio36/direction", "in"]
-    );
-
-    test.done();
-  },
-
-  digitalOut: function(test) {
-    test.expect(2);
-
-    var sent = [0, 11, 1];
-
-    this.galileo.pinMode(9, 1);
-
-    test.ok(this.writeFileSync.calledOnce);
-
-    // test.deepEqual(
-    //   this.writeFileSync.firstCall.args,
-    //   ["/sys/class/gpio/export", "19"]
-    // );
-
-    test.deepEqual(
-      this.writeFileSync.firstCall.args,
-      ["/sys/class/gpio/gpio19/direction", "out"]
-    );
-
-    test.done();
-  },
-  digitalIn: function(test) {
-    test.expect(2);
-
-    var sent = [0, 11, 1];
-
-    this.galileo.pinMode(9, 0);
-
-    test.ok(this.writeFileSync.calledOnce);
-
-    // test.deepEqual(
-    //   this.writeFileSync.firstCall.args,
-    //   ["/sys/class/gpio/export", "19"]
-    // );
-
-    test.deepEqual(
-      this.writeFileSync.firstCall.args,
-      ["/sys/class/gpio/gpio19/direction", "in"]
-    );
+    test.equal(this.galileo.pins[14].mode, 0);
 
     test.done();
   }
 };
+
+exports["Galileo.prototype.pinMode (digital)"] = {
+  setUp: function(done) {
+    this.clock = sinon.useFakeTimers();
+    this.galileo = new Galileo();
+
+    done();
+  },
+  tearDown: function(done) {
+    restore(this);
+
+    done();
+  },
+  digitalOut: function(test) {
+    test.expect(1);
+
+    this.galileo.pinMode(3, 1);
+
+    test.equal(this.galileo.pins[3].mode, 1);
+
+    test.done();
+  },
+  digitalIn: function(test) {
+    test.expect(1);
+
+    this.galileo.pinMode(3, 0);
+
+    test.equal(this.galileo.pins[3].mode, 0);
+
+    test.done();
+  }
+};
+
