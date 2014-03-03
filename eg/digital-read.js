@@ -3,6 +3,6 @@ var board = new Galileo();
 
 board.on("ready", function() {
   this.digitalRead(9, function(data) {
-    console.log( 9,  data );
+    console.log(9, data);
   });
 });

@@ -3,6 +3,6 @@ var board = new Galileo();
 
 board.on("ready", function() {
   this.analogRead("A0", function(data) {
-    console.log("A0",  data);
+    console.log("A0", data);
   });
 });

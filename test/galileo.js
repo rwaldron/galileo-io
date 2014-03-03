@@ -38,7 +38,7 @@ function Pin(dummy) {
   this.isAnalog = dummy.isAnalog || false;
   this.isPwm = dummy.isPwm || false;
   this.pin = dummy.pin || 3;
-  this.supportedModes = dummy.supportedModes || [ 0, 1, 3, 4 ];
+  this.supportedModes = dummy.supportedModes || [0, 1, 3, 4];
 
   this.value = 0;
   this.report = 0;
@@ -51,17 +51,15 @@ function Pin(dummy) {
     exported: "/sys/class/gpio/gpio18/"
   };
 
-  this.mux = dummy.mux || [
-    {
-      gpio: 30,
-      paths: {
-        value: "/sys/class/gpio/gpio30/value",
-        direction: "/sys/class/gpio/gpio30/direction",
-        exported: "/sys/class/gpio/gpio30/",
-        drive: "/sys/class/gpio/gpio30/drive"
-      }
+  this.mux = dummy.mux || [{
+    gpio: 30,
+    paths: {
+      value: "/sys/class/gpio/gpio30/value",
+      direction: "/sys/class/gpio/gpio30/direction",
+      exported: "/sys/class/gpio/gpio30/",
+      drive: "/sys/class/gpio/gpio30/drive"
     }
-  ];
+  }];
 
   this.pwm = dummy.pwm || {
     gpio: 3,
@@ -94,22 +92,20 @@ Pin.prototype.write = function(value) {
 
 var analog = {
   addr: "A0",
-  supportedModes: [ 0, 1, 2 ],
+  supportedModes: [0, 1, 2],
   analogChannel: 0,
   pin: "A0",
   gpio: 44,
   alias: 0,
-  mux: [
-    {
-      gpio: 37,
-      paths: {
-        exported: "/sys/class/gpio/gpio37/",
-        drive: "/sys/class/gpio/gpio37/drive",
-        direction: "/sys/class/gpio/gpio37/direction",
-        value: "/sys/class/gpio/gpio37/value"
-      }
+  mux: [{
+    gpio: 37,
+    paths: {
+      exported: "/sys/class/gpio/gpio37/",
+      drive: "/sys/class/gpio/gpio37/drive",
+      direction: "/sys/class/gpio/gpio37/direction",
+      value: "/sys/class/gpio/gpio37/value"
     }
-  ],
+  }],
   pwm: {},
   paths: {
     exported: "/sys/class/gpio/gpio44/",
@@ -482,7 +478,7 @@ exports["Galileo.prototype.analogWrite"] = {
     this.galileo.analogWrite("A0", value);
 
     test.ok(this.write.calledOnce);
-    test.deepEqual(this.write.firstCall.args, [ value ]);
+    test.deepEqual(this.write.firstCall.args, [value]);
 
     test.done();
   },
@@ -543,7 +539,7 @@ exports["Galileo.prototype.digitalWrite"] = {
     this.galileo.digitalWrite(3, value);
 
     test.ok(this.write.calledOnce);
-    test.deepEqual(this.write.firstCall.args, [ value ]);
+    test.deepEqual(this.write.firstCall.args, [value]);
 
     test.done();
   },
@@ -646,4 +642,3 @@ exports["Galileo.prototype.pinMode (digital)"] = {
     test.done();
   }
 };
-

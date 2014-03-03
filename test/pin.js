@@ -39,7 +39,10 @@ exports["Pin"] = {
     this.clock = sinon.useFakeTimers();
     this.write = sinon.spy(fsStub, "writeFile");
 
-    this.pin = new Pin({ addr: 1, modes: [0, 1, 4] });
+    this.pin = new Pin({
+      addr: 1,
+      modes: [0, 1, 4]
+    });
 
     this.proto = {};
 
@@ -130,11 +133,10 @@ exports["Pin"] = {
     test.equal(this.write.callCount, 3);
 
     test.deepEqual(
-      this.write.args,
-      [
-        [ "/sys/class/gpio/gpio51/drive", "strong" ],
-        [ "/sys/class/gpio/gpio51/direction", "out" ],
-        [ "/sys/class/gpio/gpio51/value", "0" ]
+      this.write.args, [
+        ["/sys/class/gpio/gpio51/drive", "strong"],
+        ["/sys/class/gpio/gpio51/direction", "out"],
+        ["/sys/class/gpio/gpio51/value", "0"]
       ]
     );
 
@@ -142,16 +144,15 @@ exports["Pin"] = {
 
     test.equal(this.write.callCount, 5);
 
-    console.log( this.write );
+    console.log(this.write);
 
     test.deepEqual(
-      this.write.args,
-      [
-        [ "/sys/class/gpio/gpio51/drive", "strong" ],
-        [ "/sys/class/gpio/gpio51/direction", "out" ],
-        [ "/sys/class/gpio/gpio51/value", "0" ],
-        [ "/sys/class/gpio/gpio51/drive", " " ],
-        [ "/sys/class/gpio/gpio51/direction", "in" ]
+      this.write.args, [
+        ["/sys/class/gpio/gpio51/drive", "strong"],
+        ["/sys/class/gpio/gpio51/direction", "out"],
+        ["/sys/class/gpio/gpio51/value", "0"],
+        ["/sys/class/gpio/gpio51/drive", " "],
+        ["/sys/class/gpio/gpio51/direction", "in"]
       ]
     );
 
@@ -286,8 +287,7 @@ exports["PWM"] = {
     test.equal(this.write.callCount, 4);
 
     test.deepEqual(
-      this.write.lastCall.args,
-      [ "/sys/class/gpio/gpio18/value", "0" ]
+      this.write.lastCall.args, ["/sys/class/gpio/gpio18/value", "0"]
     );
 
     test.done();
