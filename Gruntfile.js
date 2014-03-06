@@ -18,7 +18,8 @@ module.exports = function(grunt) {
     nodeunit: {
       tests: [
         "test/galileo.js",
-        "test/pin.js"
+        "test/pin.js",
+        "test/not-implemented.js"
       ]
     },
     jshint: {
