@@ -32,20 +32,8 @@ board.on("ready", function() {
 
 ### Johnny-Five IO Plugin
 
-Once the environmental issues are resolved, Galileo-IO will be usable as an [IO Plugin](https://github.com/rwaldron/johnny-five/wiki/IO-Plugins) for [Johnny-Five](https://github.com/rwaldron/johnny-five):
+Galileo-IO is the default [IO layer](https://github.com/rwaldron/johnny-five/wiki/IO-Plugins) for [Johnny-Five](https://github.com/rwaldron/johnny-five) programs that are run on an Intel Galileo board.
 
-```js
-var five = require("johnny-five");
-var Galileo = require("galileo-io");
-var board = new five.Board({
-  io: new Galileo()
-});
-
-board.on("ready", function() {
-  var led = new five.Led(13);
-  led.blink();
-});
-```
 
 ### API
 
