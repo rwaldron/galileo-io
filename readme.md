@@ -42,12 +42,8 @@ var board = new five.Board({
 });
 
 board.on("ready", function() {
-  var byte = 0;
-  this.pinMode(9, this.MODES.OUTPUT);
-
-  setInterval(function() {
-    board.digitalWrite(9, (byte ^= 1));
-  }, 500);
+  var led = new five.Led(13);
+  led.blink();
 });
 ```
 
