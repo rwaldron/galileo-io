@@ -8,6 +8,12 @@ Galileo-io is a Firmata-compatibility IO class for writing node programs that ru
 
 See Intel Galileo setup. Galileo-io scripts are run _on_ the Galileo board itself, via its "full Linux" installation.
 
+### Installation
+
+```
+npm install galileo-io
+```
+
 ### Usage
 
 This module can be used an IO plugin for [Johnny-Five](https://github.com/rwaldron/johnny-five).
