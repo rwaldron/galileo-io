@@ -17,8 +17,29 @@ This module can be used an IO plugin for [Johnny-Five](https://github.com/rwaldr
 The "Hello World" of microcontroller programming:
 
 ```js
-var Galileo = rewire("../lib/galileo");
+var Galileo = require("galileo-io");
 var board = new Galileo();
+
+board.on("ready", function() {
+  var byte = 0;
+  this.pinMode(9, this.MODES.OUTPUT);
+
+  setInterval(function() {
+    board.digitalWrite(9, (byte ^= 1));
+  }, 500);
+});
+```
+
+### Johnny-Five IO Plugin
+
+Once the environmental issues are resolved, Galileo-IO will be usable as an [IO Plugin](https://github.com/rwaldron/johnny-five/wiki/IO-Plugins) for [Johnny-Five](https://github.com/rwaldron/johnny-five):
+
+```js
+var five = require("johnny-five");
+var Galileo = require("galileo-io");
+var board = new five.Board({
+  io: new Galileo()
+});
 
 board.on("ready", function() {
   var byte = 0;
