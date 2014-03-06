@@ -242,7 +242,7 @@ exports["Galileo"] = {
   connected: function(test) {
     test.expect(1);
 
-    this.galileo.on("connected", function() {
+    this.galileo.on("connect", function() {
       test.ok(true);
       test.done();
     });
