@@ -608,6 +608,15 @@ exports["Galileo.prototype.pinMode (analog)"] = {
     test.equal(this.galileo.pins[14].mode, 0);
 
     test.done();
+  },
+  analogIn2: function(test) {
+    test.expect(1);
+
+    this.galileo.pinMode("A0", 2);
+
+    test.equal(this.galileo.pins[14].mode, 0);
+
+    test.done();
   }
 };
 
