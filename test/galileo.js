@@ -292,6 +292,28 @@ exports["Galileo.prototype.analogRead"] = {
     test.done();
   },
 
+  analogPin: function(test) {
+    test.expect(2);
+
+    // Reading from an ANALOG pin should set its mode to 1 ("out")
+    var value = 1024;
+    var scaled = value >> 2;
+
+
+    this.readFile = sinon.stub(fsStub, "readFile", function(path, flags, cb) {
+      cb(null, value);
+    });
+
+    var handler = function(data) {
+      test.equal(data, scaled);
+      test.done();
+    };
+
+    this.galileo.analogRead(0, handler);
+
+    test.equal(this.galileo.pins[14].mode, 1);
+  },
+
   port: function(test) {
     test.expect(1);
 
@@ -331,7 +353,7 @@ exports["Galileo.prototype.analogRead"] = {
 
     var value = 1024;
     var scaled = value >> 2;
-    var event = "analog-read-A0";
+    var event = "analog-read-0";
 
     this.readFile = sinon.stub(fsStub, "readFile", function(path, flags, cb) {
       cb(null, value);
@@ -601,20 +623,16 @@ exports["Galileo.prototype.pinMode (analog)"] = {
     test.done();
   },
   analogIn: function(test) {
-    test.expect(1);
+    test.expect(3);
 
     this.galileo.pinMode("A0", 0);
-
     test.equal(this.galileo.pins[14].mode, 0);
 
-    test.done();
-  },
-  analogIn2: function(test) {
-    test.expect(1);
+    this.galileo.pinMode(0, 2);
 
-    this.galileo.pinMode("A0", 2);
+    test.equal(this.galileo.pins[14].direction, "in");
+    test.equal(this.galileo.pins[14].mode, 2);
 
-    test.equal(this.galileo.pins[14].mode, 0);
 
     test.done();
   }
