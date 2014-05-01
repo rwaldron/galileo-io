@@ -30,6 +30,12 @@ function restore(target) {
   }
 }
 
+function removeNoop(args) {
+  return args.map(function(list) {
+    return list.slice(0, -1);
+  });
+}
+
 
 Pin.ABS_PATH = process.cwd() + "/";
 
@@ -133,7 +139,7 @@ exports["Pin"] = {
     test.equal(this.write.callCount, 3);
 
     test.deepEqual(
-      this.write.args, [
+      removeNoop(this.write.args), [
         ["/sys/class/gpio/gpio51/drive", "strong"],
         ["/sys/class/gpio/gpio51/direction", "out"],
         ["/sys/class/gpio/gpio51/value", "0"]
@@ -145,7 +151,7 @@ exports["Pin"] = {
     test.equal(this.write.callCount, 5);
 
     test.deepEqual(
-      this.write.args, [
+      removeNoop(this.write.args), [
         ["/sys/class/gpio/gpio51/drive", "strong"],
         ["/sys/class/gpio/gpio51/direction", "out"],
         ["/sys/class/gpio/gpio51/value", "0"],
@@ -285,7 +291,8 @@ exports["PWM"] = {
     test.equal(this.write.callCount, 4);
 
     test.deepEqual(
-      this.write.lastCall.args, ["/sys/class/gpio/gpio18/value", "0"]
+      this.write.lastCall.args.slice(0, -1),
+      ["/sys/class/gpio/gpio18/value", "0"]
     );
 
     test.done();
