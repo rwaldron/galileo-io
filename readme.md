@@ -16,7 +16,7 @@ npm install galileo-io
 
 ### Usage
 
-This module can be used an IO plugin for [Johnny-Five](https://github.com/rwaldron/johnny-five).
+This module can be used as an IO plugin for [Johnny-Five](https://github.com/rwaldron/johnny-five).
 
 ### Blink an Led
 
