@@ -8,6 +8,10 @@ var pins = {
 };
 var names = Object.keys(pins);
 
+// if --anode=false is passed, it will appear
+// to be "truthy"
+argv.anode = argv.anode === "true";
+
 board.on("ready", function() {
   console.log( "CONNECTED" );
 
@@ -33,13 +37,13 @@ board.on("ready", function() {
 });
 
 function setColor(rgb, name) {
-  var r = argv.anode ? 255 - rgb[0] : rgb[0];
-  var g = argv.anode ? 255 - rgb[1] : rgb[1];
-  var b = argv.anode ? 255 - rgb[2] : rgb[2];
+  rgb = rgb.map(function(eightbit) {
+    return argv.anode ? eightbit ^ 0xff : eightbit;
+  });
 
-  board.analogWrite(pins.red, r);
-  board.analogWrite(pins.green, g);
-  board.analogWrite(pins.blue, b);
+  board.analogWrite(pins.red, rgb[0]);
+  board.analogWrite(pins.green, rgb[1]);
+  board.analogWrite(pins.blue, rgb[2]);
 
-  console.log("Set to: %s ", name, argv.anode ? [r, g, b] : rgb);
+  console.log("Set to: %s ", name, rgb);
 }
