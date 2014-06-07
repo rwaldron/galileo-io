@@ -580,19 +580,32 @@ exports["Galileo.prototype.digitalWrite"] = {
 
 exports["Galileo.prototype.servoWrite"] = {
   setUp: function(done) {
+    this.clock = sinon.useFakeTimers();
+
+    Pin.DUMMY = null;
+    this.write = sinon.spy(Pin.prototype, "write");
+    this.galileo = new Galileo();
+
     done();
   },
   tearDown: function(done) {
+    Galileo.reset();
+    restore(this);
     done();
   },
-  alias: function(test) {
-    test.expect(1);
-    test.equal(
-      Galileo.prototype.servoWrite,
-      Galileo.prototype.analogWrite
-    );
+  write: function(test) {
+    test.expect(3);
+
+    var value = 180;
+
+    this.galileo.servoWrite(6, value);
+
+    test.equal(this.galileo.pins[6].mode, 4);
+    test.ok(this.write.calledOnce);
+    test.deepEqual(this.write.firstCall.args, [value]);
+
     test.done();
-  }
+  },
 };
 
 
