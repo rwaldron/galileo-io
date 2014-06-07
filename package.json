@@ -34,9 +34,9 @@
     "node": ">=0.8.0"
   },
   "dependencies": {
-    "es6-shim": "~0.9.2",
+    "es6-shim": "latest",
     "remapped": "~0.2.1",
-    "es6-promise": "~0.1.1",
+    "es6-promise": "latest",
     "graceful-fs": "~2.0.2"
   },
   "devDependencies": {
