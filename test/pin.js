@@ -3,6 +3,7 @@ var rewire = require("rewire");
 var Pin = rewire("../lib/pin.js");
 var Emitter = require("events").EventEmitter;
 var sinon = require("sinon");
+var tick = global.setImmediate || process.nextTick;
 
 var fsStub = {
   readFile: function(path, encoding, cb) {
@@ -296,7 +297,162 @@ exports["PWM"] = {
     );
 
     test.done();
+  },
+
+  modeSetsPWM: function(test) {
+    test.expect(3);
+
+    this.pin.mode = 3;
+    test.ok(this.pin.isPwm);
+
+    this.pin.mode = 0;
+    test.ok(!this.pin.isPwm);
+
+    this.pin.mode = 4;
+    test.ok(this.pin.isPwm);
+
+    test.done();
+  },
+
+  analogWriteLow: function(test) {
+    test.expect(3);
+
+    this.pin.mode = 3;
+    this.pin.write(0);
+
+    var check = function() {
+      if (this.pin.pwm.period !== null &&
+            this.pin.pwm.duty_cycle !== null) {
+
+        test.equal(this.pin.pwm.enable, 1);
+        test.equal(this.pin.pwm.period, 2400000);
+        test.equal(this.pin.pwm.duty_cycle, 0);
+        test.done();
+
+      } else {
+        tick(check);
+      }
+    }.bind(this);
+
+    tick(check);
+  },
+
+  analogWriteCenter: function(test) {
+    test.expect(3);
+
+    this.pin.mode = 3;
+    this.pin.write(127);
+
+    var check = function() {
+      if (this.pin.pwm.period !== null &&
+            this.pin.pwm.duty_cycle !== null) {
+
+        test.equal(this.pin.pwm.enable, 1);
+        test.equal(this.pin.pwm.period, 2400000);
+        test.equal(this.pin.pwm.duty_cycle, 1195294);
+        test.done();
+
+      } else {
+        tick(check);
+      }
+    }.bind(this);
+
+    tick(check);
+  },
+
+
+  analogWriteHigh: function(test) {
+    test.expect(3);
+
+    this.pin.mode = 3;
+    this.pin.write(255);
+
+    var check = function() {
+      if (this.pin.pwm.period !== null &&
+            this.pin.pwm.duty_cycle !== null) {
+
+        test.equal(this.pin.pwm.enable, 1);
+        test.equal(this.pin.pwm.period, 2400000);
+        test.equal(this.pin.pwm.duty_cycle, 2400000);
+        test.done();
+
+      } else {
+        tick(check);
+      }
+    }.bind(this);
+
+    tick(check);
+  },
+
+  servoWriteLow: function(test) {
+    test.expect(3);
+
+    this.pin.mode = 4;
+    this.pin.write(0);
+
+    var check = function() {
+      if (this.pin.pwm.period !== null &&
+            this.pin.pwm.duty_cycle !== null) {
+
+        test.equal(this.pin.pwm.enable, 1);
+        test.equal(this.pin.pwm.period, 2300000);
+        test.equal(this.pin.pwm.duty_cycle, 500000);
+        test.done();
+
+      } else {
+        tick(check);
+      }
+    }.bind(this);
+
+    tick(check);
+  },
+
+  servoWriteCenter: function(test) {
+    test.expect(3);
+
+    this.pin.mode = 4;
+    this.pin.write(90);
+
+    var check = function() {
+      if (this.pin.pwm.period !== null &&
+            this.pin.pwm.duty_cycle !== null) {
+
+        test.equal(this.pin.pwm.enable, 1);
+        test.equal(this.pin.pwm.period, 2300000);
+        test.equal(this.pin.pwm.duty_cycle, 1400000);
+        test.done();
+
+      } else {
+        tick(check);
+      }
+    }.bind(this);
+
+    tick(check);
+  },
+
+  servoWriteHigh: function(test) {
+    test.expect(3);
+
+    this.pin.mode = 4;
+    this.pin.write(180);
+
+    var check = function() {
+      if (this.pin.pwm.period !== null &&
+            this.pin.pwm.duty_cycle !== null) {
+
+        test.equal(this.pin.pwm.enable, 1);
+        test.equal(this.pin.pwm.period, 2300000);
+        test.equal(this.pin.pwm.duty_cycle, 2300000);
+        test.done();
+
+      } else {
+        tick(check);
+      }
+    }.bind(this);
+
+    tick(check);
   }
+
 
 
 };
