@@ -5,6 +5,8 @@ lib/*
 !lib/pin.js
 fun
 push.sh
+servo.sh
+pwm.sh
 watch.js
 *.py
 *.pyc
