@@ -2,7 +2,7 @@
 
 [![Build Status](https://travis-ci.org/rwaldron/galileo-io.png?branch=master)](https://travis-ci.org/rwaldron/galileo-io)
 
-Galileo-io is a Firmata-compatibility GPIO class for writing Node.js programs that run on the [Intel Galileo](https://www-ssl.intel.com/content/www/us/en/do-it-yourself/galileo-maker-quark-board.html).
+Galileo-io is a Firmata-compatibility GPIO class for writing Node.js programs that run on the [Intel Galileo](https://www-ssl.intel.com/content/www/us/en/do-it-yourself/galileo-maker-quark-board.html). This was built at [Bocoup](http://bocoup.com)
 
 ### Getting Started
 
