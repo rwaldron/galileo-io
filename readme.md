@@ -65,8 +65,14 @@ Example:
 board.analogWrite(9, 255);
 ```
 
-**servoWrite(pin, value)** This is an alias to `analogWrite`
+**servoWrite(pin, value)** 
 
+> Set the pin to a value between 0-180° to move the servo's horn to the corresponding position.
+
+Example:
+```js
+board.servoWrite(9, 180);
+```
 
 **digitalRead(pin, handler)** Setup a continuous read handler for specific digital pin.
 
