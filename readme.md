@@ -9,7 +9,7 @@ Galileo-io is a Firmata-compatibility GPIO class for writing Node.js programs th
 
 ### Getting Started
 
-See Intel Galileo setup. Galileo-io scripts are run _on_ the Galileo board itself, via its "full Linux" installation.
+See Sparkfun's [Intel Galileo setup](https://learn.sparkfun.com/tutorials/galileo-getting-started-guide/bigger-linux-image). Galileo-io scripts are run _on_ the Galileo board itself, via its "full Linux" installation.
 
 ### Installation
 
@@ -24,6 +24,8 @@ This module can be used as an IO plugin for [Johnny-Five](https://github.com/rwa
 ### Blink an Led
 
 The "Hello World" of microcontroller programming:
+
+(attach an LED on pin 9)
 
 ```js
 var Galileo = require("galileo-io");
