@@ -1,3 +1,4 @@
+// Use require("galileo-io") when running from an npm installation
 var Galileo = require("../lib/galileo");
 var board = new Galileo();
 
