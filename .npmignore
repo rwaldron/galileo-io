@@ -3,6 +3,7 @@ lib/notes
 lib/*
 !lib/galileo.js
 !lib/pin.js
+help
 fun
 push.sh
 servo.sh
