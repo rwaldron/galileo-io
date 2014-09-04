@@ -41,6 +41,7 @@ module.exports = function(grunt) {
           rewire: true,
           exports: true,
           document: true,
+          Promise: true,
           WeakMap: true,
           Map: true,
           window: true
