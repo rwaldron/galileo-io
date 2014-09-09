@@ -13,3 +13,5 @@ watch.js
 *.pyc
 *.pdf
 *.tgz
+new-data-model.js
+scp-commands
