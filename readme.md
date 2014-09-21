@@ -1,18 +1,18 @@
-# Galileo-io
+# Galileo-IO
 
 [![Build Status](https://travis-ci.org/rwaldron/galileo-io.png?branch=master)](https://travis-ci.org/rwaldron/galileo-io)
 
-## Galileo-io is compatible with Generation 1, Generation 2 and Edison
+## Galileo-IO is compatible with Intel's Galileo Generation 1, Galileo Generation 2 and Edison boards.
 
 
-Galileo-io is a Firmata-compatibility GPIO class for writing Node.js programs that run on the [Intel Galileo](https://www-ssl.intel.com/content/www/us/en/do-it-yourself/galileo-maker-quark-board.html). This was built at [Bocoup](http://bocoup.com)
+Galileo-IO is a Firmata.js-compatibility class for writing Node.js programs that run on the [Intel Galileo](https://www-ssl.intel.com/content/www/us/en/do-it-yourself/galileo-maker-quark-board.html) or the [Intel Edison](http://www.intel.com/content/www/us/en/do-it-yourself/edison.html). This project was built at [Bocoup](http://bocoup.com)
 
 ### Getting Started
 
-Galileo-io scripts are run _on_ the Galileo board itself, via its "full Linux" installation.
+Galileo-IO scripts are run directly from the Galileo or Edison board. To get started, complete the appropriate setup instructions: 
 
-- Install the full Linux image by following Sparkfun's [Intel Galileo setup](https://learn.sparkfun.com/tutorials/galileo-getting-started-guide/bigger-linux-image). 
-- Add wifi capabilities by following [Sergey's Wifi Tutorial](http://www.malinov.com/Home/sergey-s-blog/intelgalileo-addingwifi)
+- [Galileo](http://rexstjohn.com/galileo-gen-2-setup/)
+- [Edison](http://rexstjohn.com/setting-up-intel-edison-with-intel-xdk/)
 
 
 ### Installation
@@ -20,6 +20,13 @@ Galileo-io scripts are run _on_ the Galileo board itself, via its "full Linux" i
 ```
 npm install galileo-io
 ```
+
+or 
+
+```
+npm install johnny-five
+```
+
 
 ### Usage
 
@@ -47,7 +54,7 @@ board.on("ready", function() {
 
 ### Johnny-Five IO Plugin
 
-Galileo-IO is the default [IO layer](https://github.com/rwaldron/johnny-five/wiki/IO-Plugins) for [Johnny-Five](https://github.com/rwaldron/johnny-five) programs that are run on an Intel Galileo board.
+Galileo-IO is the default [IO layer](https://github.com/rwaldron/johnny-five/wiki/IO-Plugins) for [Johnny-Five](https://github.com/rwaldron/johnny-five) programs that are run on a Galileo or Edison board.
 
 
 ### API
