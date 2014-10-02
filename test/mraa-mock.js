@@ -5,94 +5,39 @@ IO.prototype.write = function() {};
 
 function Gpio(pin) {
   IO.call(this);
-
-  this.mPin = pin;
-  this.mDir = null;
-  this.mMap = false;
 }
 
 Gpio.prototype = Object.create(IO.prototype);
-
-Gpio.prototype.useMmap = function(bool) {
-  this.mMap = bool;
-};
-
-Gpio.prototype.dir = function(dir) {
-  this.mDir = dir;
-};
+Gpio.prototype.useMmap = function(bool) {};
+Gpio.prototype.dir = function(dir) {};
 
 function Aio(pin) {
   IO.call(this);
-
-  this.mPin = pin;
-
-  delete this.write;
 }
 
 Aio.prototype = Object.create(IO.prototype);
 
 function Pwm(pin) {
   IO.call(this);
-
-  this.mPin = pin;
-  this.mPeriod = null;
-  this.mPeriod_ms = null;
-  this.mPeriod_us = null;
-  this.mPulsewidth = null;
-  this.mPulsewidth_ms = null;
-  this.mPulsewidth_us = null;
-  this.mEnable = null;
-  this.mConfig_ms = null;
-  this.mConfig_percent = null;
 }
 
 Pwm.prototype = Object.create(IO.prototype);
-
-Pwm.prototype.period = function(period) {
-  this.mPeriod = period;
-};
-
-Pwm.prototype.period_ms = function(ms) {
-  this.mPeriod_ms = ms;
-};
-
-Pwm.prototype.period_us = function(us) {
-  this.mPeriod_us = us;
-};
-
-Pwm.prototype.pulsewidth = function(seconds) {
-  this.mPulsewidth = seconds;
-};
-
-Pwm.prototype.pulsewidth_ms = function(ms) {
-  this.mPulsewidth_ms = ms;
-};
-
-Pwm.prototype.pulsewidth_us = function(us) {
-  this.mPulsewidth_us = us;
-};
-
-Pwm.prototype.enable = function(enable) {
-  this.mEnable = enable;
-};
+Pwm.prototype.period = function(period) {};
+Pwm.prototype.period_ms = function(ms) {};
+Pwm.prototype.period_us = function(us) {};
+Pwm.prototype.pulsewidth = function(seconds) {};
+Pwm.prototype.pulsewidth_ms = function(ms) {};
+Pwm.prototype.pulsewidth_us = function(us) {};
+Pwm.prototype.enable = function(enable) {};
 
 
 function I2c(bus) {
   IO.call(this);
-
-  this.mBus = bus;
-  this.mAddress = null;
-  this.mFrequency = null;
 }
 
 I2c.prototype = Object.create(IO.prototype);
-I2c.prototype.address = function(address) {
-  this.mAddress = address;
-};
-I2c.prototype.frequency = function(frequency) {
-  this.mFrequency = frequency;
-};
-
+I2c.prototype.address = function(address) {};
+I2c.prototype.frequency = function(frequency) {};
 
 module.exports = {
   MRAA_INTEL_GALILEO_GEN1: 0,
