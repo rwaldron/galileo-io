@@ -3,23 +3,23 @@ var Galileo = require("../lib/galileo");
 var board = new Galileo();
 
 board.on("ready", function() {
-  console.log( "CONNECTED" );
+  console.log("READY");
 
   this.pinMode(3, this.MODES.SERVO);
 
   var positions = [0, 45, 90, 135, 180];
-  var position = 0;
+  var index = 0;
 
   setInterval(function() {
-    var degrees = positions[position];
+    var degrees = positions[index];
 
     this.servoWrite(3, degrees);
     console.log( "Moving to %d", degrees );
 
-    position++;
+    index++;
 
-    if (position === positions.length) {
-      position = 0;
+    if (index === positions.length) {
+      index = 0;
     }
   }.bind(this), 2000);
 });

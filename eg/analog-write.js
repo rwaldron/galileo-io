@@ -1,5 +1,3 @@
-var argv = require("optimist").default({ anode: false }).argv;
-// Use require("galileo-io") when running from an npm installation
 var Galileo = require("../lib/galileo");
 var board = new Galileo();
 
@@ -9,20 +7,15 @@ board.on("ready", function() {
   this.pinMode(3, this.MODES.PWM);
 
   var level = 0;
-  var direction = 1;
+  var step = 5;
 
   setInterval(function() {
-
-    if (level > 255) {
-      direction = -1;
-      level = 255;
+    if (level > 255 || level < 0) {
+      step *= -1;
     }
 
-    if (level < 0) {
-      direction = 1;
-      level = 0;
-    }
+    level += step;
 
-    level += direction;
-  }, 100);
+    this.analogWrite(3, level);
+  }.bind(this), 1000/(255/step));
 });

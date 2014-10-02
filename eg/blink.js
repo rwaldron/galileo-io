@@ -3,9 +3,10 @@ var Galileo = require("../lib/galileo");
 var board = new Galileo();
 
 board.on("ready", function() {
+  console.log("READY");
   var byte = 0;
 
   setInterval(function() {
-    board.digitalWrite(9, (byte ^= 1));
+    board.digitalWrite(3, (byte ^= 1));
   }, 500);
 });
