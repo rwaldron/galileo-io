@@ -19,6 +19,7 @@ module.exports = function(grunt) {
       tests: [
         "test/galileo.js",
         "test/pin.js",
+        "test/mraa.js",
         "test/not-implemented.js"
       ]
     },
@@ -44,7 +45,8 @@ module.exports = function(grunt) {
           Promise: true,
           WeakMap: true,
           Map: true,
-          window: true
+          window: true,
+          IS_TEST_MODE: true
         }
       },
       files: {
