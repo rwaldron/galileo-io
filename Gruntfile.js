@@ -18,6 +18,7 @@ module.exports = function(grunt) {
     nodeunit: {
       tests: [
         "test/galileo.js",
+        "test/galileo-mraa.js",
         "test/pin.js",
         "test/mraa.js",
         "test/not-implemented.js"

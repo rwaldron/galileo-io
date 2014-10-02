@@ -25,8 +25,11 @@ Pin.__set__("fs", fsStub);
 
 function restore(target) {
   for (var prop in target) {
-    if (typeof target[prop].restore === "function") {
+    if (target[prop] != null && typeof target[prop].restore === "function") {
       target[prop].restore();
+    }
+    if (typeof target[prop] === "object") {
+      restore(target[prop]);
     }
   }
 }
@@ -36,7 +39,6 @@ function removeNoop(args) {
     return list.slice(0, -1);
   });
 }
-
 
 Pin.ABS_PATH = process.cwd() + "/";
 

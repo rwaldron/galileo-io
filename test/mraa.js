@@ -164,7 +164,6 @@ exports["Digital"] = {
   }
 };
 
-
 exports["Analog"] = {
   setUp: function(done) {
 
@@ -367,3 +366,4 @@ exports["PWM"] = {
     test.done();
   }
 };
+
