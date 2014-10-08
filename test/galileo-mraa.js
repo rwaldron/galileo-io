@@ -19,7 +19,12 @@ function restore(target) {
 }
 
 var io = Galileo.__io;
+var Gpio = io.Gpio;
+var Aio = io.Aio;
+var Pwm = io.Pwm;
 var I2c = io.I2c;
+var reporting = Galileo.__reporting;
+
 
 exports["Platform Type Galileo"] = {
   setUp: function(done) {
@@ -37,6 +42,7 @@ exports["Platform Type Galileo"] = {
     test.done();
   }
 };
+
 exports["Platform Type Edison"] = {
   setUp: function(done) {
     this.gpt = sinon.stub(io, "getPlatformType").returns(2);
@@ -53,6 +59,315 @@ exports["Platform Type Edison"] = {
     test.done();
   }
 };
+
+exports["Digital & Analog"] = {
+  setUp: function(done) {
+    var protos = {
+      gpio: Object.assign({}, Gpio.prototype),
+      aio: Object.assign({}, Aio.prototype)
+    };
+
+    this.Gpio = sinon.spy(io, "Gpio");
+    this.Aio = sinon.spy(io, "Aio");
+
+    ["Gpio", "Aio"].forEach(function(name) {
+      var key = name.toLowerCase();
+      var target = this[name];
+
+      this[key] = Object.keys(protos[key]).reduce(function(proto, prop) {
+        target.prototype[prop] = protos[key][prop];
+        proto[prop] = sinon.spy(target.prototype, prop);
+        return proto;
+      }, {});
+    }, this);
+
+    this.clock = sinon.useFakeTimers();
+
+    this.board = new Galileo();
+    this.board.on("ready", function() {
+      done();
+    });
+
+    this.board.emit("ready");
+  },
+  tearDown: function(done) {
+    restore(this);
+    done();
+  },
+  initializationDigital: function(test) {
+    test.expect(45);
+
+    // 14 Digital IO Pins are initialized, with:
+    //    - 14 calls to dir
+    //    - 14 calls to useMmap
+    //
+    test.equal(this.Gpio.callCount, 14);
+    test.equal(this.gpio.dir.callCount, 14);
+    test.equal(this.gpio.useMmap.callCount, 14);
+
+    // 14 calls to dir received the argument 0
+    this.gpio.dir.args.forEach(function(args) {
+      test.equal(args[0], 0);
+    });
+
+    // 14 calls to write received the argument 0
+    this.gpio.write.args.forEach(function(args) {
+      test.equal(args[0], 0);
+    });
+
+    // 14 calls to dir received the argument true
+    this.gpio.useMmap.args.forEach(function(args) {
+      test.equal(args[0], true);
+    });
+
+    test.done();
+  },
+  initializationAnalog: function(test) {
+    test.expect(1);
+
+    // 6 Digital IO Pins are initialized
+    test.equal(this.Aio.callCount, 6);
+    test.done();
+  },
+  blinkAll: function(test) {
+    test.expect(6);
+
+    var state = 0;
+
+    for (var i = 0; i < 14; i++) {
+      this.board.pinMode(i, this.board.MODES.OUTPUT);
+    }
+
+    setInterval(function() {
+      state ^= 1;
+      for (var i = 0; i < 14; i++) {
+        this.board.digitalWrite(i, state);
+      }
+    }.bind(this), 10);
+
+
+    this.gpio.write.reset();
+    this.clock.tick(10);
+
+    test.equal(this.gpio.write.callCount, 14);
+    test.ok(this.gpio.write.alwaysCalledWithExactly(1));
+
+    this.gpio.write.reset();
+    this.clock.tick(10);
+
+    test.equal(this.gpio.write.callCount, 14);
+    test.ok(this.gpio.write.alwaysCalledWithExactly(0));
+
+    this.gpio.write.reset();
+    this.clock.tick(10);
+
+    test.equal(this.gpio.write.callCount, 14);
+    test.ok(this.gpio.write.alwaysCalledWithExactly(1));
+
+    test.done();
+  }
+};
+
+exports["Galileo.prototype.analogRead"] = {
+  setUp: function(done) {
+    var protos = {
+      gpio: Object.assign({}, Gpio.prototype),
+      aio: Object.assign({}, Aio.prototype)
+    };
+
+    this.Gpio = sinon.spy(io, "Gpio");
+    this.Aio = sinon.spy(io, "Aio");
+
+    ["Gpio", "Aio"].forEach(function(name) {
+      var key = name.toLowerCase();
+      var target = this[name];
+
+      this[key] = Object.keys(protos[key]).reduce(function(proto, prop) {
+        target.prototype[prop] = protos[key][prop];
+        proto[prop] = sinon.spy(target.prototype, prop);
+        return proto;
+      }, {});
+    }, this);
+
+    this.clock = sinon.useFakeTimers();
+
+    this.board = new Galileo();
+    this.board.on("ready", function() {
+      done();
+    });
+
+    this.board.emit("ready");
+  },
+  tearDown: function(done) {
+    Galileo.reset();
+
+    this.aio.read.override = null;
+
+    restore(this);
+
+    for (var i = 0; i < 14; i++) {
+      if (i < 6) {
+        this.board.removeAllListeners("analog-read-A" + i);
+      }
+      if (i > 1) {
+        this.board.removeAllListeners("digital-read-" + i);
+      }
+    }
+    done();
+  },
+  correctMode: function(test) {
+    test.expect(1);
+
+    this.board.analogRead("A0", function() {});
+
+    // ANALOG input mode
+    test.equal(this.board.pins[14].mode, 2);
+
+    test.done();
+  },
+
+  analogPin: function(test) {
+    test.expect(1);
+
+    var value = 1023;
+
+    this.aio.read.override = value;
+
+    var handler = function(data) {
+      test.equal(data, value);
+      test.done();
+    };
+
+    this.board.analogRead(0, handler);
+  },
+
+  analogName: function(test) {
+    test.expect(1);
+
+    var value = 1023;
+
+    this.aio.read.override = value;
+
+    var handler = function(data) {
+      test.equal(data, value);
+      test.done();
+    };
+
+    this.board.analogRead("A0", handler);
+  },
+
+  event: function(test) {
+    test.expect(1);
+
+    var value = 1023;
+    var event = "analog-read-0";
+
+    this.aio.read.override = value;
+
+    this.board.once(event, function(data) {
+      test.equal(data, value);
+      test.done();
+    });
+
+    var handler = function(data) {};
+
+    this.board.analogRead("A0", handler);
+  }
+};
+
+exports["Galileo.prototype.digitalRead"] = {
+  setUp: function(done) {
+    var protos = {
+      gpio: Object.assign({}, Gpio.prototype),
+      aio: Object.assign({}, Aio.prototype)
+    };
+
+    this.Gpio = sinon.spy(io, "Gpio");
+    this.Aio = sinon.spy(io, "Aio");
+
+    ["Gpio", "Aio"].forEach(function(name) {
+      var key = name.toLowerCase();
+      var target = this[name];
+
+      this[key] = Object.keys(protos[key]).reduce(function(proto, prop) {
+        target.prototype[prop] = protos[key][prop];
+        proto[prop] = sinon.spy(target.prototype, prop);
+        return proto;
+      }, {});
+    }, this);
+
+    this.clock = sinon.useFakeTimers();
+
+    this.board = new Galileo();
+    this.board.on("ready", function() {
+      done();
+    });
+
+    this.board.emit("ready");
+  },
+  tearDown: function(done) {
+    Galileo.reset();
+
+    this.gpio.read.override = null;
+
+    restore(this);
+
+    for (var i = 0; i < 14; i++) {
+      if (i < 6) {
+        this.board.removeAllListeners("analog-read-A" + i);
+      }
+      if (i > 1) {
+        this.board.removeAllListeners("digital-read-" + i);
+      }
+    }
+    done();
+  },
+  correctMode: function(test) {
+    test.expect(1);
+
+    this.board.digitalRead(9, function() {});
+
+    // DIGITAL input mode
+    test.equal(this.board.pins[9].mode, 0);
+
+    test.done();
+  },
+
+  digitalPin: function(test) {
+    test.expect(1);
+
+    var value = 1;
+
+    this.gpio.read.override = value;
+
+    var handler = function(data) {
+      test.equal(data, value);
+      test.done();
+    };
+
+    this.board.digitalRead(9, handler);
+  },
+
+  event: function(test) {
+    test.expect(1);
+
+    var value = 1;
+    var event = "digital-read-9";
+
+    this.gpio.read.override = value;
+
+    this.board.once(event, function(data) {
+      test.equal(data, value);
+      test.done();
+    });
+
+    var handler = function(data) {};
+
+    this.board.digitalRead(9, handler);
+  }
+};
+
+
 
 exports["I2C"] = {
   setUp: function(done) {

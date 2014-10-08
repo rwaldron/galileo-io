@@ -24,11 +24,127 @@ function removeNoop(args) {
   });
 }
 
+var pinModes = [
+  { modes: [] },
+  { modes: [] },
+  { modes: [0, 1, 4] },
+  { modes: [0, 1, 3, 4] },
+  { modes: [0, 1, 4] },
+  { modes: [0, 1, 3, 4] },
+  { modes: [0, 1, 3, 4] },
+  { modes: [0, 1, 4] },
+  { modes: [0, 1, 4] },
+  { modes: [0, 1, 3, 4] },
+  { modes: [0, 1, 3, 4] },
+  { modes: [0, 1, 3, 4] },
+  { modes: [0, 1, 4] },
+  { modes: [0, 1, 4] },
+  { modes: [0, 1, 2], analogChannel: 0 },
+  { modes: [0, 1, 2], analogChannel: 1 },
+  { modes: [0, 1, 2], analogChannel: 2 },
+  { modes: [0, 1, 2], analogChannel: 3 },
+  { modes: [0, 1, 2], analogChannel: 4 },
+  { modes: [0, 1, 2], analogChannel: 5 }
+];
+
 var io = Pin.__io;
 var Gpio = io.Gpio;
 var Aio = io.Aio;
 var Pwm = io.Pwm;
 var I2c = io.I2c;
+
+exports["Initialization"] = {
+  setUp: function(done) {
+    var state = {
+      awaiting: [],
+      ready: 0
+    };
+
+    var protos = {
+      gpio: Object.assign({}, Gpio.prototype),
+      aio: Object.assign({}, Aio.prototype)
+    };
+
+    this.Gpio = sinon.spy(io, "Gpio");
+    this.Aio = sinon.spy(io, "Aio");
+
+    ["Gpio", "Aio"].forEach(function(name) {
+      var key = name.toLowerCase();
+      var target = this[name];
+
+      this[key] = Object.keys(protos[key]).reduce(function(proto, prop) {
+        target.prototype[prop] = protos[key][prop];
+        proto[prop] = sinon.spy(target.prototype, prop);
+        return proto;
+      }, {});
+    }, this);
+
+    // This mocks the initialization from Galileo constructor
+    this.pins = pinModes.map(function(pin, index) {
+      pin.addr = typeof pin.analogChannel === "number" ?
+        "A" + pin.analogChannel : index;
+
+      var gpio = new Pin(pin);
+
+      state.awaiting.push(
+        new Promise(function(resolve) {
+          gpio.on("ready", function() {
+            state.ready++;
+            resolve();
+          });
+        })
+      );
+
+      return gpio;
+    }, this);
+
+    this.state = state;
+
+    Promise.all(state.awaiting).then(function() {
+      done();
+    });
+  },
+  tearDown: function(done) {
+    restore(this);
+    done();
+  },
+  initialization: function(test) {
+    test.expect(48);
+
+    // 14 Digital IO Pins are initialized, with:
+    //    - 14 calls to dir
+    //    - 14 calls to useMmap
+    //
+    test.equal(this.Gpio.callCount, 14);
+    test.equal(this.gpio.dir.callCount, 14);
+    test.equal(this.gpio.useMmap.callCount, 14);
+
+    // 14 calls to dir received the argument 0
+    this.gpio.dir.args.forEach(function(args) {
+      test.equal(args[0], 0);
+    });
+
+    // 14 calls to write received the argument 0
+    this.gpio.write.args.forEach(function(args) {
+      test.equal(args[0], 0);
+    });
+
+    // 14 calls to dir received the argument true
+    this.gpio.useMmap.args.forEach(function(args) {
+      test.equal(args[0], true);
+    });
+
+    // 6 Analog IO Pins are initialized
+    test.equal(this.Aio.callCount, 6);
+
+    // 20 ready flags awaited
+    test.equal(this.state.awaiting.length, 20);
+    // 20 ready flags resolved
+    test.equal(this.state.ready, 20);
+
+    test.done();
+  }
+};
 
 exports["Pin"] = {
   setUp: function(done) {

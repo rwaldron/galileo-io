@@ -1,27 +1,30 @@
-function IO() {}
+function Gpio(pin) {}
+Gpio.prototype.read = function() {
+  return this.read.override !== null ?
+    this.read.override :
+    Math.round(Math.random() * 1);
 
-IO.prototype.read = function() {};
-IO.prototype.write = function() {};
-
-function Gpio(pin) {
-  IO.call(this);
-}
-
-Gpio.prototype = Object.create(IO.prototype);
+};
+Gpio.prototype.read.override = null;
+Gpio.prototype.write = function() {};
 Gpio.prototype.useMmap = function(bool) {};
-Gpio.prototype.dir = function(dir) {};
+Gpio.prototype.dir = function(dir) {
+  // MRAA_SUCCESS: 0,
+  return 0;
+};
 
-function Aio(pin) {
-  IO.call(this);
-}
+function Aio(pin) {}
+Aio.prototype.read = function() {
+  return this.read.override !== null ?
+    this.read.override :
+    Math.round(Math.random() * 1023);
+};
+Aio.prototype.read.override = null;
+Aio.prototype.write = function() {};
 
-Aio.prototype = Object.create(IO.prototype);
-
-function Pwm(pin) {
-  IO.call(this);
-}
-
-Pwm.prototype = Object.create(IO.prototype);
+function Pwm(pin) {}
+Pwm.prototype.read = function() {};
+Pwm.prototype.write = function() {};
 Pwm.prototype.period = function(period) {};
 Pwm.prototype.period_ms = function(ms) {};
 Pwm.prototype.period_us = function(us) {};
@@ -30,12 +33,9 @@ Pwm.prototype.pulsewidth_ms = function(ms) {};
 Pwm.prototype.pulsewidth_us = function(us) {};
 Pwm.prototype.enable = function(enable) {};
 
-
-function I2c(bus) {
-  IO.call(this);
-}
-
-I2c.prototype = Object.create(IO.prototype);
+function I2c(bus) {}
+I2c.prototype.read = function() {};
+I2c.prototype.write = function() {};
 I2c.prototype.address = function(address) {};
 I2c.prototype.frequency = function(frequency) {};
 
