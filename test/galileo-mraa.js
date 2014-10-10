@@ -388,10 +388,11 @@ exports["I2C"] = {
     done();
   },
   shape: function(test) {
-    test.expect(2);
+    test.expect(3);
 
     test.equal(this.board.i2cWrite, this.board.sendI2CWriteRequest);
     test.equal(this.board.i2cRead, this.board.sendI2CReadRequest);
+    test.equal(this.board.i2cConfig, this.board.sendI2CConfig);
 
     test.done();
   },
