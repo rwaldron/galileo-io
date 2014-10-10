@@ -10,7 +10,6 @@ exports[title] = {};
   "queryPinState",
   "sendI2CWriteRequest",
   "sendI2CReadRequest",
-  "sendI2CConfig",
   "_sendOneWireRequest",
   "_sendOneWireSearch",
   "sendOneWireWriteAndRead",
