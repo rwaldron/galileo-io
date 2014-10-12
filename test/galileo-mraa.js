@@ -401,8 +401,8 @@ exports["I2C"] = {
 
     this.board.i2cWrite(0x4, 0x1);
 
-    // Once on initialization, and once for creating new I2C
-    test.equal(this.gpt.callCount, 2);
+    // Once on initialization
+    test.equal(this.gpt.callCount, 1);
     test.equal(this.i2c.address.callCount, 1);
     test.equal(this.i2c.write.callCount, 1);
 
@@ -427,7 +427,7 @@ exports["I2C"] = {
     test.equal(this.i2c.address.callCount, 1);
     test.equal(this.i2c.write.callCount, 1);
 
-    // Once on initialization, and once for creating new I2C
-    test.equal(this.gpt.callCount, 2);
+    // Once on initialization
+    test.equal(this.gpt.callCount, 1);
   },
 };
