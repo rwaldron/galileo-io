@@ -375,6 +375,7 @@ exports["I2C"] = {
     this.gpt = sinon.stub(io, "getPlatformType").returns(1);
     this.i2c = {
       write: sinon.spy(I2c.prototype, "write"),
+      writeReg: sinon.spy(I2c.prototype, "writeReg"),
       address: sinon.spy(I2c.prototype, "address")
     };
 
@@ -430,4 +431,43 @@ exports["I2C"] = {
     // Once on initialization
     test.equal(this.gpt.callCount, 1);
   },
+
+  writeAndReg: function(test) {
+    // test.expect(1);
+
+    this.i2cConfig = sinon.spy(this.board, "i2cConfig");
+    this.i2cWrite = sinon.spy(this.board, "i2cWrite");
+    this.i2cWriteReg = sinon.spy(this.board, "i2cWriteReg");
+
+    // Should invoke writeReg, does NOT invoke write
+    this.board.i2cWrite(1, 2, 3);
+    // API
+    test.equal(this.i2cWriteReg.callCount, 1);
+    // Internal
+    test.equal(this.i2c.write.callCount, 0);
+    test.equal(this.i2c.writeReg.callCount, 1);
+
+    // Should NOT invoke writeReg, does invoke write
+    this.board.i2cWrite(1, 2, [3]);
+    // API
+    test.equal(this.i2cWriteReg.callCount, 1);
+    // Internal
+    test.equal(this.i2c.write.callCount, 2);
+    test.equal(this.i2c.writeReg.callCount, 1);
+
+    // Should NOT invoke writeReg
+    this.board.i2cWrite(1, [2, 3]);
+    // API
+    test.equal(this.i2cWriteReg.callCount, 1);
+    // Internal
+    test.equal(this.i2c.write.callCount, 4);
+
+    // 3 calls, but one redirected resulting in a
+    // 4th call to i2cConfig
+    test.equal(this.i2cConfig.callCount, 4);
+
+    test.done();
+  },
+
+
 };
