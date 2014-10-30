@@ -120,7 +120,6 @@ var analog = {
 };
 
 Galileo.__set__("fs", fsStub);
-
 Galileo.__set__("Pin", Pin);
 
 function restore(target) {
@@ -134,9 +133,9 @@ function restore(target) {
 exports["Galileo"] = {
   setUp: function(done) {
 
+    this.galileo = new Galileo();
     this.clock = sinon.useFakeTimers();
 
-    this.galileo = new Galileo();
 
     this.proto = {};
 
@@ -284,10 +283,7 @@ exports["Galileo.prototype.analogRead"] = {
   correctMode: function(test) {
     test.expect(1);
 
-    // Reading from an ANALOG pin should set its mode to 1 ("out")
     this.galileo.analogRead("A0", function() {});
-
-    // test.equal(this.galileo.pins[14].mode, 1);
     test.equal(this.galileo.pins[14].mode, 2);
 
     test.done();
@@ -296,7 +292,6 @@ exports["Galileo.prototype.analogRead"] = {
   analogPin: function(test) {
     test.expect(2);
 
-    // Reading from an ANALOG pin should set its mode to 1 ("out")
     var value = 1024;
     var scaled = value >> 2;
 
@@ -306,14 +301,14 @@ exports["Galileo.prototype.analogRead"] = {
     });
 
     var handler = function(data) {
+
       test.equal(data, scaled);
       test.done();
     };
 
     this.galileo.analogRead(0, handler);
-
-    // test.equal(this.galileo.pins[14].mode, 1);
     test.equal(this.galileo.pins[14].mode, 2);
+    this.clock.tick(10);
   },
 
   port: function(test) {
@@ -329,6 +324,7 @@ exports["Galileo.prototype.analogRead"] = {
     var handler = function(data) {};
 
     this.galileo.analogRead("A0", handler);
+    this.clock.tick(10);
   },
 
   handler: function(test) {
@@ -348,6 +344,7 @@ exports["Galileo.prototype.analogRead"] = {
     };
 
     this.galileo.analogRead("A0", handler);
+    this.clock.tick(10);
   },
 
   event: function(test) {
@@ -369,6 +366,7 @@ exports["Galileo.prototype.analogRead"] = {
     var handler = function(data) {};
 
     this.galileo.analogRead("A0", handler);
+    this.clock.tick(10);
   }
 };
 
@@ -418,6 +416,7 @@ exports["Galileo.prototype.digitalRead"] = {
     var handler = function(data) {};
 
     this.galileo.digitalRead(3, handler);
+    this.clock.tick(10);
   },
 
   handler: function(test) {
@@ -435,6 +434,7 @@ exports["Galileo.prototype.digitalRead"] = {
     };
 
     this.galileo.digitalRead(3, handler);
+    this.clock.tick(10);
   },
 
   event: function(test) {
@@ -455,6 +455,7 @@ exports["Galileo.prototype.digitalRead"] = {
     var handler = function(data) {};
 
     this.galileo.digitalRead(3, handler);
+    this.clock.tick(10);
   }
 };
 

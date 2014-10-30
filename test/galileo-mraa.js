@@ -34,6 +34,7 @@ exports["Platform Type Galileo"] = {
   },
   tearDown: function(done) {
     restore(this);
+    Galileo.reset();
     done();
   },
   platformtype: function(test) {
@@ -51,6 +52,7 @@ exports["Platform Type Edison"] = {
   },
   tearDown: function(done) {
     restore(this);
+    Galileo.reset();
     done();
   },
   platformtype: function(test) {
@@ -92,6 +94,7 @@ exports["Digital & Analog"] = {
   },
   tearDown: function(done) {
     restore(this);
+    Galileo.reset();
     done();
   },
   initializationDigital: function(test) {
@@ -199,20 +202,19 @@ exports["Galileo.prototype.analogRead"] = {
     this.board.emit("ready");
   },
   tearDown: function(done) {
-    Galileo.reset();
-
     this.aio.read.override = null;
 
     restore(this);
 
     for (var i = 0; i < 14; i++) {
       if (i < 6) {
-        this.board.removeAllListeners("analog-read-A" + i);
+        this.board.removeAllListeners("analog-read-" + i);
       }
       if (i > 1) {
         this.board.removeAllListeners("digital-read-" + i);
       }
     }
+    Galileo.reset();
     done();
   },
   correctMode: function(test) {
@@ -239,6 +241,7 @@ exports["Galileo.prototype.analogRead"] = {
     };
 
     this.board.analogRead(0, handler);
+    this.clock.tick(10);
   },
 
   analogName: function(test) {
@@ -254,6 +257,7 @@ exports["Galileo.prototype.analogRead"] = {
     };
 
     this.board.analogRead("A0", handler);
+    this.clock.tick(10);
   },
 
   event: function(test) {
@@ -272,6 +276,7 @@ exports["Galileo.prototype.analogRead"] = {
     var handler = function(data) {};
 
     this.board.analogRead("A0", handler);
+    this.clock.tick(10);
   }
 };
 
@@ -306,11 +311,10 @@ exports["Galileo.prototype.digitalRead"] = {
     this.board.emit("ready");
   },
   tearDown: function(done) {
-    Galileo.reset();
-
     this.gpio.read.override = null;
 
     restore(this);
+    Galileo.reset();
 
     for (var i = 0; i < 14; i++) {
       if (i < 6) {
@@ -346,6 +350,7 @@ exports["Galileo.prototype.digitalRead"] = {
     };
 
     this.board.digitalRead(9, handler);
+    this.clock.tick(10);
   },
 
   event: function(test) {
@@ -364,6 +369,7 @@ exports["Galileo.prototype.digitalRead"] = {
     var handler = function(data) {};
 
     this.board.digitalRead(9, handler);
+    this.clock.tick(10);
   }
 };
 
@@ -452,7 +458,9 @@ exports["I2C"] = {
     // API
     test.equal(this.i2cWriteReg.callCount, 1);
     // Internal
-    test.equal(this.i2c.write.callCount, 2);
+    // 2 when using loop
+    // test.equal(this.i2c.write.callCount, 2);
+    test.equal(this.i2c.write.callCount, 1);
     test.equal(this.i2c.writeReg.callCount, 1);
 
     // Should NOT invoke writeReg
@@ -460,7 +468,7 @@ exports["I2C"] = {
     // API
     test.equal(this.i2cWriteReg.callCount, 1);
     // Internal
-    test.equal(this.i2c.write.callCount, 4);
+    test.equal(this.i2c.write.callCount, 2);
 
     // 3 calls, but one redirected resulting in a
     // 4th call to i2cConfig
@@ -468,6 +476,4 @@ exports["I2C"] = {
 
     test.done();
   },
-
-
 };
