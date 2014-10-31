@@ -1,6 +1,6 @@
 "use strict";
 
-global.IS_TEST_MODE = true;
+global.IS_TEST_ENV = true;
 
 var Galileo = require("../lib/galileo");
 var Emitter = require("events").EventEmitter;
