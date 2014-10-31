@@ -11,7 +11,6 @@ module.exports = function(grunt) {
   var _ = grunt.util._;
 
 
-
   // Project configuration.
   grunt.initConfig({
     pkg: grunt.file.readJSON("package.json"),
@@ -19,7 +18,7 @@ module.exports = function(grunt) {
       tests: [
         "test/galileo.js",
         "test/galileo-mraa.js",
-        "test/pin.js",
+        // "test/pin.js",
         "test/mraa.js",
         "test/not-implemented.js"
       ]
