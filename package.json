@@ -1,7 +1,7 @@
 {
   "name": "galileo-io",
-  "description": "Galileo IO",
-  "version": "0.5.0",
+  "description": "IO Plugin for Intel Galileo and Intel Edison for Johnny-Five",
+  "version": "0.5.1",
   "homepage": "https://github.com/rwaldron/galileo-io",
   "author": {
     "name": "Rick Waldron <waldron.rick@gmail.com>",
@@ -9,13 +9,14 @@
   },
   "contributors": [],
   "keywords": [
+    "intel",
     "edison",
     "galileo",
     "io",
     "arduino",
-    "intel",
     "firmata",
-    "johnny-five"
+    "johnny-five",
+    "mraa"
   ],
   "repository": {
     "type": "git",
