@@ -41,9 +41,6 @@
     "es6-promise": "latest",
     "graceful-fs": "~2.0.2"
   },
-  "optionsDependencies": {
-    "mraa": "latest"
-  },
   "devDependencies": {
     "rewire": "~2.0.0",
     "sinon": "~1.7.3",
@@ -54,7 +51,8 @@
     "grunt-jsbeautifier": "~0.2.2"
   },
   "scripts": {
-    "test": "grunt"
+    "test": "grunt",
+    "postinstall": "node scripts/postinstall"
   },
   "js-flags": "--harmony"
 }
