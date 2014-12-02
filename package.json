@@ -39,7 +39,9 @@
     "es6-shim": "latest",
     "remapped": "~0.2.1",
     "es6-promise": "latest",
-    "graceful-fs": "~2.0.2",
+    "graceful-fs": "~2.0.2"
+  },
+  "optionsDependencies": {
     "mraa": "latest"
   },
   "devDependencies": {
