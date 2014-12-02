@@ -1,7 +1,7 @@
 {
   "name": "galileo-io",
   "description": "Galileo IO",
-  "version": "0.4.3",
+  "version": "0.5.0",
   "homepage": "https://github.com/rwaldron/galileo-io",
   "author": {
     "name": "Rick Waldron <waldron.rick@gmail.com>",
@@ -38,7 +38,8 @@
     "es6-shim": "latest",
     "remapped": "~0.2.1",
     "es6-promise": "latest",
-    "graceful-fs": "~2.0.2"
+    "graceful-fs": "~2.0.2",
+    "mraa": "latest"
   },
   "devDependencies": {
     "rewire": "~2.0.0",
@@ -50,8 +51,7 @@
     "grunt-jsbeautifier": "~0.2.2"
   },
   "scripts": {
-    "test": "grunt",
-    "postinstall": "node scripts/postinstall"
+    "test": "grunt"
   },
   "js-flags": "--harmony"
 }
