@@ -377,8 +377,10 @@ exports["Galileo.prototype.digitalRead"] = {
 
 exports["I2C"] = {
   setUp: function(done) {
+    this.clock = sinon.useFakeTimers();
 
     this.gpt = sinon.stub(io, "getPlatformType").returns(1);
+
     this.i2c = {
       write: sinon.spy(I2c.prototype, "write"),
       writeReg: sinon.spy(I2c.prototype, "writeReg"),
@@ -391,6 +393,7 @@ exports["I2C"] = {
     done();
   },
   tearDown: function(done) {
+    this.clock.restore();
     restore(this);
     done();
   },
@@ -398,7 +401,7 @@ exports["I2C"] = {
     test.expect(3);
 
     test.equal(this.board.i2cWrite, this.board.sendI2CWriteRequest);
-    test.equal(this.board.i2cRead, this.board.sendI2CReadRequest);
+    test.equal(this.board.i2cReadOnce, this.board.sendI2CReadRequest);
     test.equal(this.board.i2cConfig, this.board.sendI2CConfig);
 
     test.done();
@@ -417,25 +420,26 @@ exports["I2C"] = {
   },
 
   initAddressOnFirstRead: function(test) {
-    test.expect(6);
+    test.expect(5);
 
     this.temp = sinon.spy(this.board, "i2cWrite");
 
-    this.board.on("I2C-reply-4", function() {
-      test.ok(true);
-    });
-
-    this.board.i2cRead(0x4, [1], 2, function() {
+    this.board.i2cConfig(0);
+    this.board.i2cReadOnce(0x4, 1, 2, function() {
       test.equal(this.temp.callCount, 1);
       test.equal(this.i2c.read.callCount, 1);
       test.done();
     }.bind(this));
+
 
     test.equal(this.i2c.address.callCount, 1);
     test.equal(this.i2c.write.callCount, 1);
 
     // Once on initialization
     test.equal(this.gpt.callCount, 1);
+
+
+    this.clock.tick(1);
   },
 
   writeAndReg: function(test) {
@@ -470,10 +474,44 @@ exports["I2C"] = {
     // Internal
     test.equal(this.i2c.write.callCount, 2);
 
-    // 3 calls, but one redirected resulting in a
-    // 4th call to i2cConfig
-    test.equal(this.i2cConfig.callCount, 4);
+    // 1 call to i2cConfig
+    test.equal(this.i2cConfig.callCount, 1);
 
     test.done();
   },
+
+  i2cRead: function(test) {
+    test.expect(6);
+
+    var handler = sinon.spy(function() {});
+
+    this.board.i2cConfig(2);
+    this.board.i2cRead(0x4, 1, 2, handler);
+    this.clock.tick(10);
+
+    test.equal(handler.callCount, 5);
+    test.equal(handler.getCall(0).args[0].length, 2);
+    test.equal(handler.getCall(1).args[0].length, 2);
+    test.equal(handler.getCall(2).args[0].length, 2);
+    test.equal(handler.getCall(3).args[0].length, 2);
+    test.equal(handler.getCall(4).args[0].length, 2);
+
+    test.done();
+  },
+
+  i2cReadOnce: function(test) {
+    test.expect(2);
+
+    var handler = sinon.spy(function() {});
+
+    this.board.i2cConfig(2);
+    this.board.i2cReadOnce(0x4, 1, 2, handler);
+    this.clock.tick(2);
+
+    test.equal(handler.callCount, 1);
+    test.equal(handler.getCall(0).args[0].length, 2);
+
+    test.done();
+  },
+
 };
