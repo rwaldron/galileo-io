@@ -84,6 +84,8 @@ exports["Platform Type Edison (Miniboard)"] = {
   miniboardDetection: function(test) {
     test.expect(1);
 
+    // var galileo = new Galileo();
+
     test.ok(true, "Not sure how to mock/stub something that has already run by the time this test occurs.");
     test.done();
   }
