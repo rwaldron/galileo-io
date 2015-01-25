@@ -23,7 +23,6 @@ var Gpio = io.Gpio;
 var Aio = io.Aio;
 var Pwm = io.Pwm;
 var I2c = io.I2c;
-var reporting = Galileo.__reporting;
 
 
 exports["Platform Type Galileo"] = {
@@ -39,13 +38,52 @@ exports["Platform Type Galileo"] = {
   },
   platformtype: function(test) {
     test.expect(1);
-    test.equal(this.board.name, "Galileo-IO (Intel Galileo 2)");
+    test.equal(this.board.name, "Galileo-IO (Intel Galileo Gen 2)");
     test.done();
   }
 };
 
 exports["Platform Type Edison"] = {
   setUp: function(done) {
+
+    this.pinModes = [
+      { modes: [] },
+      { modes: [] },
+      { modes: [0, 1] },
+      { modes: [0, 1, 3, 4] },
+      { modes: [0, 1] },
+      { modes: [0, 1, 3, 4] },
+      { modes: [0, 1, 3, 4] },
+      { modes: [0, 1] },
+      { modes: [0, 1] },
+      { modes: [0, 1, 3, 4] },
+      { modes: [0, 1, 3, 4] },
+      { modes: [0, 1, 3, 4] },
+      { modes: [0, 1] },
+      { modes: [0, 1] },
+      { modes: [0, 1, 2], analogChannel: 0 },
+      { modes: [0, 1, 2], analogChannel: 1 },
+      { modes: [0, 1, 2], analogChannel: 2 },
+      { modes: [0, 1, 2], analogChannel: 3 },
+      { modes: [0, 1, 2], analogChannel: 4 },
+      { modes: [0, 1, 2], analogChannel: 5 },
+    ];
+
+    this.connections = this.pinModes.reduce(function(accum, value, i) {
+      if (value !== null) {
+        accum.push(i);
+      }
+      return accum;
+    }, []);
+
+    this.analogs = this.pinModes.reduce(function(accum, value, i) {
+      if (typeof value.analogChannel === "number") {
+        accum.push(i);
+      }
+      return accum;
+    }, []);
+
+
     this.gpt = sinon.stub(io, "getPlatformType").returns(2);
     this.board = new Galileo();
     done();
@@ -59,34 +97,229 @@ exports["Platform Type Edison"] = {
     test.expect(1);
     test.equal(this.board.name, "Galileo-IO (Intel Edison)");
     test.done();
+  },
+  arduinoBoardErrors: function(test) {
+    test.expect(88);
+
+    var board = new Galileo();
+    var pin = 30;
+
+    // No connection on pin 30
+    test.throws(function() {
+      board.pinMode(pin, 0);
+    });
+
+    test.throws(function() {
+      board.digitalWrite(pin, 0);
+    });
+
+    test.throws(function() {
+      board.digitalRead(pin, function() {});
+    });
+
+    test.throws(function() {
+      board.analogWrite(pin, 0);
+    });
+
+    test.throws(function() {
+      board.analogRead(pin, function() {});
+    });
+
+    test.throws(function() {
+      board.servoWrite(pin, 0);
+    });
+
+    this.connections.forEach(function(pin) {
+      var isAnalog = typeof this.pinModes[pin].analogChannel === "number";
+
+
+      if (isAnalog) {
+        pin = "A" + this.pinModes[pin].analogChannel;
+        test.doesNotThrow(function() {
+          board.pinMode(pin, 0);
+        });
+
+        test.doesNotThrow(function() {
+          board.analogRead(pin, function() {});
+        });
+      } else {
+        test.doesNotThrow(function() {
+          board.pinMode(pin, 0);
+        });
+
+        test.doesNotThrow(function() {
+          board.digitalWrite(pin, 0);
+        });
+
+        test.doesNotThrow(function() {
+          board.digitalRead(pin, function() {});
+        });
+
+        test.doesNotThrow(function() {
+          board.analogWrite(pin, 0);
+        });
+
+        test.doesNotThrow(function() {
+          board.servoWrite(pin, 0);
+        });
+      }
+    }, this);
+
+    test.done();
   }
 };
 
 exports["Platform Type Edison (Miniboard)"] = {
   setUp: function(done) {
-    this.gpt = sinon.stub(io, "getPlatformType").returns(2);
-    this.gpio = sinon.stub(io, "Gpio", function(pin) {
-      // if (pin === 1) {
-      //   throw new Error("Illegal arguments for construction of _exports_Gpio");
-      // }
 
-      this.useMmap = function() {};
-      this.write = function() {};
-      this.dir = function() {};
-    });
+    this.pinModes = [
+      { modes: [0, 1, 3, 4] },
+      null,
+      null,
+      null,
+      { modes: [0, 1] },
+      null,
+      { modes: [0, 1] },
+      { modes: [0, 1] },
+      { modes: [0, 1] },
+      { modes: [0, 1] },
+      { modes: [0, 1] },
+      { modes: [0, 1] },
+      null,
+      { modes: [0, 1] },
+      { modes: [0, 1, 3, 4] },
+      { modes: [0, 1] },
+      null,
+      null,
+      null,
+      { modes: [0, 1] },
+      { modes: [0, 1, 3, 4] },
+      { modes: [0, 1, 3, 4] },
+      null,
+      { modes: [0, 1] },
+      { modes: [0, 1] },
+      { modes: [0, 1] },
+      { modes: [0, 1] },
+      null,
+      null,
+      null,
+      null,
+      { modes: [0, 1] },
+      { modes: [0, 1] },
+      { modes: [0, 1] },
+      null,
+      { modes: [0, 1] },
+      { modes: [0, 1] },
+      { modes: [0, 1] },
+      { modes: [0, 1] },
+      { modes: [0, 1] },
+      { modes: [0, 1] },
+      { modes: [0, 1] },
+      null,
+      null,
+      null,
+      { modes: [0, 1] },
+      { modes: [0, 1] },
+      { modes: [0, 1] },
+      { modes: [0, 1] },
+      { modes: [0, 1] },
+      { modes: [0, 1] },
+      { modes: [0, 1] },
+      { modes: [0, 1] },
+      { modes: [0, 1] },
+      { modes: [0, 1] },
+      { modes: [0, 1] },
+    ];
+
+    this.noConnections = this.pinModes.reduce(function(accum, value, i) {
+      if (value === null) {
+        accum.push(i);
+      }
+      return accum;
+    }, []);
+    this.connections = this.pinModes.reduce(function(accum, value, i) {
+      if (value !== null) {
+        accum.push(i);
+      }
+      return accum;
+    }, []);
+
+
+    Galileo.__miniboard(true);
+    Galileo.__pinmodes(this.pinModes);
+
     done();
   },
   tearDown: function(done) {
+
+    Galileo.__miniboard(false);
+    Galileo.__pinmodes();
     restore(this);
     Galileo.reset();
     done();
   },
-  miniboardDetection: function(test) {
-    test.expect(1);
+  miniBoardErrors: function(test) {
+    test.expect(298);
 
-    // var galileo = new Galileo();
+    var board = new Galileo();
 
-    test.ok(true, "Not sure how to mock/stub something that has already run by the time this test occurs.");
+    // Tests for capabilities as shown here:
+    // https://github.com/intel-iot-devkit/mraa/blob/master/docs/edison.md
+    //
+
+    // No analog read on any
+    test.throws(function() {
+      board.pinMode("any", 2);
+    });
+
+    this.noConnections.forEach(function(pin) {
+      test.throws(function() {
+        board.pinMode(pin, 0);
+      });
+
+      test.throws(function() {
+        board.digitalWrite(pin, 0);
+      });
+
+      test.throws(function() {
+        board.digitalRead(pin, function() {});
+      });
+
+      test.throws(function() {
+        board.analogWrite(pin, 0);
+      });
+
+      test.throws(function() {
+        board.analogRead(pin, function() {});
+      });
+
+      test.throws(function() {
+        board.servoWrite(pin, 0);
+      });
+    });
+
+    this.connections.forEach(function(pin) {
+      test.doesNotThrow(function() {
+        board.pinMode(pin, 0);
+      });
+
+      test.doesNotThrow(function() {
+        board.digitalWrite(pin, 0);
+      });
+
+      test.doesNotThrow(function() {
+        board.digitalRead(pin, function() {});
+      });
+
+      test.doesNotThrow(function() {
+        board.analogWrite(pin, 0);
+      });
+
+      test.doesNotThrow(function() {
+        board.servoWrite(pin, 0);
+      });
+    });
+
     test.done();
   }
 };

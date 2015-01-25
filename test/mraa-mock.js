@@ -176,13 +176,19 @@ module.exports = {
   getVersion: function() {},
   setPriority: function() {},
   getPlatformType: function() {
-    return 2;
+    // Return value must be set by test
   },
   printError: function() {},
   pinModeTest: function() {},
   adcRawBits: function() {},
   adcSupportedBits: function() {},
-  getPlatformName: function() {},
+  getPlatformName: function() {
+    return [
+      "Intel Galileo Gen 1",
+      "Intel Galileo Gen 2",
+      "Intel Edison",
+    ][this.getPlatformType()];
+  },
   getPinCount: function() {},
   setLogLevel: function() {},
   mraa_set_priority: function() {},

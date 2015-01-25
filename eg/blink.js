@@ -6,7 +6,9 @@ board.on("ready", function() {
   console.log("READY");
   var byte = 0;
 
+
+
   setInterval(function() {
-    board.digitalWrite(3, (byte ^= 1));
+    board.digitalWrite(13, (byte ^= 1));
   }, 500);
 });
