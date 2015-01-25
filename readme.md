@@ -2,12 +2,14 @@
 
 [![Build Status](https://travis-ci.org/rwaldron/galileo-io.png?branch=master)](https://travis-ci.org/rwaldron/galileo-io)
 
-## Galileo-IO is compatible with Intel's Galileo Generation 1, Galileo Generation 2 and Edison boards.
+## Galileo-IO is compatible with Intel's Galileo Generation 1, Galileo Generation 2 and Edison boards (Mini and Arduino Board).
 
 
 Galileo-IO is a Firmata.js-compatibility class for writing Node.js programs that run on the [Intel Galileo](https://www-ssl.intel.com/content/www/us/en/do-it-yourself/galileo-maker-quark-board.html) or the [Intel Edison](http://www.intel.com/content/www/us/en/do-it-yourself/edison.html). This project was built at [Bocoup](http://bocoup.com)
 
 ### Getting Started
+
+**As of 0.7.0, only the IoTKit image is supported**
 
 Galileo-IO scripts are run directly from the Galileo or Edison board. To get started, complete the appropriate setup instructions: 
 
