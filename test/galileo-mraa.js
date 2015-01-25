@@ -62,6 +62,34 @@ exports["Platform Type Edison"] = {
   }
 };
 
+exports["Platform Type Edison (Miniboard)"] = {
+  setUp: function(done) {
+    this.gpt = sinon.stub(io, "getPlatformType").returns(2);
+    this.gpio = sinon.stub(io, "Gpio", function(pin) {
+      // if (pin === 1) {
+      //   throw new Error("Illegal arguments for construction of _exports_Gpio");
+      // }
+
+      this.useMmap = function() {};
+      this.write = function() {};
+      this.dir = function() {};
+    });
+    done();
+  },
+  tearDown: function(done) {
+    restore(this);
+    Galileo.reset();
+    done();
+  },
+  miniboardDetection: function(test) {
+    test.expect(1);
+
+    test.ok(true, "Not sure how to mock/stub something that has already run by the time this test occurs.");
+    test.done();
+  }
+};
+
+
 exports["Digital & Analog"] = {
   setUp: function(done) {
     var protos = {
