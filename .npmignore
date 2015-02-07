@@ -6,3 +6,6 @@ watch.js
 *.pyc
 *.pdf
 *.tgz
+send.sh
+edison.js
+npm-*
