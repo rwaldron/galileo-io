@@ -9,6 +9,7 @@ var tick = global.setImmediate || process.nextTick;
 
 function restore(target) {
   for (var prop in target) {
+
     if (target[prop] != null && typeof target[prop].restore === "function") {
       target[prop].restore();
     }
@@ -99,7 +100,7 @@ exports["Platform Type Edison"] = {
     test.done();
   },
   arduinoBoardErrors: function(test) {
-    test.expect(88);
+    test.expect(78);
 
     var board = new Galileo();
     var pin = 30;
@@ -132,6 +133,9 @@ exports["Platform Type Edison"] = {
     this.connections.forEach(function(pin) {
       var isAnalog = typeof this.pinModes[pin].analogChannel === "number";
 
+      if (this.pinModes[pin].modes.length === 0) {
+        return;
+      }
 
       if (isAnalog) {
         pin = "A" + this.pinModes[pin].analogChannel;
@@ -244,14 +248,11 @@ exports["Platform Type Edison (Miniboard)"] = {
       return accum;
     }, []);
 
-
     Galileo.__miniboard(true);
     Galileo.__pinmodes(this.pinModes);
-
     done();
   },
   tearDown: function(done) {
-
     Galileo.__miniboard(false);
     Galileo.__pinmodes();
     restore(this);
@@ -349,11 +350,12 @@ exports["Digital & Analog"] = {
     this.clock = sinon.useFakeTimers();
 
     this.board = new Galileo();
-    this.board.on("ready", function() {
-      done();
-    });
 
-    this.board.emit("ready");
+    for (var i = 2; i < 20; i++) {
+      this.board.pins[i].initialize();
+    }
+
+    done();
   },
   tearDown: function(done) {
     restore(this);
@@ -361,27 +363,28 @@ exports["Digital & Analog"] = {
     done();
   },
   initializationDigital: function(test) {
-    test.expect(45);
+    test.expect(39);
 
-    // 14 Digital IO Pins are initialized, with:
-    //    - 14 calls to dir
-    //    - 14 calls to useMmap
+
+    // 12 Digital IO Pins are initialized, with:
+    //    - 12 calls to dir
+    //    - 12 calls to useMmap
     //
-    test.equal(this.Gpio.callCount, 14);
-    test.equal(this.gpio.dir.callCount, 14);
-    test.equal(this.gpio.useMmap.callCount, 14);
+    test.equal(this.Gpio.callCount, 12);
+    test.equal(this.gpio.dir.callCount, 12);
+    test.equal(this.gpio.useMmap.callCount, 12);
 
-    // 14 calls to dir received the argument 0
+    // 12 calls to dir received the argument 0
     this.gpio.dir.args.forEach(function(args) {
       test.equal(args[0], 0);
     });
 
-    // 14 calls to write received the argument 0
+    // 12 calls to write received the argument 0
     this.gpio.write.args.forEach(function(args) {
       test.equal(args[0], 0);
     });
 
-    // 14 calls to dir received the argument true
+    // 12 calls to dir received the argument true
     this.gpio.useMmap.args.forEach(function(args) {
       test.equal(args[0], true);
     });
@@ -400,13 +403,13 @@ exports["Digital & Analog"] = {
 
     var state = 0;
 
-    for (var i = 0; i < 14; i++) {
+    for (var i = 2; i < 14; i++) {
       this.board.pinMode(i, this.board.MODES.OUTPUT);
     }
 
     setInterval(function() {
       state ^= 1;
-      for (var i = 0; i < 14; i++) {
+      for (var i = 2; i < 14; i++) {
         this.board.digitalWrite(i, state);
       }
     }.bind(this), 10);
@@ -415,19 +418,19 @@ exports["Digital & Analog"] = {
     this.gpio.write.reset();
     this.clock.tick(10);
 
-    test.equal(this.gpio.write.callCount, 14);
+    test.equal(this.gpio.write.callCount, 12);
     test.ok(this.gpio.write.alwaysCalledWithExactly(1));
 
     this.gpio.write.reset();
     this.clock.tick(10);
 
-    test.equal(this.gpio.write.callCount, 14);
+    test.equal(this.gpio.write.callCount, 12);
     test.ok(this.gpio.write.alwaysCalledWithExactly(0));
 
     this.gpio.write.reset();
     this.clock.tick(10);
 
-    test.equal(this.gpio.write.callCount, 14);
+    test.equal(this.gpio.write.callCount, 12);
     test.ok(this.gpio.write.alwaysCalledWithExactly(1));
 
     test.done();
@@ -458,11 +461,9 @@ exports["Galileo.prototype.analogRead"] = {
     this.clock = sinon.useFakeTimers();
 
     this.board = new Galileo();
-    this.board.on("ready", function() {
-      done();
-    });
 
-    this.board.emit("ready");
+    done();
+
   },
   tearDown: function(done) {
     this.aio.read.override = null;
@@ -473,10 +474,11 @@ exports["Galileo.prototype.analogRead"] = {
       if (i < 6) {
         this.board.removeAllListeners("analog-read-" + i);
       }
-      if (i > 1) {
+      if (i > 2) {
         this.board.removeAllListeners("digital-read-" + i);
       }
     }
+
     Galileo.reset();
     done();
   },
@@ -567,11 +569,7 @@ exports["Galileo.prototype.digitalRead"] = {
     this.clock = sinon.useFakeTimers();
 
     this.board = new Galileo();
-    this.board.on("ready", function() {
-      done();
-    });
-
-    this.board.emit("ready");
+    done();
   },
   tearDown: function(done) {
     this.gpio.read.override = null;

@@ -84,52 +84,61 @@ exports["Initialization"] = {
       pin.addr = typeof pin.analogChannel === "number" ?
         "A" + pin.analogChannel : index;
 
-      var gpio = new Pin(pin);
+      // var gpio = new Pin(pin);
 
-      state.awaiting.push(
-        new Promise(function(resolve) {
-          gpio.on("ready", function() {
-            state.ready++;
-            resolve();
-          });
-        })
-      );
+      // state.awaiting.push(
+      //   new Promise(function(resolve) {
+      //     gpio.on("ready", function() {
+      //       state.ready++;
+      //       resolve();
+      //     });
+      //   })
+      // );
 
-      return gpio;
+      // return gpio;
+
+      return new Pin(pin);
     }, this);
 
     this.state = state;
 
-    Promise.all(state.awaiting).then(function() {
-      done();
+
+    this.pins.forEach(function(pin) {
+      try {
+        pin.initialize();
+      } catch(e) {
+        // ...
+      }
     });
+
+    done();
   },
   tearDown: function(done) {
     restore(this);
     done();
   },
   initialization: function(test) {
-    test.expect(48);
+    test.expect(40);
 
-    // 14 Digital IO Pins are initialized, with:
-    //    - 14 calls to dir
-    //    - 14 calls to useMmap
+    // 12 Digital IO Pins are initialized, with:
+    //    - 12 calls to dir
+    //    - 12 calls to useMmap
     //
-    test.equal(this.Gpio.callCount, 14);
-    test.equal(this.gpio.dir.callCount, 14);
-    test.equal(this.gpio.useMmap.callCount, 14);
+    test.equal(this.Gpio.callCount, 12);
+    test.equal(this.gpio.dir.callCount, 12);
+    test.equal(this.gpio.useMmap.callCount, 12);
 
-    // 14 calls to dir received the argument 0
+    // 12 calls to dir received the argument 0
     this.gpio.dir.args.forEach(function(args) {
       test.equal(args[0], 0);
     });
 
-    // 14 calls to write received the argument 0
+    // 12 calls to write received the argument 0
     this.gpio.write.args.forEach(function(args) {
       test.equal(args[0], 0);
     });
 
-    // 14 calls to dir received the argument true
+    // 12 calls to dir received the argument true
     this.gpio.useMmap.args.forEach(function(args) {
       test.equal(args[0], true);
     });
@@ -137,10 +146,10 @@ exports["Initialization"] = {
     // 6 Analog IO Pins are initialized
     test.equal(this.Aio.callCount, 6);
 
-    // 20 ready flags awaited
-    test.equal(this.state.awaiting.length, 20);
-    // 20 ready flags resolved
-    test.equal(this.state.ready, 20);
+    // // 20 ready flags awaited
+    // test.equal(this.state.awaiting.length, 20);
+    // // 20 ready flags resolved
+    // test.equal(this.state.ready, 20);
 
     test.done();
   }
@@ -219,16 +228,18 @@ exports["Pin"] = {
     test.equal(this.pin.mode, null);
     test.done();
   },
-  ready: function(test) {
-    test.expect(1);
+  // ready: function(test) {
+  //   test.expect(1);
 
-    this.pin.on("ready", function() {
-      test.ok(true);
-      test.done();
-    });
-  },
+  //   this.pin.on("ready", function() {
+  //     test.ok(true);
+  //     test.done();
+  //   });
+  // },
   direction: function(test) {
     test.expect(4);
+
+    this.pin.initialize();
 
     test.equal(this.gpio.dir.callCount, 1);
     this.pin.direction = "in";
@@ -267,6 +278,8 @@ exports["Digital"] = {
   },
   pin: function(test) {
     test.expect(3);
+
+    this.pin.initialize();
 
     test.equal(this.pin.isAnalog, false);
 
@@ -358,6 +371,8 @@ exports["PWM"] = {
   },
   pin: function(test) {
     test.expect(3);
+
+    this.pin.initialize();
 
     test.equal(this.pin.isAnalog, false);
 
