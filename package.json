@@ -1,7 +1,7 @@
 {
   "name": "galileo-io",
   "description": "Intel Galileo & Intel Edison IO Plugin for Johnny-Five",
-  "version": "0.7.1-dev-002",
+  "version": "0.8.0",
   "homepage": "https://github.com/rwaldron/galileo-io",
   "author": {
     "name": "Rick Waldron <waldron.rick@gmail.com>",
