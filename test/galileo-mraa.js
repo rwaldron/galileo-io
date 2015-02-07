@@ -18,16 +18,16 @@ function restore(target) {
   }
 }
 
-var io = Galileo.__io;
-var Gpio = io.Gpio;
-var Aio = io.Aio;
-var Pwm = io.Pwm;
-var I2c = io.I2c;
+var IO = Galileo.__io;
+var Gpio = IO.Gpio;
+var Aio = IO.Aio;
+var Pwm = IO.Pwm;
+var I2c = IO.I2c;
 
 
 exports["Platform Type Galileo"] = {
   setUp: function(done) {
-    this.gpt = sinon.stub(io, "getPlatformType").returns(1);
+    this.gpt = sinon.stub(IO, "getPlatformType").returns(1);
     this.board = new Galileo();
     done();
   },
@@ -38,7 +38,7 @@ exports["Platform Type Galileo"] = {
   },
   platformtype: function(test) {
     test.expect(1);
-    test.equal(this.board.name, "Galileo-IO (Intel Galileo Gen 2)");
+    test.equal(this.board.name, "Intel Galileo Gen 2");
     test.done();
   }
 };
@@ -84,7 +84,7 @@ exports["Platform Type Edison"] = {
     }, []);
 
 
-    this.gpt = sinon.stub(io, "getPlatformType").returns(2);
+    this.gpt = sinon.stub(IO, "getPlatformType").returns(2);
     this.board = new Galileo();
     done();
   },
@@ -95,7 +95,7 @@ exports["Platform Type Edison"] = {
   },
   platformtype: function(test) {
     test.expect(1);
-    test.equal(this.board.name, "Galileo-IO (Intel Edison)");
+    test.equal(this.board.name, "Intel Edison");
     test.done();
   },
   arduinoBoardErrors: function(test) {
@@ -332,8 +332,8 @@ exports["Digital & Analog"] = {
       aio: Object.assign({}, Aio.prototype)
     };
 
-    this.Gpio = sinon.spy(io, "Gpio");
-    this.Aio = sinon.spy(io, "Aio");
+    this.Gpio = sinon.spy(IO, "Gpio");
+    this.Aio = sinon.spy(IO, "Aio");
 
     ["Gpio", "Aio"].forEach(function(name) {
       var key = name.toLowerCase();
@@ -441,8 +441,8 @@ exports["Galileo.prototype.analogRead"] = {
       aio: Object.assign({}, Aio.prototype)
     };
 
-    this.Gpio = sinon.spy(io, "Gpio");
-    this.Aio = sinon.spy(io, "Aio");
+    this.Gpio = sinon.spy(IO, "Gpio");
+    this.Aio = sinon.spy(IO, "Aio");
 
     ["Gpio", "Aio"].forEach(function(name) {
       var key = name.toLowerCase();
@@ -550,8 +550,8 @@ exports["Galileo.prototype.digitalRead"] = {
       aio: Object.assign({}, Aio.prototype)
     };
 
-    this.Gpio = sinon.spy(io, "Gpio");
-    this.Aio = sinon.spy(io, "Aio");
+    this.Gpio = sinon.spy(IO, "Gpio");
+    this.Aio = sinon.spy(IO, "Aio");
 
     ["Gpio", "Aio"].forEach(function(name) {
       var key = name.toLowerCase();
@@ -642,7 +642,7 @@ exports["I2C"] = {
   setUp: function(done) {
     this.clock = sinon.useFakeTimers();
 
-    this.gpt = sinon.stub(io, "getPlatformType").returns(1);
+    this.gpt = sinon.stub(IO, "getPlatformType").returns(1);
 
     this.i2c = {
       write: sinon.spy(I2c.prototype, "write"),

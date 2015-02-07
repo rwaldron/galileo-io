@@ -47,11 +47,11 @@ var pinModes = [
   { modes: [0, 1, 2], analogChannel: 5 }
 ];
 
-var io = Pin.__io;
-var Gpio = io.Gpio;
-var Aio = io.Aio;
-var Pwm = io.Pwm;
-var I2c = io.I2c;
+var IO = Pin.IO;
+var Gpio = IO.Gpio;
+var Aio = IO.Aio;
+var Pwm = IO.Pwm;
+var I2c = IO.I2c;
 
 exports["Initialization"] = {
   setUp: function(done) {
@@ -65,8 +65,8 @@ exports["Initialization"] = {
       aio: Object.assign({}, Aio.prototype)
     };
 
-    this.Gpio = sinon.spy(io, "Gpio");
-    this.Aio = sinon.spy(io, "Aio");
+    this.Gpio = sinon.spy(IO, "Gpio");
+    this.Aio = sinon.spy(IO, "Aio");
 
     ["Gpio", "Aio"].forEach(function(name) {
       var key = name.toLowerCase();
