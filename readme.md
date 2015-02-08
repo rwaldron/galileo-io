@@ -58,6 +58,16 @@ board.on("ready", function() {
 
 Galileo-IO is the default [IO layer](https://github.com/rwaldron/johnny-five/wiki/IO-Plugins) for [Johnny-Five](https://github.com/rwaldron/johnny-five) programs that are run on a Galileo or Edison board.
 
+***Note:*** On the Edison, you should require johnny-five first, followed by galileo-io. Otherwise you'll get a segmentation fault.
+
+Example:
+```js
+var five = require("johnny-five");
+var Edison = require("galileo-io");
+var board = new five.Board({
+  io: new Edison()
+});
+```
 
 ### API
 
