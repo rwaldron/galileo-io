@@ -1,7 +1,7 @@
 {
   "name": "galileo-io",
   "description": "Intel Galileo & Intel Edison IO Plugin for Johnny-Five",
-  "version": "0.8.0",
+  "version": "0.8.1",
   "homepage": "https://github.com/rwaldron/galileo-io",
   "author": {
     "name": "Rick Waldron <waldron.rick@gmail.com>",
@@ -41,9 +41,6 @@
     "es6-promise": "latest",
     "remapped": "~0.2.1"
   },
-  "optionalDependencies": {
-    "mraa": "0.5.4-110-g459ecc0"
-  },
   "devDependencies": {
     "rewire": "~2.0.0",
     "sinon": "~1.7.3",
@@ -54,7 +51,8 @@
     "grunt-jsbeautifier": "~0.2.2"
   },
   "scripts": {
-    "test": "grunt"
+    "test": "grunt",
+    "postinstall": "node scripts/postinstall"
   },
   "js-flags": "--harmony"
 }

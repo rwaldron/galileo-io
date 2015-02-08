@@ -9,7 +9,5 @@ var isGalileo = (function() {
 })();
 
 if (isGalileo) {
-  exec("echo 'src mraa-upm http://iotdk.intel.com/repos/1.1/intelgalactic' > /etc/opkg/mraa-upm.conf", function() {
-    exec("opkg update; opkg install libmraa0");
-  });
+  exec("npm install mraa@0.5.4-110-g459ecc0");
 }
