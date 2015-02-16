@@ -189,7 +189,9 @@ module.exports = {
       "Intel Edison",
     ][this.getPlatformType()];
   },
-  getPinCount: function() {},
+  getPinCount: function() {
+    return 20;
+  },
   setLogLevel: function() {},
   mraa_set_priority: function() {},
   mraa_get_version: function() {},
