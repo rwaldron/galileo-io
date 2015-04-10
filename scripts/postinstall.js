@@ -8,6 +8,25 @@ var useMraa = (function() {
     release.includes("edison");
 })();
 
+var safeBuild = "0.6.1+git0+805d22f0b1-r0";
+var safeVersion = "0.6.1-36-gbe4312e";
+
 if (useMraa) {
-  exec("npm install mraa@0.6.1-36-gbe4312e");
+  console.log("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+  console.log("  Do not quit the program until npm completes the installation process.  ");
+  console.log("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+
+  exec("opkg info libmraa0", function(error, stdout, stderr) {
+    if (!stdout.includes(safeBuild)) {
+      console.log("");
+      console.log("  Galileo-IO needs to install a trusted version of libmraa0.");
+      console.log("  This process takes approximately one minute.");
+      console.log("  Thanks for your patience.");
+
+      exec("npm install mraa@" + safeVersion, function() {
+        console.log("  Completed!");
+        console.log("");
+      });
+    }
+  });
 }
