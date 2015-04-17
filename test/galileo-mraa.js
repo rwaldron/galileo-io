@@ -3,6 +3,7 @@
 global.IS_TEST_ENV = true;
 
 var Galileo = require("../lib/galileo");
+var edisonPinMapping = require("../lib/edison-pin-mapping.json");
 var Emitter = require("events").EventEmitter;
 var sinon = require("sinon");
 var tick = global.setImmediate || process.nextTick;
@@ -322,6 +323,66 @@ exports["Platform Type Edison (Miniboard)"] = {
     });
 
     test.done();
+  }, 
+  pinMapping: function(test) {
+    var keys = Object.keys(edisonPinMapping);
+
+    test.expect(keys.length * 5);
+
+    this.board = new Galileo();
+
+    [
+      "pinMode",
+      "analogRead",
+      "digitalRead",
+      "analogWrite",
+      "digitalWrite",
+      "servoWrite",
+      "i2cConfig",
+      "i2cWrite",
+      "i2cWriteReg",
+      "i2cRead",
+      "i2cReadOnce",
+    ].forEach(function(method) {
+
+      if (this.board[method].restore) {
+        this.board[method].restore();
+      }
+      sinon.spy(this.board, method);
+    }, this);
+
+    this.board.on("ready", function() {
+      keys.forEach(function(key) {
+        var pin = edisonPinMapping[key];
+
+        // Test Setting Mode
+        this.pins[pin].mode = null;
+        this.pinMode(key, 1);
+        test.equal(this.pins[pin].mode, 1);
+
+        // Test Digital Read        
+        this.pins[pin].mode = null;
+        this.digitalRead(key, function() {});
+        test.equal(this.pins[pin].mode, 0);
+
+        // Test Digital Write        
+        this.pins[pin].mode = null;
+        this.digitalWrite(key, function() {});
+        test.equal(this.pins[pin].mode, 1);
+
+        // Test Analog Write        
+        this.pins[pin].mode = null;
+        this.analogWrite(key, 255);
+        test.equal(this.pins[pin].mode, 3);
+
+        // Test Servo Write        
+        this.pins[pin].mode = null;
+        this.servoWrite(key, 180);
+        test.equal(this.pins[pin].mode, 4);
+      }, this);
+
+      test.done();
+    });
   }
 };
 
