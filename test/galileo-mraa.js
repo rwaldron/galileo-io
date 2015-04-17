@@ -42,7 +42,48 @@ exports["Platform Type Galileo"] = {
     test.expect(1);
     test.equal(this.board.name, "Intel Galileo Gen 2");
     test.done();
-  }
+  },
+  normalize: function(test) {
+    var arduinoPinMapping = {
+      0: 0, 
+      1: 1, 
+      2: 2, 
+      3: 3,
+      4: 4,
+      5: 5, 
+      6: 6, 
+      7: 7, 
+      8: 8, 
+      9: 9, 
+      10: 10, 
+      11: 11, 
+      12: 12, 
+      13: 13,
+      "A0": 14,
+      "A1": 15,
+      "A2": 16,
+      "A3": 17,
+      "A4": 18,
+      "A5": 19
+    };
+
+    var keys = Object.keys(arduinoPinMapping);
+
+    test.expect(keys.length);
+
+    this.board = new Galileo();
+
+    this.board.on("ready", function() {
+      keys.forEach(function(key) {
+        var expect = arduinoPinMapping[key];
+
+        test.equal(this.normalize(key), expect);
+
+      }, this);
+
+      test.done();
+    });
+  }     
 };
 
 exports["Platform Type Edison"] = {
@@ -171,7 +212,48 @@ exports["Platform Type Edison"] = {
     }, this);
 
     test.done();
-  }
+  }, 
+  normalize: function(test) {
+    var arduinoPinMapping = {
+      0: 0, 
+      1: 1, 
+      2: 2, 
+      3: 3,
+      4: 4,
+      5: 5, 
+      6: 6, 
+      7: 7, 
+      8: 8, 
+      9: 9, 
+      10: 10, 
+      11: 11, 
+      12: 12, 
+      13: 13,
+      "A0": 14,
+      "A1": 15,
+      "A2": 16,
+      "A3": 17,
+      "A4": 18,
+      "A5": 19
+    };
+
+    var keys = Object.keys(arduinoPinMapping);
+
+    test.expect(keys.length);
+
+    this.board = new Galileo();
+
+    this.board.on("ready", function() {
+      keys.forEach(function(key) {
+        var expect = arduinoPinMapping[key];
+
+        test.equal(this.normalize(key), expect);
+
+      }, this);
+
+      test.done();
+    });
+  }    
 };
 
 exports["Platform Type Edison (Miniboard)"] = {
@@ -383,7 +465,25 @@ exports["Platform Type Edison (Miniboard)"] = {
 
       test.done();
     });
-  }
+  },
+  normalize: function(test) {
+    var keys = Object.keys(edisonPinMapping);
+
+    test.expect(keys.length);
+
+    this.board = new Galileo();
+
+    this.board.on("ready", function() {
+      keys.forEach(function(key) {
+        var expect = edisonPinMapping[key];
+
+        test.equal(this.normalize(key), expect);
+
+      }, this);
+
+      test.done();
+    });
+  }  
 };
 
 
