@@ -20,13 +20,7 @@ Galileo-IO scripts are run directly from the Galileo or Edison board. To get sta
 ### Installation
 
 ```
-npm install galileo-io
-```
-
-or 
-
-```
-npm install johnny-five
+npm install galileo-io johnny-five
 ```
 
 
