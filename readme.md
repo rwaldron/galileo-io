@@ -2,7 +2,7 @@
 
 [![Build Status](https://travis-ci.org/rwaldron/galileo-io.png?branch=master)](https://travis-ci.org/rwaldron/galileo-io)
 
-## Galileo-IO is compatible with Intel's Galileo Generation 1, Galileo Generation 2 and Edison boards (Mini and Arduino Board).
+## Galileo-IO is compatible with Intel's Galileo Generation 1, Galileo Generation 2 and Edison boards (Mini and Arduino Board, SparkFun GPIO and Arduino Blocks)
 
 
 Galileo-IO is a Firmata.js-compatibility class for writing Node.js programs that run on the [Intel Galileo](https://www-ssl.intel.com/content/www/us/en/do-it-yourself/galileo-maker-quark-board.html) or the [Intel Edison](http://www.intel.com/content/www/us/en/do-it-yourself/edison.html). This project was built at [Bocoup](http://bocoup.com)
@@ -27,6 +27,103 @@ npm install galileo-io johnny-five
 ### Usage
 
 This module can be used as an IO plugin for [Johnny-Five](https://github.com/rwaldron/johnny-five).
+
+### Pin Identity and Access
+
+#### Intel Galileo Gen 2
+
+> Or Gen 1 if you're a glutton for punishment. 
+
+The [Intel Galileo Gen 2](https://www-ssl.intel.com/content/www/us/en/do-it-yourself/galileo-maker-quark-board.html) has a pin-out form similar to an Arduino Uno. Use the pin numbers as printed on the board, eg. `3`, `13`, or `"A0"`.
+
+[![](https://cdn.sparkfun.com//assets/parts/1/0/1/3/8/13096-01.jpg)](https://cdn.sparkfun.com//assets/parts/1/0/1/3/8/13096-01.jpg)
+
+#### Intel Edison Arduino Breaout
+
+The [Intel Edison + Arduino Breakout](https://www.sparkfun.com/products/13097) has a pin-out form similar to an Arduino Uno. Use the pin numbers as printed on the board, eg. `3`, `13`, or `"A0"`.
+
+[![](https://cdn.sparkfun.com//assets/parts/1/0/1/3/9/13097-02.jpg)](https://cdn.sparkfun.com//assets/parts/1/0/1/3/9/13097-02.jpg)
+
+#### Intel Edison Mini Breakout
+
+The [Intel Edison + Mini Breakout](https://www.sparkfun.com/products/13025) has a dense pin-out form comprised of four rows, J17, J18, and J19, J20. Each pin is numbered, left-to-right, from 14 to 1 (if looking from the back). Use the row and column name (`"J17-1"`), or the corresponding GPIO (`"GP182"`), or pin number `0`, to interact with that pin. (Note: `"J17-1"`, `"GP182"` and `0` refer to the same pin). See the [table of valid pins](#pin-mapping-table-) below to determine corresponding Pin names and numbers. \*
+
+[![](https://cdn.sparkfun.com//assets/parts/1/0/0/1/1/13025-01.jpg)](https://cdn.sparkfun.com//assets/parts/1/0/0/1/1/13025-01.jpg)
+
+
+#### SparkFun Edison GPIO Block
+
+The [SparkFun Edison GPIO Block](https://www.sparkfun.com/products/13038) has two columns of pins. Use the GPIO name printed on the board (`"GP48"`), or the corresponding row and column name (`"J19-6"`), or pin number (`33`), to interact with that pin. (Note: `"J19-6"`, `"GP48"` and `33` refer to the same pin). See the [table of valid pins](#pin-mapping-table-) below to determine corresponding Pin names and numbers. \*
+
+[![](https://cdn.sparkfun.com//assets/parts/1/0/0/3/9/13038-03.jpg)](https://cdn.sparkfun.com//assets/parts/1/0/0/3/9/13038-03.jpg)
+
+#### SparkFun Edison Arduino Block
+
+The [SparkFun Edison Arduino Block](https://www.sparkfun.com/products/13046) connects to the Edison via `Serial1`, or `/dev/ttyMFD1`. This means that a user must [upload StandardFirmata via FTDI programmer](https://learn.sparkfun.com/tutorials/sparkfun-blocks-for-intel-edison---arduino-block). Johnny-Five does not use Galileo-IO to communicate with the hardware on this block, instead it communicates via the serial connection, using its default [`Firmata.js`](https://github.com/jgautier/firmata) (this is installed by Johnny-Five automattically. The port name must be specified: 
+
+```js
+// This code runs on the Edison, communicating with the 
+// SparkFun Arduino Block via Serial1 (/dev/ttyMFD1)
+var five = require("johnny-five");
+var board = new five.Board({
+  port: "/dev/ttyMFD1"
+});
+
+board.on("ready", function() {
+  console.log("READY!");
+});
+```
+
+[![](https://cdn.sparkfun.com//assets/parts/1/0/0/3/7/13036-01.jpg)](https://cdn.sparkfun.com//assets/parts/1/0/0/3/7/13036-01.jpg)
+
+
+#### Pin Mapping Table \* 
+
+| Pin Number  | Physical Pin | Edison Pin    |
+|-------------|--------------|---------------|
+| 0           | J17-1        | GP182         |
+| 4           | J17-5        | GP135         |
+| 6           | J17-7        | GP27          |
+| 7           | J17-8        | GP20          |
+| 8           | J17-9        | GP28          |
+| 9           | J17-10       | GP111         |
+| 10          | J17-11       | GP109         |
+| 11          | J17-12       | GP115         |
+| 13          | J17-14       | GP128         |
+| 14          | J18-1        | GP13          |
+| 15          | J18-2        | GP165         |
+| 19          | J18-6        | GP19          |
+| 20          | J18-7        | GP12          |
+| 21          | J18-8        | GP183         |
+| 23          | J18-10       | GP110         |
+| 24          | J18-11       | GP114         |
+| 25          | J18-12       | GP129         |
+| 26          | J18-13       | GP130         |
+| 31          | J19-4        | GP44          |
+| 32          | J19-5        | GP46          |
+| 33          | J19-6        | GP48          |
+| 35          | J19-8        | GP131         |
+| 36          | J19-9        | GP14          |
+| 37          | J19-10       | GP40          |
+| 38          | J19-11       | GP43          |
+| 39          | J19-12       | GP77          |
+| 40          | J19-13       | GP82          |
+| 41          | J19-14       | GP83          |
+| 45          | J20-4        | GP45          |
+| 46          | J20-5        | GP47          |
+| 47          | J20-6        | GP49          |
+| 48          | J20-7        | GP15          |
+| 49          | J20-8        | GP84          |
+| 50          | J20-9        | GP42          |
+| 51          | J20-10       | GP41          |
+| 52          | J20-11       | GP78          |
+| 53          | J20-12       | GP79          |
+| 54          | J20-13       | GP80          |
+| 55          | J20-14       | GP81          |
+
+
+
+
 
 ### Blink an Led
 
