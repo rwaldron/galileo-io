@@ -7,7 +7,7 @@
 
 Galileo-IO is a Firmata.js-compatibility class for writing Node.js programs that run on the [Intel Galileo](https://www-ssl.intel.com/content/www/us/en/do-it-yourself/galileo-maker-quark-board.html) or the [Intel Edison](http://www.intel.com/content/www/us/en/do-it-yourself/edison.html). This project was built at [Bocoup](http://bocoup.com)
 
-### Getting Started
+## Getting Started
 
 **As of 0.7.0, only the IoTKit image is supported**
 
@@ -28,7 +28,7 @@ npm install galileo-io johnny-five
 
 This module can be used as an IO plugin for [Johnny-Five](https://github.com/rwaldron/johnny-five).
 
-### Pin Identity and Access
+## Pin Identity and Access
 
 #### Intel Galileo Gen 2
 
@@ -38,11 +38,42 @@ The [Intel Galileo Gen 2](https://www-ssl.intel.com/content/www/us/en/do-it-your
 
 [![](https://cdn.sparkfun.com//assets/parts/1/0/1/3/8/13096-01.jpg)](https://cdn.sparkfun.com//assets/parts/1/0/1/3/8/13096-01.jpg)
 
+Example: 
+
+```js
+var five = require("johnny-five");
+var Galileo = require("galileo-io");
+var board = new five.Board({
+  io: new Galileo()
+});
+
+board.on("ready", function() {
+  var led = new five.Led(13);
+  led.blink(500);
+});
+```
+
+
 #### Intel Edison Arduino Breaout
 
 The [Intel Edison + Arduino Breakout](https://www.sparkfun.com/products/13097) has a pin-out form similar to an Arduino Uno. Use the pin numbers as printed on the board, eg. `3`, `13`, or `"A0"`.
 
 [![](https://cdn.sparkfun.com//assets/parts/1/0/1/3/9/13097-02.jpg)](https://cdn.sparkfun.com//assets/parts/1/0/1/3/9/13097-02.jpg)
+
+Example: 
+
+```js
+var five = require("johnny-five");
+var Edison = require("galileo-io");
+var board = new five.Board({
+  io: new Edison()
+});
+
+board.on("ready", function() {
+  var led = new five.Led(13);
+  led.blink(500);
+});
+```
 
 #### Intel Edison Mini Breakout
 
@@ -51,11 +82,54 @@ The [Intel Edison + Mini Breakout](https://www.sparkfun.com/products/13025) has 
 [![](https://cdn.sparkfun.com//assets/parts/1/0/0/1/1/13025-01.jpg)](https://cdn.sparkfun.com//assets/parts/1/0/0/1/1/13025-01.jpg)
 
 
+Example: 
+
+```js
+var five = require("johnny-five");
+var Edison = require("galileo-io");
+var board = new five.Board({
+  io: new Edison()
+});
+
+board.on("ready", function() {
+  var led = new five.Led("J17-1");
+  /*
+    Same as: 
+
+    var led = new five.Led(0);
+    var led = new five.Led("GP182");
+   */
+  led.blink(500);
+});
+```
+
+
 #### SparkFun Edison GPIO Block
 
-The [SparkFun Edison GPIO Block](https://www.sparkfun.com/products/13038) has two columns of pins. Use the GPIO name printed on the board (`"GP48"`), or the corresponding row and column name (`"J19-6"`), or pin number (`33`), to interact with that pin. (Note: `"J19-6"`, `"GP48"` and `33` refer to the same pin). See the [table of valid pins](#pin-mapping-table-) below to determine corresponding Pin names and numbers. \*
+The [SparkFun Edison GPIO Block](https://www.sparkfun.com/products/13038) has two columns of pins. Use the GPIO name printed on the board (`"GP44"`), or the corresponding row and column name (`"J19-4"`), or pin number (`31`), to interact with that pin. (Note: `"J19-4"`, `"GP44"` and `31` refer to the same pin). See the [table of valid pins](#pin-mapping-table-) below to determine corresponding Pin names and numbers. \*
 
 [![](https://cdn.sparkfun.com//assets/parts/1/0/0/3/9/13038-03.jpg)](https://cdn.sparkfun.com//assets/parts/1/0/0/3/9/13038-03.jpg)
+
+Example: 
+
+```js
+var five = require("johnny-five");
+var Edison = require("galileo-io");
+var board = new five.Board({
+  io: new Edison()
+});
+
+board.on("ready", function() {
+  var led = new five.Led("GP44");
+  /*
+    Same as: 
+
+    var led = new five.Led(31);
+    var led = new five.Led("J19-4");
+   */
+  led.blink(500);
+});
+```
 
 #### SparkFun Edison Arduino Block
 
@@ -70,7 +144,8 @@ var board = new five.Board({
 });
 
 board.on("ready", function() {
-  console.log("READY!");
+  var led = new five.Led(13);
+  led.blink(500);
 });
 ```
 
