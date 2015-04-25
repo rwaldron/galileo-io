@@ -79,6 +79,12 @@ board.on("ready", function() {
 
 The [Intel Edison + Mini Breakout](https://www.sparkfun.com/products/13025) has a dense pin-out form comprised of four rows, J17, J18, and J19, J20. Each pin is numbered, left-to-right, from 14 to 1 (if looking from the back). Use the row and column name (`"J17-1"`), or the corresponding GPIO (`"GP182"`), or pin number `0`, to interact with that pin. (Note: `"J17-1"`, `"GP182"` and `0` refer to the same pin). See the [table of valid pins](#pin-mapping-table-) below to determine corresponding Pin names and numbers. \*
 
+For I2C, use bus 1, connected to the following:
+
+|I2C-1-SDA|I2C-1-SCL|
+|---------|---------|
+|J17-8    |J18-6    |
+
 [![](https://cdn.sparkfun.com//assets/parts/1/0/0/1/1/13025-01.jpg)](https://cdn.sparkfun.com//assets/parts/1/0/0/1/1/13025-01.jpg)
 
 
@@ -150,6 +156,18 @@ board.on("ready", function() {
 ```
 
 [![](https://cdn.sparkfun.com//assets/parts/1/0/0/3/7/13036-01.jpg)](https://cdn.sparkfun.com//assets/parts/1/0/0/3/7/13036-01.jpg)
+
+
+#### SparkFun Edison I2C Block
+
+Galileo-IO/Edison-IO will automattically connect to bus 1, which is the bus used by this block.
+
+
+#### SparkFun Edison 9DOF Block
+
+Galileo-IO/Edison-IO will automattically connect to bus 1, which is the bus used by this block.
+
+
 
 
 #### Pin Mapping Table \* 
