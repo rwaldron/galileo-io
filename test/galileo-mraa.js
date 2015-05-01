@@ -20,6 +20,7 @@ function restore(target) {
   }
 }
 
+var read = Galileo.__read;
 var IO = Galileo.__io;
 var Gpio = IO.Gpio;
 var Aio = IO.Aio;
@@ -45,19 +46,19 @@ exports["Platform Type Galileo"] = {
   },
   normalize: function(test) {
     var arduinoPinMapping = {
-      0: 0, 
-      1: 1, 
-      2: 2, 
+      0: 0,
+      1: 1,
+      2: 2,
       3: 3,
       4: 4,
-      5: 5, 
-      6: 6, 
-      7: 7, 
-      8: 8, 
-      9: 9, 
-      10: 10, 
-      11: 11, 
-      12: 12, 
+      5: 5,
+      6: 6,
+      7: 7,
+      8: 8,
+      9: 9,
+      10: 10,
+      11: 11,
+      12: 12,
       13: 13,
       "A0": 14,
       "A1": 15,
@@ -83,7 +84,7 @@ exports["Platform Type Galileo"] = {
 
       test.done();
     });
-  }     
+  }
 };
 
 exports["Platform Type Edison"] = {
@@ -212,22 +213,22 @@ exports["Platform Type Edison"] = {
     }, this);
 
     test.done();
-  }, 
+  },
   normalize: function(test) {
     var arduinoPinMapping = {
-      0: 0, 
-      1: 1, 
-      2: 2, 
+      0: 0,
+      1: 1,
+      2: 2,
       3: 3,
       4: 4,
-      5: 5, 
-      6: 6, 
-      7: 7, 
-      8: 8, 
-      9: 9, 
-      10: 10, 
-      11: 11, 
-      12: 12, 
+      5: 5,
+      6: 6,
+      7: 7,
+      8: 8,
+      9: 9,
+      10: 10,
+      11: 11,
+      12: 12,
       13: 13,
       "A0": 14,
       "A1": 15,
@@ -253,7 +254,7 @@ exports["Platform Type Edison"] = {
 
       test.done();
     });
-  }    
+  }
 };
 
 exports["Platform Type Edison (Miniboard)"] = {
@@ -405,7 +406,7 @@ exports["Platform Type Edison (Miniboard)"] = {
     });
 
     test.done();
-  }, 
+  },
   pinMapping: function(test) {
     var keys = Object.keys(edisonPinMapping);
 
@@ -442,22 +443,22 @@ exports["Platform Type Edison (Miniboard)"] = {
         this.pinMode(key, 1);
         test.equal(this.pins[pin].mode, 1);
 
-        // Test Digital Read        
+        // Test Digital Read
         this.pins[pin].mode = null;
         this.digitalRead(key, function() {});
         test.equal(this.pins[pin].mode, 0);
 
-        // Test Digital Write        
+        // Test Digital Write
         this.pins[pin].mode = null;
         this.digitalWrite(key, function() {});
         test.equal(this.pins[pin].mode, 1);
 
-        // Test Analog Write        
+        // Test Analog Write
         this.pins[pin].mode = null;
         this.analogWrite(key, 255);
         test.equal(this.pins[pin].mode, 3);
 
-        // Test Servo Write        
+        // Test Servo Write
         this.pins[pin].mode = null;
         this.servoWrite(key, 180);
         test.equal(this.pins[pin].mode, 4);
@@ -483,7 +484,7 @@ exports["Platform Type Edison (Miniboard)"] = {
 
       test.done();
     });
-  }  
+  }
 };
 
 
@@ -936,4 +937,32 @@ exports["I2C"] = {
     test.done();
   },
 
+};
+
+exports["Galileo.prototype.setSamplingInterval"] = {
+  setUp: function(done) {
+    this.clock = sinon.useFakeTimers();
+    this.galileo = new Galileo();
+
+    done();
+  },
+  tearDown: function(done) {
+    restore(this);
+    Galileo.reset();
+
+    done();
+  },
+  samplingIntervalDefault: function(test) {
+    test.expect(1);
+    read();
+    test.equal(read.samplingInterval, 1);
+    test.done();
+  },
+  samplingIntervalCustom: function(test) {
+    test.expect(1);
+    read();
+    this.galileo.setSamplingInterval(1000);
+    test.equal(read.samplingInterval, 1000);
+    test.done();
+  }
 };
