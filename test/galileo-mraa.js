@@ -955,7 +955,7 @@ exports["Galileo.prototype.setSamplingInterval"] = {
   samplingIntervalDefault: function(test) {
     test.expect(1);
     read();
-    test.equal(read.samplingInterval, 1);
+    test.equal(read.samplingInterval, 10);
     test.done();
   },
   samplingIntervalCustom: function(test) {
