@@ -44,7 +44,87 @@ exports["Platform Type Galileo"] = {
     test.equal(this.board.name, "Intel Galileo Gen 2");
     test.done();
   },
-  normalize: function(test) {
+
+  pinModeObvious: function(test) {
+    var nameIndexMap = {
+      0: { index: 0, mode: null },
+      1: { index: 1, mode: null },
+      2: { index: 2, mode: 1 },
+      3: { index: 3, mode: 1 },
+      4: { index: 4, mode: 1 },
+      5: { index: 5, mode: 1 },
+      6: { index: 6, mode: 1 },
+      7: { index: 7, mode: 1 },
+      8: { index: 8, mode: 1 },
+      9: { index: 9, mode: 1 },
+      10: { index: 10, mode: 1 },
+      11: { index: 11, mode: 1 },
+      12: { index: 12, mode: 1 },
+      13: { index: 13, mode: 1 },
+      "A0": { index: 14, mode: 2 },
+      "A1": { index: 15, mode: 2 },
+      "A2": { index: 16, mode: 2 },
+      "A3": { index: 17, mode: 2 },
+      "A4": { index: 18, mode: 2 },
+      "A5": { index: 19, mode: 2 },
+    };
+
+    var keys = Object.keys(nameIndexMap);
+
+    test.expect(keys.length * 2);
+
+    var board = new Galileo();
+
+    board.on("ready", function() {
+      keys.forEach(function(key) {
+        var mapped = nameIndexMap[key];
+
+        test.equal(this.pins[mapped.index].mode, null);
+
+        // Don't set pinMode for 0 or 1
+        if (mapped.mode) {
+          this.pinMode(key, mapped.mode);
+        }
+
+        test.equal(this.pins[mapped.index].mode, mapped.mode);
+      }, this);
+
+      test.done();
+    });
+  },
+
+  pinModeNonObvious: function(test) {
+    var nameIndexMap = {
+      0: { index: 14, mode: 2 },
+      1: { index: 15, mode: 2 },
+      2: { index: 16, mode: 2 },
+      3: { index: 17, mode: 2 },
+      4: { index: 18, mode: 2 },
+      5: { index: 19, mode: 2 },
+    };
+
+    var keys = Object.keys(nameIndexMap);
+
+    test.expect(keys.length * 2);
+
+    var board = new Galileo();
+
+    board.on("ready", function() {
+      keys.forEach(function(key) {
+        var mapped = nameIndexMap[key];
+
+        test.equal(this.pins[mapped.index].mode, null);
+
+        this.pinMode(Number(key), mapped.mode);
+
+        test.equal(this.pins[mapped.index].mode, mapped.mode);
+      }, this);
+
+      test.done();
+    });
+  },
+
+  normalize1: function(test) {
     var arduinoPinMapping = {
       0: 0,
       1: 1,
@@ -60,12 +140,41 @@ exports["Platform Type Galileo"] = {
       11: 11,
       12: 12,
       13: 13,
-      "A0": 14,
-      "A1": 15,
-      "A2": 16,
-      "A3": 17,
-      "A4": 18,
-      "A5": 19
+      // This matches the default Pin
+      // normalization in Johnny-Five.
+      "A0": 0,
+      "A1": 1,
+      "A2": 2,
+      "A3": 3,
+      "A4": 4,
+      "A5": 5,
+    };
+
+    var keys = Object.keys(arduinoPinMapping);
+
+    test.expect(keys.length);
+
+    this.board = new Galileo();
+
+    this.board.on("ready", function() {
+      keys.forEach(function(key) {
+        var expect = arduinoPinMapping[key];
+
+        test.equal(this.normalize(key), expect);
+
+      }, this);
+
+      test.done();
+    });
+  },
+  normalizeAnalogOneToOne: function(test) {
+    var arduinoPinMapping = {
+      14: 14,
+      15: 15,
+      16: 16,
+      17: 17,
+      18: 18,
+      19: 19,
     };
 
     var keys = Object.keys(arduinoPinMapping);
@@ -214,7 +323,86 @@ exports["Platform Type Edison"] = {
 
     test.done();
   },
-  normalize: function(test) {
+  pinModeObvious: function(test) {
+    var nameIndexMap = {
+      0: { index: 0, mode: null },
+      1: { index: 1, mode: null },
+      2: { index: 2, mode: 1 },
+      3: { index: 3, mode: 1 },
+      4: { index: 4, mode: 1 },
+      5: { index: 5, mode: 1 },
+      6: { index: 6, mode: 1 },
+      7: { index: 7, mode: 1 },
+      8: { index: 8, mode: 1 },
+      9: { index: 9, mode: 1 },
+      10: { index: 10, mode: 1 },
+      11: { index: 11, mode: 1 },
+      12: { index: 12, mode: 1 },
+      13: { index: 13, mode: 1 },
+      "A0": { index: 14, mode: 2 },
+      "A1": { index: 15, mode: 2 },
+      "A2": { index: 16, mode: 2 },
+      "A3": { index: 17, mode: 2 },
+      "A4": { index: 18, mode: 2 },
+      "A5": { index: 19, mode: 2 },
+    };
+
+    var keys = Object.keys(nameIndexMap);
+
+    test.expect(keys.length * 2);
+
+    var board = new Galileo();
+
+    board.on("ready", function() {
+      keys.forEach(function(key) {
+        var mapped = nameIndexMap[key];
+
+        test.equal(this.pins[mapped.index].mode, null);
+
+        // Don't set pinMode for 0 or 1
+        if (mapped.mode) {
+          this.pinMode(key, mapped.mode);
+        }
+
+        test.equal(this.pins[mapped.index].mode, mapped.mode);
+      }, this);
+
+      test.done();
+    });
+  },
+
+  pinModeNonObvious: function(test) {
+    var nameIndexMap = {
+      0: { index: 14, mode: 2 },
+      1: { index: 15, mode: 2 },
+      2: { index: 16, mode: 2 },
+      3: { index: 17, mode: 2 },
+      4: { index: 18, mode: 2 },
+      5: { index: 19, mode: 2 },
+    };
+
+    var keys = Object.keys(nameIndexMap);
+
+    test.expect(keys.length * 2);
+
+    var board = new Galileo();
+
+    board.on("ready", function() {
+      keys.forEach(function(key) {
+        var mapped = nameIndexMap[key];
+
+        test.equal(this.pins[mapped.index].mode, null);
+
+        this.pinMode(Number(key), mapped.mode);
+
+        test.equal(this.pins[mapped.index].mode, mapped.mode);
+      }, this);
+
+      test.done();
+    });
+  },
+
+  normalize1: function(test) {
     var arduinoPinMapping = {
       0: 0,
       1: 1,
@@ -230,12 +418,39 @@ exports["Platform Type Edison"] = {
       11: 11,
       12: 12,
       13: 13,
-      "A0": 14,
-      "A1": 15,
-      "A2": 16,
-      "A3": 17,
-      "A4": 18,
-      "A5": 19
+      "A0": 0,
+      "A1": 1,
+      "A2": 2,
+      "A3": 3,
+      "A4": 4,
+      "A5": 5,
+    };
+
+    var keys = Object.keys(arduinoPinMapping);
+
+    test.expect(keys.length);
+
+    this.board = new Galileo();
+
+    this.board.on("ready", function() {
+      keys.forEach(function(key) {
+        var expect = arduinoPinMapping[key];
+
+        test.equal(this.normalize(key), expect);
+
+      }, this);
+
+      test.done();
+    });
+  },
+  normalizeAnalogOneToOne: function(test) {
+    var arduinoPinMapping = {
+      14: 14,
+      15: 15,
+      16: 16,
+      17: 17,
+      18: 18,
+      19: 19,
     };
 
     var keys = Object.keys(arduinoPinMapping);
@@ -467,14 +682,84 @@ exports["Platform Type Edison (Miniboard)"] = {
       test.done();
     });
   },
+
+  pinModeGP: function(test) {
+    var nameIndexMap = Object.keys(edisonPinMapping).reduce(function(accum, key) {
+      var index = edisonPinMapping[key];
+
+      if (key.startsWith("GP")) {
+        accum[key] = { index: index, mode: 1 };
+      }
+
+      return accum;
+    }, {});
+
+    var keys = Object.keys(nameIndexMap);
+
+    test.expect(keys.length * 2);
+
+    var board = new Galileo();
+
+    board.on("ready", function() {
+      keys.forEach(function(key) {
+        var mapped = nameIndexMap[key];
+
+        test.equal(this.pins[mapped.index].mode, null);
+
+        // Don't set pinMode for 0 or 1
+        if (mapped.mode) {
+          this.pinMode(key, mapped.mode);
+        }
+
+        test.equal(this.pins[mapped.index].mode, mapped.mode);
+      }, this);
+
+      test.done();
+    });
+  },
+
+  pinModeJ: function(test) {
+    var nameIndexMap = Object.keys(edisonPinMapping).reduce(function(accum, key) {
+      var index = edisonPinMapping[key];
+
+      if (key.startsWith("J")) {
+        accum[key] = { index: index, mode: 1 };
+      }
+
+      return accum;
+    }, {});
+
+    var keys = Object.keys(nameIndexMap);
+
+    test.expect(keys.length * 2);
+
+    var board = new Galileo();
+
+    board.on("ready", function() {
+      keys.forEach(function(key) {
+        var mapped = nameIndexMap[key];
+
+        test.equal(this.pins[mapped.index].mode, null);
+
+        // Don't set pinMode for 0 or 1
+        if (mapped.mode) {
+          this.pinMode(key, mapped.mode);
+        }
+
+        test.equal(this.pins[mapped.index].mode, mapped.mode);
+      }, this);
+
+      test.done();
+    });
+  },
   normalize: function(test) {
     var keys = Object.keys(edisonPinMapping);
 
     test.expect(keys.length);
 
-    this.board = new Galileo();
+    var board = new Galileo();
 
-    this.board.on("ready", function() {
+    board.on("ready", function() {
       keys.forEach(function(key) {
         var expect = edisonPinMapping[key];
 
