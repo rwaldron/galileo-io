@@ -17,16 +17,29 @@ if (useMraa) {
   console.log("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
 
   exec("opkg info libmraa0", function(error, stdout, stderr) {
-    if (!stdout.includes(safeBuild)) {
-      console.log("");
-      console.log("  Galileo-IO needs to install a trusted version of libmraa0.");
-      console.log("  This process takes approximately one minute.");
-      console.log("  Thanks for your patience.");
-
-      exec("npm install mraa@" + safeVersion, function() {
-        console.log("  Completed!");
+    if (error) {
+      console.log(error);
+      process.exit(error.code);
+    } else {
+      if (!stdout.includes(safeBuild)) {
         console.log("");
-      });
+        console.log("  Galileo-IO needs to install a trusted version of libmraa0.");
+        console.log("  This process takes approximately one minute.");
+        console.log("  Thanks for your patience.");
+
+        exec("npm install mraa@" + safeVersion, function(error) {
+          if (error) {
+            console.log(error);
+            process.exit(error.code);
+          } else {
+            console.log("  Completed!");
+            console.log("");
+            process.exit(0);
+          }
+        });
+      } else {
+        process.exit(0);
+      }
     }
   });
 }
