@@ -1092,6 +1092,7 @@ exports["I2C"] = {
     this.i2c = {
       write: sinon.spy(I2c.prototype, "write"),
       writeReg: sinon.spy(I2c.prototype, "writeReg"),
+      writeByte: sinon.spy(I2c.prototype, "writeByte"),
       address: sinon.spy(I2c.prototype, "address")
     };
 
@@ -1128,26 +1129,20 @@ exports["I2C"] = {
   },
 
   initAddressOnFirstRead: function(test) {
-    test.expect(5);
-
-    this.temp = sinon.spy(this.board, "i2cWrite");
+    test.expect(4);
 
     this.board.i2cConfig(0);
     this.board.i2cReadOnce(0x4, 1, 2, function() {
-      test.equal(this.temp.callCount, 1);
+      test.equal(this.i2c.address.callCount, 2);
+      test.equal(this.i2c.writeByte.callCount, 1);
       test.equal(this.i2c.read.callCount, 1);
       test.done();
     }.bind(this));
 
-
-    test.equal(this.i2c.address.callCount, 1);
-    test.equal(this.i2c.write.callCount, 1);
-
     // Once on initialization
     test.equal(this.gpt.callCount, 1);
 
-
-    this.clock.tick(1);
+    this.clock.tick(10);
   },
 
   writeAndReg: function(test) {

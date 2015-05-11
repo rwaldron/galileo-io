@@ -38,6 +38,10 @@ I2c.prototype.read = function() {};
 I2c.prototype.write = function() {
   return 0;
 };
+I2c.prototype.writeByte = function() {
+  return 0;
+};
+
 I2c.prototype.writeReg = function() {
   return 0;
 };
