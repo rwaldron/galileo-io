@@ -1246,3 +1246,47 @@ exports["Galileo.prototype.setSamplingInterval"] = {
     test.done();
   }
 };
+
+exports["Galileo.prototype.servoConfig"] = {
+  setUp: function(done) {
+    this.clock = sinon.useFakeTimers();
+    this.pulsewidth_us = sinon.spy(Pwm.prototype, "pulsewidth_us");
+    this.galileo = new Galileo();
+
+    done();
+  },
+  tearDown: function(done) {
+    restore(this);
+    Galileo.reset();
+    done();
+  },
+  servoConfigDefault: function(test) {
+    test.expect(3);
+
+    this.galileo.pinMode(9, this.galileo.MODES.SERVO);
+    this.galileo.servoWrite(9, 180);
+    test.equal(this.pulsewidth_us.getCall(0).args[0], 2600);
+
+    this.galileo.servoWrite(9, 0);
+    test.equal(this.pulsewidth_us.getCall(1).args[0], 600);
+
+    this.galileo.servoWrite(9, 90);
+    test.equal(this.pulsewidth_us.getCall(2).args[0], 1600);
+    test.done();
+  },
+  servoConfigCustom: function(test) {
+    test.expect(3);
+
+    this.galileo.servoConfig(9, 1000, 2000);
+    this.galileo.servoWrite(9, 180);
+    test.equal(this.pulsewidth_us.getCall(0).args[0], 2000);
+
+    this.galileo.servoWrite(9, 0);
+    test.equal(this.pulsewidth_us.getCall(1).args[0], 1000);
+
+    this.galileo.servoWrite(9, 90);
+    test.equal(this.pulsewidth_us.getCall(2).args[0], 1500);
+    test.done();
+  },
+
+};

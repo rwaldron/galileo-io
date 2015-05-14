@@ -495,6 +495,23 @@ exports["PWM"] = {
     test.equal(this.pwm.pulsewidth_us.callCount, 1);
 
     test.done();
+  },
+
+  servoConfig: function(test) {
+    test.expect(3);
+
+    this.pin.mode = 4;
+    this.pin.servoConfig = { min: 1000, max: 2000 };
+
+    this.pin.write(180);
+    test.equal(this.pwm.pulsewidth_us.getCall(0).args[0], 2000);
+
+    this.pin.write(0);
+    test.equal(this.pwm.pulsewidth_us.getCall(1).args[0], 1000);
+
+    this.pin.write(90);
+    test.equal(this.pwm.pulsewidth_us.getCall(2).args[0], 1500);
+    test.done();
   }
 };
 
