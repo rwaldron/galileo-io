@@ -1088,6 +1088,7 @@ exports["I2C"] = {
     this.clock = sinon.useFakeTimers();
 
     this.gpt = sinon.stub(IO, "getPlatformType").returns(1);
+    this.I2C = sinon.spy(IO, "I2c");
 
     this.i2c = {
       write: sinon.spy(I2c.prototype, "write"),
@@ -1115,6 +1116,39 @@ exports["I2C"] = {
 
     test.done();
   },
+
+  explicitBus: function(test) {
+    test.expect(1);
+
+    this.I2C.reset();
+
+    var board = new Galileo({
+      bus: 0xff
+    });
+
+    board.i2cConfig();
+
+    test.deepEqual(this.I2C.lastCall.args, [ 255 ]);
+
+    test.done();
+  },
+
+  implicitBus: function(test) {
+    test.expect(1);
+
+    this.I2C.reset();
+
+    Galileo.__i2cBus(1);
+
+    var board = new Galileo();
+
+    board.i2cConfig();
+
+    test.deepEqual(this.I2C.lastCall.args, [ 1 ]);
+
+    test.done();
+  },
+
   initAddressOnFirstWrite: function(test) {
     test.expect(3);
 

@@ -160,12 +160,12 @@ board.on("ready", function() {
 
 #### SparkFun Edison I2C Block
 
-Galileo-IO/Edison-IO will automattically connect to bus 1, which is the bus used by this block.
+Galileo-IO/Edison-IO will automatically connect to bus 1, which is the bus used by this block.
 
 
 #### SparkFun Edison 9DOF Block
 
-Galileo-IO/Edison-IO will automattically connect to bus 1, which is the bus used by this block.
+Galileo-IO/Edison-IO will automatically connect to bus 1, which is the bus used by this block.
 
 
 
@@ -252,6 +252,47 @@ var board = new five.Board({
   io: new Edison()
 });
 ```
+
+### Specify An I2C Bus
+
+Galileo-IO will do it's best to detect the correct I2C bus to use for a given expansion board, however the process is not infallible. To specify an I2C bus: 
+
+```js
+// If the i2c bus is 1 (`/dev/i2c-1`)
+var board = new Galileo({
+  bus: 1
+});
+```
+
+Or...
+
+```js
+var board = new Edison({
+  bus: 1
+});
+```
+
+#### Xadow Board
+
+Example:
+```js
+var five = require("johnny-five");
+var Edison = require("galileo-io");
+var board = new five.Board({
+  io: new Edison({ bus: 0 })
+});
+```
+
+Or 
+
+```js
+var five = require("johnny-five");
+var Galileo = require("galileo-io");
+var board = new five.Board({
+  io: new Galileo({ bus: 0 })
+});
+```
+
 
 ### API
 
