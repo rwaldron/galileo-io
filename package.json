@@ -1,7 +1,7 @@
 {
   "name": "galileo-io",
-  "description": "Intel Galileo & Intel Edison IO Plugin for Johnny-Five",
-  "version": "0.8.14",
+  "description": "Intel Galileo & Intel Edison IO Plugin for Johnny-Five JavaScript Robotics",
+  "version": "0.8.15",
   "homepage": "https://github.com/rwaldron/galileo-io",
   "author": {
     "name": "Rick Waldron <waldron.rick@gmail.com>",
@@ -9,15 +9,8 @@
   },
   "contributors": [],
   "keywords": [
-    "intel",
-    "edison",
-    "galileo",
-    "io",
-    "arduino",
-    "firmata",
-    "johnny-five",
-    "mraa",
-    "upm"
+    "intel", "edison", "galileo", "io", "arduino", "firmata", "johnny-five", "mraa", "upm",
+    "i2c", "xadow", "sparkfun", "dfrobot", "robot", "romeo", "expansion"
   ],
   "repository": {
     "type": "git",
