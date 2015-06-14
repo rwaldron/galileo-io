@@ -18,7 +18,7 @@ if (useMraa) {
 
   exec("opkg info libmraa0", function(error, stdout, stderr) {
     if (error) {
-      console.log"opkg info libmraa0 failed. Reason: "+ error);
+      console.log("opkg info libmraa0 failed. Reason: "+ error);
       process.exit(error.code);
     } else {
       if (!stdout.includes(safeBuild)) {
