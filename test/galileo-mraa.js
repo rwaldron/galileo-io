@@ -3,7 +3,7 @@
 global.IS_TEST_ENV = true;
 
 var Galileo = require("../lib/galileo");
-var edisonPinMapping = require("../lib/edison-pin-mapping.json");
+var pinMapping = require("../lib/pin-mapping.json");
 var Emitter = require("events").EventEmitter;
 var sinon = require("sinon");
 var tick = global.setImmediate || process.nextTick;
@@ -623,7 +623,7 @@ exports["Platform Type Edison (Miniboard)"] = {
     test.done();
   },
   pinMapping: function(test) {
-    var keys = Object.keys(edisonPinMapping);
+    var keys = Object.keys(pinMapping.edison);
 
     test.expect(keys.length * 5);
 
@@ -651,7 +651,7 @@ exports["Platform Type Edison (Miniboard)"] = {
 
     this.board.on("ready", function() {
       keys.forEach(function(key) {
-        var pin = edisonPinMapping[key];
+        var pin = pinMapping.edison[key];
 
         // Test Setting Mode
         this.pins[pin].mode = null;
@@ -684,8 +684,8 @@ exports["Platform Type Edison (Miniboard)"] = {
   },
 
   pinModeGP: function(test) {
-    var nameIndexMap = Object.keys(edisonPinMapping).reduce(function(accum, key) {
-      var index = edisonPinMapping[key];
+    var nameIndexMap = Object.keys(pinMapping.edison).reduce(function(accum, key) {
+      var index = pinMapping.edison[key];
 
       if (key.startsWith("GP")) {
         accum[key] = { index: index, mode: 1 };
@@ -719,8 +719,8 @@ exports["Platform Type Edison (Miniboard)"] = {
   },
 
   pinModeJ: function(test) {
-    var nameIndexMap = Object.keys(edisonPinMapping).reduce(function(accum, key) {
-      var index = edisonPinMapping[key];
+    var nameIndexMap = Object.keys(pinMapping).reduce(function(accum, key) {
+      var index = pinMapping[key];
 
       if (key.startsWith("J")) {
         accum[key] = { index: index, mode: 1 };
@@ -753,7 +753,7 @@ exports["Platform Type Edison (Miniboard)"] = {
     });
   },
   normalize: function(test) {
-    var keys = Object.keys(edisonPinMapping);
+    var keys = Object.keys(pinMapping.edison);
 
     test.expect(keys.length);
 
@@ -761,7 +761,7 @@ exports["Platform Type Edison (Miniboard)"] = {
 
     board.on("ready", function() {
       keys.forEach(function(key) {
-        var expect = edisonPinMapping[key];
+        var expect = pinMapping.edison[key];
 
         test.equal(this.normalize(key), expect);
 
@@ -772,6 +772,129 @@ exports["Platform Type Edison (Miniboard)"] = {
   }
 };
 
+exports["Platform Type Edison (Xadow)"] = {
+  setUp: function(done) {
+    this.I2C = sinon.spy(IO, "I2c");
+
+    done();
+  },
+  tearDown: function(done) {
+    restore(this);
+    done();
+  },
+  bus: function(test) {
+    test.expect(1);
+    test.deepEqual(Galileo.Boards.Xadow, { bus: 0 });
+    test.done();
+  },
+  i2cConfig: function(test) {
+    test.expect(1);
+
+    this.I2C.reset();
+
+    var board = new Galileo(Galileo.Boards.Xadow);
+
+    board.i2cConfig();
+
+    test.deepEqual(this.I2C.lastCall.args, [ 0 ]);
+
+    test.done();
+  }
+};
+
+exports["Platform Type Edison (DFRobot Romeo)"] = {
+  setUp: function(done) {
+    this.I2C = sinon.spy(IO, "I2c");
+    this.pinModes = [
+      { modes: [] },
+      { modes: [] },
+      { modes: [0, 1] },
+      { modes: [0, 1, 3, 4] },
+      { modes: [0, 1] },
+      { modes: [0, 1, 3, 4] },
+      { modes: [0, 1, 3, 4] },
+      { modes: [0, 1] },
+      { modes: [0, 1] },
+      { modes: [0, 1, 3, 4] },
+      { modes: [0, 1, 3, 4] },
+      { modes: [0, 1, 3, 4] },
+      { modes: [0, 1] },
+      { modes: [0, 1] },
+      { modes: [0, 1, 2], analogChannel: 0 },
+      { modes: [0, 1, 2], analogChannel: 1 },
+      { modes: [0, 1, 2], analogChannel: 2 },
+      { modes: [0, 1, 2], analogChannel: 3 },
+      { modes: [0, 1, 2], analogChannel: 4 },
+      { modes: [0, 1, 2], analogChannel: 5 },
+    ];
+    Galileo.__miniboard(true);
+    Galileo.__pinmodes(this.pinModes);
+    done();
+  },
+  tearDown: function(done) {
+    Galileo.__miniboard(false);
+    Galileo.__pinmodes();
+    restore(this);
+    done();
+  },
+  bus: function(test) {
+    test.expect(1);
+    test.deepEqual(Galileo.Boards.DFRobotRomeo, { bus: 0, map: "dfrobotromeo" });
+    test.done();
+  },
+  i2cConfig: function(test) {
+    test.expect(1);
+
+    this.I2C.reset();
+
+    var board = new Galileo(Galileo.Boards.DFRobotRomeo);
+
+    board.i2cConfig();
+
+    test.deepEqual(this.I2C.lastCall.args, [ 0 ]);
+    test.done();
+  },
+  normalize: function(test) {
+    var romeoPinMapping = {
+      0: 26,
+      1: 35,
+      2: 13,
+      3: 20,
+      4: 25,
+      5: 14,
+      6: 0,
+      7: 33,
+      8: 47,
+      9: 21,
+      10: 51,
+      11: 38,
+      12: 50,
+      13: 37,
+      "A0": 0,
+      "A1": 1,
+      "A2": 2,
+      "A3": 3,
+      "A4": 4,
+      "A5": 5,
+    };
+
+    var keys = Object.keys(romeoPinMapping);
+
+    test.expect(keys.length);
+
+    this.board = new Galileo();
+
+    this.board.on("ready", function() {
+      keys.forEach(function(key) {
+        var expect = romeoPinMapping[key];
+
+        test.equal(this.normalize(key), expect);
+      }, this);
+
+      test.done();
+    });
+  },
+};
 
 exports["Digital & Analog"] = {
   setUp: function(done) {
