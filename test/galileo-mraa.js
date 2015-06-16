@@ -1123,7 +1123,9 @@ exports["I2C"] = {
     this.I2C.reset();
 
     var board = new Galileo({
-      bus: 0xff
+      i2c: {
+        bus: 0xff
+      }
     });
 
     board.i2cConfig();
@@ -1145,6 +1147,40 @@ exports["I2C"] = {
     board.i2cConfig();
 
     test.deepEqual(this.I2C.lastCall.args, [ 1 ]);
+
+    test.done();
+  },
+
+  explicitZeroBus: function(test) {
+    test.expect(1);
+
+    this.I2C.reset();
+
+    var board = new Galileo({
+      i2c: {
+        bus: 0
+      }
+    });
+
+    board.i2cConfig();
+
+    test.deepEqual(this.I2C.lastCall.args, [ 0 ]);
+
+    test.done();
+  },
+
+  implicitZeroBus: function(test) {
+    test.expect(1);
+
+    this.I2C.reset();
+
+    Galileo.__i2cBus(0);
+
+    var board = new Galileo();
+
+    board.i2cConfig();
+
+    test.deepEqual(this.I2C.lastCall.args, [ 0 ]);
 
     test.done();
   },

@@ -260,7 +260,9 @@ Galileo-IO will do it's best to detect the correct I2C bus to use for a given ex
 ```js
 // If the i2c bus is 1 (`/dev/i2c-1`)
 var board = new Galileo({
-  bus: 1
+  i2c: {
+    bus: 1
+  }
 });
 ```
 
@@ -268,18 +270,22 @@ Or...
 
 ```js
 var board = new Edison({
-  bus: 1
+  i2c: {
+    bus: 1
+  }
 });
 ```
 
 #### Xadow Board
+
+Expansion boards can also be initialized with a built-in configuration object, that contains the correct I2C bus for that board: 
 
 Example:
 ```js
 var five = require("johnny-five");
 var Edison = require("galileo-io");
 var board = new five.Board({
-  io: new Edison({ bus: 0 })
+  io: new Edison(Edison.Boards.Xadow)
 });
 ```
 
@@ -289,9 +295,11 @@ Or
 var five = require("johnny-five");
 var Galileo = require("galileo-io");
 var board = new five.Board({
-  io: new Galileo({ bus: 0 })
+  io: new Galileo(Galileo.Boards.Xadow)
 });
 ```
+
+**Additional expansion board configurations will be added as support is implemented**
 
 
 ### API

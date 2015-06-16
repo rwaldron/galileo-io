@@ -1,4 +1,5 @@
 // Use require("galileo-io") when running from an npm installation
+var repl = require("repl");
 var Galileo = require("../lib/galileo");
 var board = new Galileo();
 
@@ -23,3 +24,27 @@ function scale(value, inMin, inMax, outMin, outMax) {
   return (value - inMin) * (outMax - outMin) /
     (inMax - inMin) + outMin;
 }
+
+
+
+
+process.stdin.resume();
+process.stdin.setEncoding("utf8");
+
+// Create a one time data event handler for initializing
+// the repl session via keyboard input
+process.stdin.once("data", function() {
+  console.log("Initialized");
+
+  var replDefaults = {
+    prompt: ">> ",
+    useGlobal: false
+  };
+
+  var cmd = repl.start(replDefaults);
+
+  cmd.on("exit", function() {
+    console.log("Exit!");
+    process.reallyExit();
+  });
+});
