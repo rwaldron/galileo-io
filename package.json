@@ -1,7 +1,7 @@
 {
   "name": "galileo-io",
   "description": "Intel Galileo & Intel Edison IO Plugin for Johnny-Five JavaScript Robotics",
-  "version": "0.8.15",
+  "version": "0.8.16",
   "homepage": "https://github.com/rwaldron/galileo-io",
   "author": {
     "name": "Rick Waldron <waldron.rick@gmail.com>",
