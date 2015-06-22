@@ -8,8 +8,8 @@ var useMraa = (function() {
     release.includes("edison");
 })();
 
-var safeBuild = "0.6.1+git0+805d22f0b1-r0";
-var safeVersion = "0.6.1-36-gbe4312e";
+var safeBuild = "0.7.2";
+var safeVersion = "0.7.2";
 
 if (useMraa) {
   console.log("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
