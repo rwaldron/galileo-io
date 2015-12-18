@@ -18,7 +18,7 @@ if (useMraa) {
 
   exec("opkg info libmraa0", function(error, stdout, stderr) {
     if (error) {
-      console.log(error);
+      console.log("opkg info libmraa0 failed. Reason: "+ error);
       process.exit(error.code);
     } else {
       if (!stdout.includes(safeBuild)) {
@@ -29,7 +29,7 @@ if (useMraa) {
 
         exec("npm install mraa@" + safeVersion, function(error) {
           if (error) {
-            console.log(error);
+            console.log("npm install mraa failed. Reason: " + error);
             process.exit(error.code);
           } else {
             console.log("  Completed!");
