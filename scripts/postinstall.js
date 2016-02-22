@@ -23,6 +23,7 @@ if (useMraa) {
       exec(npmCommand, function(error, stdout, stderr) {
         if (error) {
           console.log("opkg info libmraa0 failed.")
+          console.log("npm install mraa failed.")
           console.log("Reasons: ");
           console.log("    %s   %s", opkgError.code, opkgError.message);
           console.log("    %s   %s", error.code, error.message);
