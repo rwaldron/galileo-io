@@ -44,7 +44,8 @@
     "grunt-jsbeautifier": "~0.2.2"
   },
   "scripts": {
-    "test": "grunt"
+    "test": "grunt",
+    "postinstall": "node scripts/postinstall"
   },
   "js-flags": "--harmony"
 }

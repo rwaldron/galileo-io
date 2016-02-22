@@ -8,8 +8,9 @@ var useMraa = (function() {
     release.includes("edison");
 })();
 
-var safeBuild = "0.7.2";
-var safeVersion = "0.7.2";
+var safeBuild = "0.9.4";
+var safeVersion = "0.9.4";
+var npmCommand = "npm install mraa@" + safeVersion;
 
 if (useMraa) {
   console.log("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
@@ -18,8 +19,19 @@ if (useMraa) {
 
   exec("opkg info libmraa0", function(error, stdout, stderr) {
     if (error) {
-      console.log("opkg info libmraa0 failed. Reason: "+ error);
-      process.exit(error.code);
+      var opkgError = error;
+      exec(npmCommand, function(error, stdout, stderr) {
+        if (error) {
+          console.log("opkg info libmraa0 failed.")
+          console.log("Reasons: ");
+          console.log("    %s   %s", opkgError.code, opkgError.message);
+          console.log("    %s   %s", error.code, error.message);
+          process.exit(error.code);
+        } else {
+          console.log("");
+          process.exit(0);
+        }
+      });
     } else {
       if (!stdout.includes(safeBuild)) {
         console.log("");
@@ -27,7 +39,7 @@ if (useMraa) {
         console.log("  This process takes approximately one minute.");
         console.log("  Thanks for your patience.");
 
-        exec("npm install mraa@" + safeVersion, function(error) {
+        exec(npmCommand, function(error) {
           if (error) {
             console.log("npm install mraa failed. Reason: " + error);
             process.exit(error.code);
