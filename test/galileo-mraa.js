@@ -27,15 +27,17 @@ var Aio = IO.Aio;
 var Pwm = IO.Pwm;
 var I2c = IO.I2c;
 
+var sandbox = sinon.sandbox.create();
 
 exports["Platform Type Galileo"] = {
   setUp: function(done) {
-    this.gpt = sinon.stub(IO, "getPlatformType").returns(1);
+
+    this.gpt = sandbox.stub(IO, "getPlatformType").returns(1);
     this.board = new Galileo();
     done();
   },
   tearDown: function(done) {
-    restore(this);
+    sandbox.restore();
     Galileo.reset();
     done();
   },
@@ -237,12 +239,12 @@ exports["Platform Type Edison"] = {
     }, []);
 
 
-    this.gpt = sinon.stub(IO, "getPlatformType").returns(2);
+    this.gpt = sandbox.stub(IO, "getPlatformType").returns(2);
     this.board = new Galileo();
     done();
   },
   tearDown: function(done) {
-    restore(this);
+    sandbox.restore();
     Galileo.reset();
     done();
   },
@@ -554,7 +556,7 @@ exports["Platform Type Edison (Miniboard)"] = {
   tearDown: function(done) {
     Galileo.__miniboard(false);
     Galileo.__pinmodes();
-    restore(this);
+    sandbox.restore();
     Galileo.reset();
     done();
   },
@@ -646,7 +648,7 @@ exports["Platform Type Edison (Miniboard)"] = {
       if (this.board[method].restore) {
         this.board[method].restore();
       }
-      sinon.spy(this.board, method);
+      sandbox.spy(this.board, method);
     }, this);
 
     this.board.on("ready", function() {
@@ -780,8 +782,8 @@ exports["Digital & Analog"] = {
       aio: Object.assign({}, Aio.prototype)
     };
 
-    this.Gpio = sinon.spy(IO, "Gpio");
-    this.Aio = sinon.spy(IO, "Aio");
+    this.Gpio = sandbox.spy(IO, "Gpio");
+    this.Aio = sandbox.spy(IO, "Aio");
 
     ["Gpio", "Aio"].forEach(function(name) {
       var key = name.toLowerCase();
@@ -789,12 +791,12 @@ exports["Digital & Analog"] = {
 
       this[key] = Object.keys(protos[key]).reduce(function(proto, prop) {
         target.prototype[prop] = protos[key][prop];
-        proto[prop] = sinon.spy(target.prototype, prop);
+        proto[prop] = sandbox.spy(target.prototype, prop);
         return proto;
       }, {});
     }, this);
 
-    this.clock = sinon.useFakeTimers();
+    this.clock = sandbox.useFakeTimers();
 
     this.board = new Galileo();
 
@@ -805,7 +807,7 @@ exports["Digital & Analog"] = {
     done();
   },
   tearDown: function(done) {
-    restore(this);
+    sandbox.restore();
     Galileo.reset();
     done();
   },
@@ -891,8 +893,8 @@ exports["Galileo.prototype.analogRead"] = {
       aio: Object.assign({}, Aio.prototype)
     };
 
-    this.Gpio = sinon.spy(IO, "Gpio");
-    this.Aio = sinon.spy(IO, "Aio");
+    this.Gpio = sandbox.spy(IO, "Gpio");
+    this.Aio = sandbox.spy(IO, "Aio");
 
     ["Gpio", "Aio"].forEach(function(name) {
       var key = name.toLowerCase();
@@ -900,12 +902,12 @@ exports["Galileo.prototype.analogRead"] = {
 
       this[key] = Object.keys(protos[key]).reduce(function(proto, prop) {
         target.prototype[prop] = protos[key][prop];
-        proto[prop] = sinon.spy(target.prototype, prop);
+        proto[prop] = sandbox.spy(target.prototype, prop);
         return proto;
       }, {});
     }, this);
 
-    this.clock = sinon.useFakeTimers();
+    this.clock = sandbox.useFakeTimers();
 
     this.board = new Galileo();
 
@@ -915,7 +917,7 @@ exports["Galileo.prototype.analogRead"] = {
   tearDown: function(done) {
     this.aio.read.override = null;
 
-    restore(this);
+    sandbox.restore();
 
     for (var i = 0; i < 14; i++) {
       if (i < 6) {
@@ -999,8 +1001,8 @@ exports["Galileo.prototype.digitalRead"] = {
       aio: Object.assign({}, Aio.prototype)
     };
 
-    this.Gpio = sinon.spy(IO, "Gpio");
-    this.Aio = sinon.spy(IO, "Aio");
+    this.Gpio = sandbox.spy(IO, "Gpio");
+    this.Aio = sandbox.spy(IO, "Aio");
 
     ["Gpio", "Aio"].forEach(function(name) {
       var key = name.toLowerCase();
@@ -1008,12 +1010,12 @@ exports["Galileo.prototype.digitalRead"] = {
 
       this[key] = Object.keys(protos[key]).reduce(function(proto, prop) {
         target.prototype[prop] = protos[key][prop];
-        proto[prop] = sinon.spy(target.prototype, prop);
+        proto[prop] = sandbox.spy(target.prototype, prop);
         return proto;
       }, {});
     }, this);
 
-    this.clock = sinon.useFakeTimers();
+    this.clock = sandbox.useFakeTimers();
 
     this.board = new Galileo();
     done();
@@ -1021,7 +1023,7 @@ exports["Galileo.prototype.digitalRead"] = {
   tearDown: function(done) {
     this.gpio.read.override = null;
 
-    restore(this);
+    sandbox.restore();
     Galileo.reset();
 
     for (var i = 0; i < 14; i++) {
@@ -1085,26 +1087,27 @@ exports["Galileo.prototype.digitalRead"] = {
 
 exports["I2C"] = {
   setUp: function(done) {
-    this.clock = sinon.useFakeTimers();
+    this.clock = sandbox.useFakeTimers();
 
-    this.gpt = sinon.stub(IO, "getPlatformType").returns(1);
-    this.I2C = sinon.spy(IO, "I2c");
+    this.gpt = sandbox.stub(IO, "getPlatformType").returns(1);
+    this.I2C = sandbox.spy(IO, "I2c");
 
     this.i2c = {
-      write: sinon.spy(I2c.prototype, "write"),
-      writeReg: sinon.spy(I2c.prototype, "writeReg"),
-      writeByte: sinon.spy(I2c.prototype, "writeByte"),
-      address: sinon.spy(I2c.prototype, "address")
+      write: sandbox.spy(I2c.prototype, "write"),
+      writeReg: sandbox.spy(I2c.prototype, "writeReg"),
+      writeByte: sandbox.spy(I2c.prototype, "writeByte"),
+      address: sandbox.spy(I2c.prototype, "address")
     };
 
     this.board = new Galileo();
 
-    this.i2c.read = sinon.stub(I2c.prototype, "read").returns([0x0, 0x1]);
+    this.i2c.read = sandbox.stub(I2c.prototype, "read").returns(new Buffer([0x0, 0x1]));
+    this.i2c.readBytesReg = sandbox.stub(I2c.prototype, "readBytesReg").returns(new Buffer([0x0, 0x1]));
     done();
   },
   tearDown: function(done) {
     this.clock.restore();
-    restore(this);
+    sandbox.restore();
     done();
   },
   shape: function(test) {
@@ -1198,13 +1201,48 @@ exports["I2C"] = {
     test.done();
   },
 
-  initAddressOnFirstRead: function(test) {
+  initAddressOnFirstReadNoRegister: function(test) {
     test.expect(4);
 
-    this.board.i2cConfig(0);
-    this.board.i2cReadOnce(0x4, 1, 2, function() {
-      test.equal(this.i2c.address.callCount, 2);
-      test.equal(this.i2c.writeByte.callCount, 1);
+    var handler = sandbox.spy();
+    this.board.i2cConfig({ delay: 1 });
+    this.board.i2cRead(0x4, 2, handler);
+
+    this.clock.tick(1);
+
+    test.equal(this.i2c.address.callCount, 1);
+    test.equal(this.i2c.read.callCount, 1);
+    // Once on initialization
+    test.equal(this.gpt.callCount, 1);
+
+    test.equal(handler.callCount, 1);
+
+    test.done();
+  },
+
+  initAddressOnFirstReadWithRegister: function(test) {
+    test.expect(3);
+
+    var handler = sandbox.spy();
+    this.board.i2cConfig({ delay: 1 });
+    this.board.i2cRead(0x4, 1, 2, handler);
+
+    this.clock.tick(1);
+
+    test.equal(this.i2c.address.callCount, 1);
+    test.equal(this.i2c.readBytesReg.callCount, 1);
+    // Once on initialization
+    test.equal(this.gpt.callCount, 1);
+
+    test.done();
+  },
+
+  initAddressOnFirstReadOnceNoRegister: function(test) {
+    test.expect(3);
+
+    this.board.i2cConfig({ delay: 1 });
+    this.board.i2cReadOnce(0x4, 2, function() {
+      test.equal(this.i2c.address.callCount, 1);
       test.equal(this.i2c.read.callCount, 1);
       test.done();
     }.bind(this));
@@ -1215,12 +1253,120 @@ exports["I2C"] = {
     this.clock.tick(10);
   },
 
+  initAddressOnFirstReadOnceWithRegister: function(test) {
+    test.expect(3);
+
+    this.board.i2cConfig({ delay: 1 });
+    this.board.i2cReadOnce(0x4, 1, 2, function() {
+      test.equal(this.i2c.address.callCount, 1);
+      test.equal(this.i2c.readBytesReg.callCount, 1);
+      test.done();
+    }.bind(this));
+
+    // Once on initialization
+    test.equal(this.gpt.callCount, 1);
+
+    this.clock.tick(10);
+  },
+
+  warnReadOnceWithRegister: function(test) {
+    test.expect(1);
+
+    this.warn = sandbox.stub(console, "warn");
+    this.i2c.readBytesReg.restore();
+    this.i2c.readBytesReg = sandbox.stub(I2c.prototype, "readBytesReg").returns(new Buffer([]));
+
+    this.board.i2cConfig({ delay: 1 });
+    this.board.i2cReadOnce(0x4, 1, 2, function() {
+      test.deepEqual(this.warn.lastCall.args, [ 'I2C: Could not read %d Bytes from peripheral with address 0x%s', 2, '4' ]);
+      test.done();
+    }.bind(this));
+    this.clock.tick(10);
+  },
+
+  warnReadOnceWithNoRegister: function(test) {
+    test.expect(1);
+
+    this.warn = sandbox.stub(console, "warn");
+    this.i2c.read.restore();
+    this.i2c.read = sandbox.stub(I2c.prototype, "read").returns(new Buffer([]));
+
+    this.board.i2cConfig({ delay: 1 });
+    this.board.i2cReadOnce(0x4, 2, function() {
+      test.deepEqual(this.warn.lastCall.args, [ 'I2C: Could not read %d Bytes from peripheral with address 0x%s', 2, '4' ]);
+      test.done();
+    }.bind(this));
+    this.clock.tick(10);
+  },
+
+
+  warnReadOnceWithRegister: function(test) {
+    test.expect(1);
+
+    this.warn = sandbox.stub(console, "warn");
+    this.i2c.readBytesReg.restore();
+    this.i2c.readBytesReg = sandbox.stub(I2c.prototype, "readBytesReg").returns(new Buffer([]));
+
+    this.board.i2cConfig({ delay: 1 });
+    this.board.i2cReadOnce(0x4, 1, 2, function() {
+      test.deepEqual(this.warn.lastCall.args, [ 'I2C: Could not read %d Bytes from peripheral with address 0x%s', 2, '4' ]);
+      test.done();
+    }.bind(this));
+    this.clock.tick(10);
+  },
+
+  warnReadOnceWithNoRegister: function(test) {
+    test.expect(1);
+
+    this.warn = sandbox.stub(console, "warn");
+    this.i2c.read.restore();
+    this.i2c.read = sandbox.stub(I2c.prototype, "read").returns(new Buffer([]));
+
+    this.board.i2cConfig({ delay: 1 });
+    this.board.i2cReadOnce(0x4, 2, function() {
+      test.deepEqual(this.warn.lastCall.args, [ 'I2C: Could not read %d Bytes from peripheral with address 0x%s', 2, '4' ]);
+      test.done();
+    }.bind(this));
+    this.clock.tick(10);
+  },
+
+
+  warnReadWithRegister: function(test) {
+    test.expect(1);
+
+    this.warn = sandbox.stub(console, "warn");
+    this.i2c.readBytesReg.restore();
+    this.i2c.readBytesReg = sandbox.stub(I2c.prototype, "readBytesReg").returns(new Buffer([]));
+
+    this.board.i2cConfig({ delay: 1 });
+    this.board.i2cRead(0x4, 1, 2, function() {
+      test.deepEqual(this.warn.lastCall.args, [ 'I2C: Could not read %d Bytes from peripheral with address 0x%s', 2, '4' ]);
+      test.done();
+    }.bind(this));
+    this.clock.tick(1);
+  },
+
+  warnReadWithNoRegister: function(test) {
+    test.expect(1);
+
+    this.warn = sandbox.stub(console, "warn");
+    this.i2c.read.restore();
+    this.i2c.read = sandbox.stub(I2c.prototype, "read").returns(new Buffer([]));
+
+    this.board.i2cConfig({ delay: 1 });
+    this.board.i2cRead(0x4, 2, function() {
+      test.deepEqual(this.warn.lastCall.args, [ 'I2C: Could not read %d Bytes from peripheral with address 0x%s', 2, '4' ]);
+      test.done();
+    }.bind(this));
+    this.clock.tick(1);
+  },
+
   writeAndReg: function(test) {
     // test.expect(1);
 
-    this.i2cConfig = sinon.spy(this.board, "i2cConfig");
-    this.i2cWrite = sinon.spy(this.board, "i2cWrite");
-    this.i2cWriteReg = sinon.spy(this.board, "i2cWriteReg");
+    this.i2cConfig = sandbox.spy(this.board, "i2cConfig");
+    this.i2cWrite = sandbox.spy(this.board, "i2cWrite");
+    this.i2cWriteReg = sandbox.spy(this.board, "i2cWriteReg");
 
     // Should invoke writeReg, does NOT invoke write
     this.board.i2cWrite(1, 2, 3);
@@ -1253,10 +1399,29 @@ exports["I2C"] = {
     test.done();
   },
 
+  i2cReadNoRegister: function(test) {
+    test.expect(6);
+
+    var handler = sandbox.spy(function() {});
+
+    this.board.i2cConfig(2);
+    this.board.i2cRead(0x4, 2, handler);
+    this.clock.tick(10);
+
+    test.equal(handler.callCount, 5);
+    test.equal(handler.getCall(0).args[0].length, 2);
+    test.equal(handler.getCall(1).args[0].length, 2);
+    test.equal(handler.getCall(2).args[0].length, 2);
+    test.equal(handler.getCall(3).args[0].length, 2);
+    test.equal(handler.getCall(4).args[0].length, 2);
+
+    test.done();
+  },
+
   i2cRead: function(test) {
     test.expect(6);
 
-    var handler = sinon.spy(function() {});
+    var handler = sandbox.spy(function() {});
 
     this.board.i2cConfig(2);
     this.board.i2cRead(0x4, 1, 2, handler);
@@ -1275,7 +1440,7 @@ exports["I2C"] = {
   i2cReadOnce: function(test) {
     test.expect(2);
 
-    var handler = sinon.spy(function() {});
+    var handler = sandbox.spy(function() {});
 
     this.board.i2cConfig(2);
     this.board.i2cReadOnce(0x4, 1, 2, handler);
@@ -1291,13 +1456,13 @@ exports["I2C"] = {
 
 exports["Galileo.prototype.setSamplingInterval"] = {
   setUp: function(done) {
-    this.clock = sinon.useFakeTimers();
+    this.clock = sandbox.useFakeTimers();
     this.galileo = new Galileo();
 
     done();
   },
   tearDown: function(done) {
-    restore(this);
+    sandbox.restore();
     Galileo.reset();
 
     done();
@@ -1319,14 +1484,14 @@ exports["Galileo.prototype.setSamplingInterval"] = {
 
 exports["Galileo.prototype.servoConfig"] = {
   setUp: function(done) {
-    this.clock = sinon.useFakeTimers();
-    this.pulsewidth_us = sinon.spy(Pwm.prototype, "pulsewidth_us");
+    this.clock = sandbox.useFakeTimers();
+    this.pulsewidth_us = sandbox.spy(Pwm.prototype, "pulsewidth_us");
     this.galileo = new Galileo();
 
     done();
   },
   tearDown: function(done) {
-    restore(this);
+    sandbox.restore();
     Galileo.reset();
     done();
   },

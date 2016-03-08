@@ -35,6 +35,7 @@ Pwm.prototype.enable = function(enable) {};
 
 function I2c(bus) {}
 I2c.prototype.read = function() {};
+I2c.prototype.readBytesReg = function() {};
 I2c.prototype.write = function() {
   return 0;
 };
