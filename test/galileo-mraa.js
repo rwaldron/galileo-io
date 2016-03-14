@@ -1300,37 +1300,6 @@ exports["I2C"] = {
   },
 
 
-  warnReadOnceWithRegister: function(test) {
-    test.expect(1);
-
-    this.warn = sandbox.stub(console, "warn");
-    this.i2c.readBytesReg.restore();
-    this.i2c.readBytesReg = sandbox.stub(I2c.prototype, "readBytesReg").returns(new Buffer([]));
-
-    this.board.i2cConfig({ delay: 1 });
-    this.board.i2cReadOnce(0x4, 1, 2, function() {
-      test.deepEqual(this.warn.lastCall.args, [ 'I2C: Could not read %d Bytes from peripheral with address 0x%s', 2, '4' ]);
-      test.done();
-    }.bind(this));
-    this.clock.tick(10);
-  },
-
-  warnReadOnceWithNoRegister: function(test) {
-    test.expect(1);
-
-    this.warn = sandbox.stub(console, "warn");
-    this.i2c.read.restore();
-    this.i2c.read = sandbox.stub(I2c.prototype, "read").returns(new Buffer([]));
-
-    this.board.i2cConfig({ delay: 1 });
-    this.board.i2cReadOnce(0x4, 2, function() {
-      test.deepEqual(this.warn.lastCall.args, [ 'I2C: Could not read %d Bytes from peripheral with address 0x%s', 2, '4' ]);
-      test.done();
-    }.bind(this));
-    this.clock.tick(10);
-  },
-
-
   warnReadWithRegister: function(test) {
     test.expect(1);
 
