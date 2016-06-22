@@ -2,7 +2,7 @@
 
 global.IS_TEST_ENV = true;
 
-var Pin = require("../lib/mraa.js");
+var Pin = require("../lib/pin.js");
 var Emitter = require("events").EventEmitter;
 var sinon = require("sinon");
 var tick = global.setImmediate || process.nextTick;
