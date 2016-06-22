@@ -9,3 +9,4 @@ watch.js
 send.sh
 edison.js
 npm-*
+lib/out-of-service.js
