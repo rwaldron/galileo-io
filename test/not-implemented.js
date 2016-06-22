@@ -1,4 +1,4 @@
-var Galileo = require("../lib/galileo");
+var Galileo = require("../");
 var sinon = require("sinon");
 var title = "Not Implemented";
 

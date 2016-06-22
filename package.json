@@ -39,7 +39,7 @@
       "url": "https://github.com/rwaldron/galileo-io/blob/master/LICENSE-MIT"
     }
   ],
-  "main": "lib/galileo",
+  "main": "lib/index.js",
   "engines": {
     "node": ">=0.10.0"
   },

@@ -2,7 +2,7 @@
 
 global.IS_TEST_ENV = true;
 
-var Galileo = require("../lib/galileo");
+var Galileo = require("../");
 var edisonPinMapping = require("../lib/edison-pin-mapping.json");
 var Emitter = require("events").EventEmitter;
 var sinon = require("sinon");
