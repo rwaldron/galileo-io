@@ -54,7 +54,7 @@ board.on("ready", function() {
 ```
 
 
-#### Intel Edison Arduino Breaout
+#### Intel Edison Arduino
 
 The [Intel Edison + Arduino Breakout](https://www.sparkfun.com/products/13097) has a pin-out form similar to an Arduino Uno. Use the pin numbers as printed on the board, eg. `3`, `13`, or `"A0"`.
 
