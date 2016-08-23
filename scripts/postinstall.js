@@ -5,7 +5,8 @@ var os = require("os");
 var useMraa = (function() {
   var release = os.release();
   return release.includes("yocto") ||
-    release.includes("edison");
+    release.includes("edison") ||
+    process.env.MRAA_VERSION;
 })();
 
 var safeBuild = "0.9.4";
