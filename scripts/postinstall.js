@@ -1,3 +1,5 @@
+process.exit();
+
 require("es6-shim");
 
 var exec = require("child_process").exec;
