@@ -1,20 +1,21 @@
-# Galileo-IO
+# Galileo/Edison/Joule-IO
 
 [![Build Status](https://travis-ci.org/rwaldron/galileo-io.png?branch=master)](https://travis-ci.org/rwaldron/galileo-io)
 
-## Galileo-IO is compatible with Intel's Galileo Generation 1, Galileo Generation 2 and Edison boards (Mini and Arduino Board, SparkFun GPIO & Arduino Blocks, Xadow Board, DFRobot Romeo & IO Expansion)
+## Compatible with Intel's Galileo Generation 2 (no longer supports Galileo Generation 1), Edison (Mini and Arduino Board, SparkFun GPIO & Arduino Blocks, Xadow Board, DFRobot Romeo & IO Expansion) and Joule boards.
 
 
-Galileo-IO is a Firmata.js-compatibility class for writing Node.js programs that run on the [Intel Galileo](https://www-ssl.intel.com/content/www/us/en/do-it-yourself/galileo-maker-quark-board.html) or the [Intel Edison](http://www.intel.com/content/www/us/en/do-it-yourself/edison.html). This project was built at [Bocoup](http://bocoup.com)
+Galileo/Edison/Joule-IO is a Firmata.js-compatibility class for writing Node.js programs that run on the [Intel Galileo](https://software.intel.com/en-us/iot/hardware/galileo), [Intel Edison](https://software.intel.com/en-us/iot/hardware/edison), or [Intel Joule](https://software.intel.com/en-us/iot/hardware/joule). This project was built at [Bocoup](http://bocoup.com)
+
 
 ## Getting Started
 
-**As of 0.7.0, only the IoTKit image is supported**
+Galileo/Edison/Joule-IO scripts are run directly on the Galileo, Edison or Joule board. To get started, complete the appropriate setup instructions: 
 
-Galileo-IO scripts are run directly from the Galileo or Edison board. To get started, complete the appropriate setup instructions: 
-
-- [Galileo](http://rexstjohn.com/galileo-gen-2-setup/)
-- [Edison](http://rexstjohn.com/setting-up-intel-edison-with-intel-xdk/)
+- [Getting Started with the Intel Galileo Board](https://software.intel.com/en-us/get-started-galileo-windows)
+- [Get Started with the Intel Edison Development Board](https://software.intel.com/en-us/get-started-edison-windows)
+- [Intel Joule Module User Guide
+](https://software.intel.com/en-us/intel-joule-getting-started)
 
 
 ### Installation
@@ -23,35 +24,162 @@ Galileo-IO scripts are run directly from the Galileo or Edison board. To get sta
 npm install galileo-io johnny-five
 ```
 
+If you want, you can also use the alias modules: 
+
+For Edison: 
+
+```
+npm install edison-io johnny-five
+```
+
+For Joule: 
+
+```
+npm install joule-io johnny-five
+```
+
+
+But keep in mind that these modules only delegate directly back to this module. 
+
 
 ### Usage
 
-This module can be used as an IO plugin for [Johnny-Five](https://github.com/rwaldron/johnny-five).
+This module is intended for use as an IO-Plugin for [Johnny-Five](https://github.com/rwaldron/johnny-five).
 
-## Pin Identity and Access
+## Pin Identity and Access by Platform
 
-#### Intel Galileo Gen 2
 
-> Or Gen 1 if you're a glutton for punishment. 
+#### Intel Joule (Carrier Board)
 
-The [Intel Galileo Gen 2](https://www-ssl.intel.com/content/www/us/en/do-it-yourself/galileo-maker-quark-board.html) has a pin-out form similar to an Arduino Uno. Use the pin numbers as printed on the board, eg. `3`, `13`, or `"A0"`.
 
-[![](https://cdn.sparkfun.com//assets/parts/1/0/1/3/8/13096-01.jpg)](https://cdn.sparkfun.com//assets/parts/1/0/1/3/8/13096-01.jpg)
 
-Example: 
+
+The [Intel Joule + Carrier Breakout](https://www.sparkfun.com/products/13097) has two "Breakout connectors": 
+
+[![](joule-breakouts.jpg)](joule-breakouts.jpg)
+
+
+The usable pins are shown here: 
+
+[![](joule-pins-role-rotated.jpg)](joule-pins-role-rotated.jpg)
+
+
+Pins may be addressed by their number shown above, or by their "Breakout" name: 
+
+
+| Breakout Name | Pin Number |
+| ------------- | ---------- |
+| B1_1 | 1 |
+| B1_2 | 2 |
+| B1_4 | 4 |
+| B1_5 | 5 |
+| B1_6 | 6 |
+| B1_7 | 7 |
+| B1_8 | 8 |
+| B1_10 | 10 |
+| B1_11 | 11 |
+| B1_12 | 12 |
+| B1_13 | 13 |
+| B1_14 | 14 |
+| B1_15 | 15 |
+| B1_16 | 16 |
+| B1_17 | 17 |
+| B1_18 | 18 |
+| B1_19 | 19 |
+| B1_20 | 20 |
+| B1_21 | 21 |
+| B1_22 | 22 |
+| B1_24 | 24 |
+| B1_26 | 26 |
+| B1_27 | 27 |
+| B1_28 | 28 |
+| B1_30 | 30 |
+| B1_32 | 32 |
+| B1_35 | 35 |
+| B2_11 | 51 |
+| B2_13 | 53 |
+| B2_15 | 55 |
+| B2_17 | 57 |
+| B2_19 | 59 |
+| B2_21 | 61 |
+| B2_22 | 62 |
+| B2_23 | 63 |
+| B2_24 | 64 |
+| B2_25 | 65 |
+| B2_26 | 66 |
+| B2_27 | 67 |
+| B2_28 | 68 |
+| B2_29 | 69 |
+| B2_30 | 70 |
+| B2_31 | 71 |
+| B2_32 | 72 |
+| B2_33 | 73 |
+| B2_34 | 74 |
+| B2_35 | 75 |
+| B2_36 | 76 |
+| B2_37 | 77 |
+| B2_38 | 78 |
+| B2_39 | 79 |
+| B2_40 | 80 |
+| L1 | 100 |
+| L2 | 101 |
+| L3 | 102 |
+| L4 | 103 |
+
+
+
+Additional Pin Capabilities: 
+
+| Pin Number | Capability |
+| ---------- | ---------- |
+| 7  | UART 0 TX |
+| 11 | I2C 0 SDA |
+| 13 | I2C 0 SCL |
+| 15 | I2C 1 SDA |
+| 17 | I2C 1 SCL |
+| 19 | I2C 2 SDA |
+| 21 | I2C 2 SCL |
+| 22 | UART 1 TX |
+| 24 | UART 1 RX |
+| 26 | PWM0 |
+| 28 | PWM1 |
+| 30 | PWM2 |
+| 32 | PWM3 |
+| 68 | UART 0 RX |
+| 70 | UART 0 RT |
+| 71 | I2C 1 SDA |
+| 73 | I2C 1 SCL |
+| 74 | UART 1 TX |
+| 75 | I2C 2 SDA |
+| 76 | UART 1 RX |
+| 77 | I2C 1 SCL |
+
+
+- When using I2C bus 1 or 2, you must explicitly provide that bus to the component being initialized.
+- The default I2C bus 0 is assumed when no bus is explicitly provided.
+
+
+
+Basic Example: 
+
+```
+npm install joule-io johnny-five
+```
+
 
 ```js
 var five = require("johnny-five");
-var Galileo = require("galileo-io");
+var Joule = require("joule-io");
 var board = new five.Board({
-  io: new Galileo()
+  io: new Joule()
 });
 
 board.on("ready", function() {
-  var led = new five.Led(13);
+  var led = new five.Led(103);
   led.blink(500);
 });
 ```
+
 
 
 #### Intel Edison Arduino
@@ -62,9 +190,14 @@ The [Intel Edison + Arduino Breakout](https://www.sparkfun.com/products/13097) h
 
 Example: 
 
+```
+npm install edison-io johnny-five
+```
+
+
 ```js
 var five = require("johnny-five");
-var Edison = require("galileo-io");
+var Edison = require("edison-io");
 var board = new five.Board({
   io: new Edison()
 });
@@ -90,9 +223,14 @@ Connection to bus `1`:
 
 Example: 
 
+```
+npm install edison-io johnny-five
+```
+
+
 ```js
 var five = require("johnny-five");
-var Edison = require("galileo-io");
+var Edison = require("edison-io");
 var board = new five.Board({
   io: new Edison()
 });
@@ -118,9 +256,14 @@ The [SparkFun Edison GPIO Block](https://www.sparkfun.com/products/13038) has tw
 
 Example: 
 
+```
+npm install edison-io johnny-five
+```
+
+
 ```js
 var five = require("johnny-five");
-var Edison = require("galileo-io");
+var Edison = require("edison-io");
 var board = new five.Board({
   io: new Edison()
 });
@@ -139,7 +282,7 @@ board.on("ready", function() {
 
 #### SparkFun Edison Arduino Block
 
-The [SparkFun Edison Arduino Block](https://www.sparkfun.com/products/13046) connects to the Edison via `Serial1`, or `/dev/ttyMFD1`. This means that a user must [upload StandardFirmata via FTDI programmer](https://learn.sparkfun.com/tutorials/sparkfun-blocks-for-intel-edison---arduino-block). Johnny-Five does not use Galileo-IO to communicate with the hardware on this block, instead it communicates via the serial connection, using its default [`Firmata.js`](https://github.com/jgautier/firmata) (this is installed by Johnny-Five automattically. The port name must be specified: 
+The [SparkFun Edison Arduino Block](https://www.sparkfun.com/products/13046) connects to the Edison via `Serial1`, or `/dev/ttyMFD1`. This means that a user must [upload StandardFirmata via FTDI programmer](https://learn.sparkfun.com/tutorials/sparkfun-blocks-for-intel-edison---arduino-block). Johnny-Five does not use Galileo/Edison/Joule-IO to communicate with the hardware on this block, instead it communicates via the serial connection, using its default [`Firmata.js`](https://github.com/jgautier/firmata) (this is installed by Johnny-Five automattically. The port name must be specified: 
 
 ```js
 // This code runs on the Edison, communicating with the 
@@ -160,17 +303,17 @@ board.on("ready", function() {
 
 #### SparkFun Edison I2C Block
 
-Galileo-IO/Edison-IO will automatically connect to bus 1, which is the bus used by this block.
+Galileo/Edison/Joule-IO/Edison-IO will automatically connect to bus 1, which is the bus used by this block.
 
 
 #### SparkFun Edison 9DOF Block
 
-Galileo-IO/Edison-IO will automatically connect to bus 1, which is the bus used by this block.
+Galileo/Edison/Joule-IO/Edison-IO will automatically connect to bus 1, which is the bus used by this block.
 
 
 
 
-#### Pin Mapping Table \* 
+#### Edison Mini Pin Mapping Table \* 
 
 | Pin Number  | Physical Pin | Edison Pin    |
 |-------------|--------------|---------------|
@@ -215,6 +358,31 @@ Galileo-IO/Edison-IO will automatically connect to bus 1, which is the bus used 
 | 55          | J20-14       | GP81          |
 
 
+#### Intel Galileo Gen 2
+
+> Or Gen 1 if you're a glutton for punishment. 
+
+The [Intel Galileo Gen 2](https://www-ssl.intel.com/content/www/us/en/do-it-yourself/galileo-maker-quark-board.html) has a pin-out form similar to an Arduino Uno. Use the pin numbers as printed on the board, eg. `3`, `13`, or `"A0"`.
+
+[![](https://cdn.sparkfun.com//assets/parts/1/0/1/3/8/13096-01.jpg)](https://cdn.sparkfun.com//assets/parts/1/0/1/3/8/13096-01.jpg)
+
+Example: 
+
+```js
+var five = require("johnny-five");
+var Galileo = require("galileo-io");
+var board = new five.Board({
+  io: new Galileo()
+});
+
+board.on("ready", function() {
+  var led = new five.Led(13);
+  led.blink(500);
+});
+```
+
+
+
 
 
 
@@ -240,14 +408,19 @@ board.on("ready", function() {
 
 ### Johnny-Five IO Plugin
 
-Galileo-IO is the default [IO layer](https://github.com/rwaldron/johnny-five/wiki/IO-Plugins) for [Johnny-Five](https://github.com/rwaldron/johnny-five) programs that are run on a Galileo or Edison board.
+Galileo/Edison/Joule-IO is the default [IO layer](https://github.com/rwaldron/johnny-five/wiki/IO-Plugins) for [Johnny-Five](https://github.com/rwaldron/johnny-five) programs that are run on a Galileo or Edison board.
 
 ***Note:*** On the Edison, you should require johnny-five first, followed by galileo-io. Otherwise you'll get a segmentation fault.
+
+
+```
+npm install edison-io johnny-five
+```
 
 Example:
 ```js
 var five = require("johnny-five");
-var Edison = require("galileo-io");
+var Edison = require("edison-io");
 var board = new five.Board({
   io: new Edison()
 });
@@ -255,7 +428,7 @@ var board = new five.Board({
 
 ### Specify An I2C Bus
 
-Galileo-IO will do it's best to detect the correct I2C bus to use for a given expansion board, however the process is not infallible. To specify an I2C bus: 
+Galileo/Edison/Joule-IO will do it's best to detect the correct I2C bus to use for a given expansion board, however the process is not infallible. To specify an I2C bus: 
 
 ```js
 // If the i2c bus is 1 (`/dev/i2c-1`)
@@ -280,10 +453,15 @@ var board = new Edison({
 
 Expansion boards can also be initialized with a built-in configuration object, that contains the correct I2C bus for that board: 
 
+
+```
+npm install edison-io johnny-five
+```
+
 Example:
 ```js
 var five = require("johnny-five");
-var Edison = require("galileo-io");
+var Edison = require("edison-io");
 var board = new five.Board({
   io: new Edison(Edison.Boards.Xadow)
 });
