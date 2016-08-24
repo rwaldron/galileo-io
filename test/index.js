@@ -2,8 +2,9 @@
 
 global.IS_TEST_ENV = true;
 
-var Galileo = require("../");
-var edisonPinMapping = require("../lib/edison-pin-mapping.json");
+var Board = require("../");
+var pinMapping = require("../lib/pin-mapping/");
+var edisonPinMapping = pinMapping[2];
 var Emitter = require("events").EventEmitter;
 var sinon = require("sinon");
 var tick = global.setImmediate || process.nextTick;
@@ -20,8 +21,8 @@ function restore(target) {
   }
 }
 
-var read = Galileo.__read;
-var IO = Galileo.__io;
+var read = Board.__read;
+var IO = Board.__io;
 var Gpio = IO.Gpio;
 var Aio = IO.Aio;
 var Pwm = IO.Pwm;
@@ -29,16 +30,16 @@ var I2c = IO.I2c;
 
 var sandbox = sinon.sandbox.create();
 
-exports["Platform Type Galileo"] = {
+exports["Platform Type Board"] = {
   setUp: function(done) {
 
     this.gpt = sandbox.stub(IO, "getPlatformType").returns(1);
-    this.board = new Galileo();
+    this.board = new Board();
     done();
   },
   tearDown: function(done) {
     sandbox.restore();
-    Galileo.reset();
+    Board.reset();
     done();
   },
   platformtype: function(test) {
@@ -75,7 +76,7 @@ exports["Platform Type Galileo"] = {
 
     test.expect(keys.length * 2);
 
-    var board = new Galileo();
+    var board = new Board();
 
     board.on("ready", function() {
       keys.forEach(function(key) {
@@ -83,7 +84,7 @@ exports["Platform Type Galileo"] = {
 
         test.equal(this.pins[mapped.index].mode, null);
 
-        // Don't set pinMode for 0 or 1
+        // Don"t set pinMode for 0 or 1
         if (mapped.mode) {
           this.pinMode(key, mapped.mode);
         }
@@ -109,7 +110,7 @@ exports["Platform Type Galileo"] = {
 
     test.expect(keys.length * 2);
 
-    var board = new Galileo();
+    var board = new Board();
 
     board.on("ready", function() {
       keys.forEach(function(key) {
@@ -156,7 +157,7 @@ exports["Platform Type Galileo"] = {
 
     test.expect(keys.length);
 
-    this.board = new Galileo();
+    this.board = new Board();
 
     this.board.on("ready", function() {
       keys.forEach(function(key) {
@@ -183,7 +184,7 @@ exports["Platform Type Galileo"] = {
 
     test.expect(keys.length);
 
-    this.board = new Galileo();
+    this.board = new Board();
 
     this.board.on("ready", function() {
       keys.forEach(function(key) {
@@ -240,12 +241,12 @@ exports["Platform Type Edison"] = {
 
 
     this.gpt = sandbox.stub(IO, "getPlatformType").returns(2);
-    this.board = new Galileo();
+    this.board = new Board();
     done();
   },
   tearDown: function(done) {
     sandbox.restore();
-    Galileo.reset();
+    Board.reset();
     done();
   },
   platformtype: function(test) {
@@ -256,7 +257,7 @@ exports["Platform Type Edison"] = {
   arduinoBoardErrors: function(test) {
     test.expect(78);
 
-    var board = new Galileo();
+    var board = new Board();
     var pin = 30;
 
     // No connection on pin 30
@@ -353,7 +354,7 @@ exports["Platform Type Edison"] = {
 
     test.expect(keys.length * 2);
 
-    var board = new Galileo();
+    var board = new Board();
 
     board.on("ready", function() {
       keys.forEach(function(key) {
@@ -361,7 +362,7 @@ exports["Platform Type Edison"] = {
 
         test.equal(this.pins[mapped.index].mode, null);
 
-        // Don't set pinMode for 0 or 1
+        // Don"t set pinMode for 0 or 1
         if (mapped.mode) {
           this.pinMode(key, mapped.mode);
         }
@@ -387,7 +388,7 @@ exports["Platform Type Edison"] = {
 
     test.expect(keys.length * 2);
 
-    var board = new Galileo();
+    var board = new Board();
 
     board.on("ready", function() {
       keys.forEach(function(key) {
@@ -432,7 +433,7 @@ exports["Platform Type Edison"] = {
 
     test.expect(keys.length);
 
-    this.board = new Galileo();
+    this.board = new Board();
 
     this.board.on("ready", function() {
       keys.forEach(function(key) {
@@ -459,7 +460,7 @@ exports["Platform Type Edison"] = {
 
     test.expect(keys.length);
 
-    this.board = new Galileo();
+    this.board = new Board();
 
     this.board.on("ready", function() {
       keys.forEach(function(key) {
@@ -549,21 +550,21 @@ exports["Platform Type Edison (Miniboard)"] = {
       return accum;
     }, []);
 
-    Galileo.__miniboard(true);
-    Galileo.__pinmodes(this.pinModes);
+    Board.__miniboard(true);
+    Board.__pinmodes(this.pinModes);
     done();
   },
   tearDown: function(done) {
-    Galileo.__miniboard(false);
-    Galileo.__pinmodes();
+    Board.__miniboard(false);
+    Board.__pinmodes();
     sandbox.restore();
-    Galileo.reset();
+    Board.reset();
     done();
   },
   miniBoardErrors: function(test) {
     test.expect(298);
 
-    var board = new Galileo();
+    var board = new Board();
 
     // Tests for capabilities as shown here:
     // https://github.com/intel-iot-devkit/mraa/blob/master/docs/edison.md
@@ -627,9 +628,10 @@ exports["Platform Type Edison (Miniboard)"] = {
   pinMapping: function(test) {
     var keys = Object.keys(edisonPinMapping);
 
+
     test.expect(keys.length * 5);
 
-    this.board = new Galileo();
+    this.board = new Board();
 
     [
       "pinMode",
@@ -700,7 +702,7 @@ exports["Platform Type Edison (Miniboard)"] = {
 
     test.expect(keys.length * 2);
 
-    var board = new Galileo();
+    var board = new Board();
 
     board.on("ready", function() {
       keys.forEach(function(key) {
@@ -708,7 +710,7 @@ exports["Platform Type Edison (Miniboard)"] = {
 
         test.equal(this.pins[mapped.index].mode, null);
 
-        // Don't set pinMode for 0 or 1
+        // Don"t set pinMode for 0 or 1
         if (mapped.mode) {
           this.pinMode(key, mapped.mode);
         }
@@ -735,7 +737,7 @@ exports["Platform Type Edison (Miniboard)"] = {
 
     test.expect(keys.length * 2);
 
-    var board = new Galileo();
+    var board = new Board();
 
     board.on("ready", function() {
       keys.forEach(function(key) {
@@ -743,7 +745,7 @@ exports["Platform Type Edison (Miniboard)"] = {
 
         test.equal(this.pins[mapped.index].mode, null);
 
-        // Don't set pinMode for 0 or 1
+        // Don"t set pinMode for 0 or 1
         if (mapped.mode) {
           this.pinMode(key, mapped.mode);
         }
@@ -759,7 +761,7 @@ exports["Platform Type Edison (Miniboard)"] = {
 
     test.expect(keys.length);
 
-    var board = new Galileo();
+    var board = new Board();
 
     board.on("ready", function() {
       keys.forEach(function(key) {
@@ -798,7 +800,7 @@ exports["Digital & Analog"] = {
 
     this.clock = sandbox.useFakeTimers();
 
-    this.board = new Galileo();
+    this.board = new Board();
 
     for (var i = 2; i < 20; i++) {
       this.board.pins[i].initialize();
@@ -808,7 +810,7 @@ exports["Digital & Analog"] = {
   },
   tearDown: function(done) {
     sandbox.restore();
-    Galileo.reset();
+    Board.reset();
     done();
   },
   initializationDigital: function(test) {
@@ -886,7 +888,7 @@ exports["Digital & Analog"] = {
   }
 };
 
-exports["Galileo.prototype.analogRead"] = {
+exports["Board.prototype.analogRead"] = {
   setUp: function(done) {
     var protos = {
       gpio: Object.assign({}, Gpio.prototype),
@@ -909,7 +911,7 @@ exports["Galileo.prototype.analogRead"] = {
 
     this.clock = sandbox.useFakeTimers();
 
-    this.board = new Galileo();
+    this.board = new Board();
 
     done();
 
@@ -928,7 +930,7 @@ exports["Galileo.prototype.analogRead"] = {
       }
     }
 
-    Galileo.reset();
+    Board.reset();
     done();
   },
   correctMode: function(test) {
@@ -994,7 +996,7 @@ exports["Galileo.prototype.analogRead"] = {
   }
 };
 
-exports["Galileo.prototype.digitalRead"] = {
+exports["Board.prototype.digitalRead"] = {
   setUp: function(done) {
     var protos = {
       gpio: Object.assign({}, Gpio.prototype),
@@ -1017,14 +1019,14 @@ exports["Galileo.prototype.digitalRead"] = {
 
     this.clock = sandbox.useFakeTimers();
 
-    this.board = new Galileo();
+    this.board = new Board();
     done();
   },
   tearDown: function(done) {
     this.gpio.read.override = null;
 
     sandbox.restore();
-    Galileo.reset();
+    Board.reset();
 
     for (var i = 0; i < 14; i++) {
       if (i < 6) {
@@ -1099,7 +1101,7 @@ exports["I2C"] = {
       address: sandbox.spy(I2c.prototype, "address")
     };
 
-    this.board = new Galileo();
+    this.board = new Board();
 
     this.i2c.read = sandbox.stub(I2c.prototype, "read").returns(new Buffer([0x0, 0x1]));
     this.i2c.readBytesReg = sandbox.stub(I2c.prototype, "readBytesReg").returns(new Buffer([0x0, 0x1]));
@@ -1125,7 +1127,7 @@ exports["I2C"] = {
 
     this.I2C.reset();
 
-    var board = new Galileo({
+    var board = new Board({
       i2c: {
         bus: 0xff
       }
@@ -1143,9 +1145,9 @@ exports["I2C"] = {
 
     this.I2C.reset();
 
-    Galileo.__i2cBus(1);
+    Board.__i2cBus(1);
 
-    var board = new Galileo();
+    var board = new Board();
 
     board.i2cConfig();
 
@@ -1159,7 +1161,7 @@ exports["I2C"] = {
 
     this.I2C.reset();
 
-    var board = new Galileo({
+    var board = new Board({
       i2c: {
         bus: 0
       }
@@ -1177,9 +1179,9 @@ exports["I2C"] = {
 
     this.I2C.reset();
 
-    Galileo.__i2cBus(0);
+    Board.__i2cBus(0);
 
-    var board = new Galileo();
+    var board = new Board();
 
     board.i2cConfig();
 
@@ -1278,7 +1280,7 @@ exports["I2C"] = {
 
     this.board.i2cConfig({ delay: 1 });
     this.board.i2cReadOnce(0x4, 1, 2, function() {
-      test.deepEqual(this.warn.lastCall.args, [ 'I2C: Could not read %d Bytes from peripheral with address 0x%s', 2, '4' ]);
+      test.deepEqual(this.warn.lastCall.args, [ "I2C: Could not read %d Bytes from peripheral with address 0x%s", 2, "4" ]);
       test.done();
     }.bind(this));
     this.clock.tick(10);
@@ -1293,7 +1295,7 @@ exports["I2C"] = {
 
     this.board.i2cConfig({ delay: 1 });
     this.board.i2cReadOnce(0x4, 2, function() {
-      test.deepEqual(this.warn.lastCall.args, [ 'I2C: Could not read %d Bytes from peripheral with address 0x%s', 2, '4' ]);
+      test.deepEqual(this.warn.lastCall.args, [ "I2C: Could not read %d Bytes from peripheral with address 0x%s", 2, "4" ]);
       test.done();
     }.bind(this));
     this.clock.tick(10);
@@ -1309,7 +1311,7 @@ exports["I2C"] = {
 
     this.board.i2cConfig({ delay: 1 });
     this.board.i2cRead(0x4, 1, 2, function() {
-      test.deepEqual(this.warn.lastCall.args, [ 'I2C: Could not read %d Bytes from peripheral with address 0x%s', 2, '4' ]);
+      test.deepEqual(this.warn.lastCall.args, [ "I2C: Could not read %d Bytes from peripheral with address 0x%s", 2, "4" ]);
       test.done();
     }.bind(this));
     this.clock.tick(1);
@@ -1324,7 +1326,7 @@ exports["I2C"] = {
 
     this.board.i2cConfig({ delay: 1 });
     this.board.i2cRead(0x4, 2, function() {
-      test.deepEqual(this.warn.lastCall.args, [ 'I2C: Could not read %d Bytes from peripheral with address 0x%s', 2, '4' ]);
+      test.deepEqual(this.warn.lastCall.args, [ "I2C: Could not read %d Bytes from peripheral with address 0x%s", 2, "4" ]);
       test.done();
     }.bind(this));
     this.clock.tick(1);
@@ -1423,16 +1425,16 @@ exports["I2C"] = {
 
 };
 
-exports["Galileo.prototype.setSamplingInterval"] = {
+exports["Board.prototype.setSamplingInterval"] = {
   setUp: function(done) {
     this.clock = sandbox.useFakeTimers();
-    this.galileo = new Galileo();
+    this.galileo = new Board();
 
     done();
   },
   tearDown: function(done) {
     sandbox.restore();
-    Galileo.reset();
+    Board.reset();
 
     done();
   },
@@ -1451,17 +1453,17 @@ exports["Galileo.prototype.setSamplingInterval"] = {
   }
 };
 
-exports["Galileo.prototype.servoConfig"] = {
+exports["Board.prototype.servoConfig"] = {
   setUp: function(done) {
     this.clock = sandbox.useFakeTimers();
     this.pulsewidth_us = sandbox.spy(Pwm.prototype, "pulsewidth_us");
-    this.galileo = new Galileo();
+    this.galileo = new Board();
 
     done();
   },
   tearDown: function(done) {
     sandbox.restore();
-    Galileo.reset();
+    Board.reset();
     done();
   },
   servoConfigDefault: function(test) {
