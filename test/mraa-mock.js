@@ -13,6 +13,8 @@ Gpio.prototype.dir = function(dir) {
   return 0;
 };
 
+Object.assign(Gpio, { v8isr() {}, nop() {}, uvwork() {} });
+
 function Aio(pin) {}
 Aio.prototype.read = function() {
   return this.read.override !== null ?
@@ -49,13 +51,28 @@ I2c.prototype.writeReg = function() {
 I2c.prototype.address = function(address) {};
 I2c.prototype.frequency = function(frequency) {};
 
+
+function Spi() {}
+function Uart() {}
+
 module.exports = {
   INTEL_GALILEO_GEN1: 0,
   INTEL_GALILEO_GEN2: 1,
   INTEL_EDISON_FAB_C: 2,
   INTEL_DE3815: 3,
   INTEL_MINNOWBOARD_MAX: 4,
-  RASPBERRY_PI_B: 5,
+  RASPBERRY_PI: 5,
+  BEAGLEBONE: 6,
+  BANANA: 7,
+  INTEL_NUC5: 8,
+  A96BOARDS: 9,
+  INTEL_SOFIA_3GR: 10,
+  INTEL_CHERRYHILLS: 11,
+  INTEL_UP: 12,
+  INTEL_GT_TUCHUCK: 13,
+  FTDI_FT4222: 256,
+  GENERIC_FIRMATA: 1280,
+  NULL_PLATFORM: 98,
   UNKNOWN_PLATFORM: 99,
   INTEL_EDISON_MINIBOARD_J17_1: 0,
   INTEL_EDISON_MINIBOARD_J17_5: 4,
@@ -137,6 +154,36 @@ module.exports = {
   INTEL_EDISON_GP79: 53,
   INTEL_EDISON_GP80: 54,
   INTEL_EDISON_GP81: 55,
+  RASPBERRY_WIRING_PIN8: 3,
+  RASPBERRY_WIRING_PIN9: 5,
+  RASPBERRY_WIRING_PIN7: 7,
+  RASPBERRY_WIRING_PIN15: 8,
+  RASPBERRY_WIRING_PIN16: 10,
+  RASPBERRY_WIRING_PIN0: 11,
+  RASPBERRY_WIRING_PIN1: 12,
+  RASPBERRY_WIRING_PIN2: 13,
+  RASPBERRY_WIRING_PIN3: 15,
+  RASPBERRY_WIRING_PIN4: 16,
+  RASPBERRY_WIRING_PIN5: 18,
+  RASPBERRY_WIRING_PIN12: 19,
+  RASPBERRY_WIRING_PIN13: 21,
+  RASPBERRY_WIRING_PIN6: 22,
+  RASPBERRY_WIRING_PIN14: 23,
+  RASPBERRY_WIRING_PIN10: 24,
+  RASPBERRY_WIRING_PIN11: 26,
+  RASPBERRY_WIRING_PIN17: 29,
+  RASPBERRY_WIRING_PIN21: 29,
+  RASPBERRY_WIRING_PIN18: 30,
+  RASPBERRY_WIRING_PIN19: 31,
+  RASPBERRY_WIRING_PIN22: 31,
+  RASPBERRY_WIRING_PIN20: 32,
+  RASPBERRY_WIRING_PIN26: 32,
+  RASPBERRY_WIRING_PIN23: 33,
+  RASPBERRY_WIRING_PIN24: 35,
+  RASPBERRY_WIRING_PIN27: 36,
+  RASPBERRY_WIRING_PIN25: 37,
+  RASPBERRY_WIRING_PIN28: 38,
+  RASPBERRY_WIRING_PIN29: 40,
   SUCCESS: 0,
   ERROR_FEATURE_NOT_IMPLEMENTED: 1,
   ERROR_FEATURE_NOT_SUPPORTED: 2,
@@ -149,7 +196,9 @@ module.exports = {
   ERROR_NO_DATA_AVAILABLE: 9,
   ERROR_INVALID_PLATFORM: 10,
   ERROR_PLATFORM_NOT_INITIALISED: 11,
-  ERROR_PLATFORM_ALREADY_INITIALISED: 12,
+  ERROR_UART_OW_SHORTED: 12,
+  ERROR_UART_OW_NO_DEVICES: 13,
+  ERROR_UART_OW_DATA_ERROR: 14,
   ERROR_UNSPECIFIED: 99,
   PIN_VALID: 0,
   PIN_GPIO: 1,
@@ -162,6 +211,11 @@ module.exports = {
   I2C_STD: 0,
   I2C_FAST: 1,
   I2C_HIGH: 2,
+  UART_PARITY_NONE: 0,
+  UART_PARITY_EVEN: 1,
+  UART_PARITY_ODD: 2,
+  UART_PARITY_MARK: 3,
+  UART_PARITY_SPACE: 4,
   MODE_STRONG: 0,
   MODE_PULLUP: 1,
   MODE_PULLDOWN: 2,
@@ -178,32 +232,61 @@ module.exports = {
   SPI_MODE1: 1,
   SPI_MODE2: 2,
   SPI_MODE3: 3,
-  getVersion: function() {},
-  setPriority: function() {},
-  getPlatformType: function() {
+  init() {},
+  getVersion() {},
+  setPriority() {},
+  getPlatformType() {
     // Return value must be set by test
+    return 2;
   },
-  printError: function() {},
-  pinModeTest: function() {},
-  adcRawBits: function() {},
-  adcSupportedBits: function() {},
-  getPlatformName: function() {
-    return [
-      "Intel Galileo Gen 1",
-      "Intel Galileo Gen 2",
-      "Intel Edison",
-    ][this.getPlatformType()];
+  printError() {},
+  pinModeTest() {},
+  adcRawBits() {},
+  adcSupportedBits() {},
+  getPlatformName() {
+    return ({
+      0: "Intel Galileo Gen 1",
+      1: "Intel Galileo Gen 2",
+      2: "Intel Edison",
+      13: "Intel GT Tuchuck",
+    })[this.getPlatformType()];
   },
-  getPinCount: function() {
+  getPlatformVersion() {},
+  getPinCount() {
     return 20;
   },
-  setLogLevel: function() {},
-  mraa_set_priority: function() {},
-  mraa_get_version: function() {},
-  mraa_result_print: function() {},
-  mraa_get_platform_type: function() {},
-  Gpio: Gpio,
-  I2c: I2c,
-  Pwm: Pwm,
-  Aio: Aio
+  getI2cBusCount() {},
+  getI2cBusId() {},
+  getPinName() {},
+  setLogLevel() {},
+  hasSubPlatform() {},
+  isSubPlatformId() {},
+  getSubPlatformId() {},
+  getSubPlatformIndex() {},
+  getDefaultI2cBus() {
+    return ({
+      0: 0,
+      1: 0,
+      2: 6,
+      13: 0,
+    })[this.getPlatformType()];
+  },
+  addSubplatform() {},
+  removeSubplatform() {},
+  initJsonPlatform() {},
+  gpioFromDesc() {},
+  aioFromDesc() {},
+  uartFromDesc() {},
+  spiFromDesc() {},
+  i2cFromDesc() {},
+  pwmFromDesc() {},
+  uint8Array: {
+    frompointer() {}
+  },
+  Gpio,
+  I2c,
+  Pwm,
+  Spi,
+  Aio,
+  Uart,
 };
