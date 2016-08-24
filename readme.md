@@ -121,10 +121,11 @@ Pins may be addressed by their number shown above, or by their "Breakout" name:
 | B2_38 | 78 |
 | B2_39 | 79 |
 | B2_40 | 80 |
-| L1 | 100 |
-| L2 | 101 |
-| L3 | 102 |
-| L4 | 103 |
+| GP100 | 100 |
+| GP101 | 101 |
+| GP102 | 102 |
+| GP103 | 103 |
+
 
 
 
