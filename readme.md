@@ -69,69 +69,69 @@ The usable pins and additional capabilities are shown here:
 Pins may be addressed by _either_ "Breakout Name" or "Pin Number": 
 
 
-| Breakout Name | Pin Number | Capability |
-| ------------- | ---------- | ---------- |
-| B1_1 | 1 | GPIO |
-| B1_2 | 2 | GPIO |
-| B1_4 | 4 | GPIO |
-| B1_5 | 5 | GPIO |
-| B1_6 | 6 | GPIO |
-| B1_7  | 7 | UART 0 TX, GPIO | 
-| B1_8 | 8 | GPIO |
-| B1_10 | 10 | GPIO |
-| B1_11 | 11 | I2C 0 SDA, GPIO | 
-| B1_12 | 12 | GPIO |
-| B1_13 | 13 | I2C 0 SCL, GPIO | 
-| B1_14 | 14 | GPIO |
-| B1_15 | 15 | I2C 1 SDA, GPIO | 
-| B1_16 | 16 | GPIO |
-| B1_17 | 17 | I2C 1 SCL, GPIO | 
-| B1_18 | 18 | GPIO |
-| B1_19 | 19 | I2C 2 SDA, GPIO | 
-| B1_20 | 20 | GPIO |
-| B1_21 | 21 | I2C 2 SCL, GPIO | 
-| B1_22 | 22 | UART 1 TX, GPIO | 
-| B1_24 | 24 | UART 1 RX, GPIO | 
-| B1_26 | 26 | PWM 0, GPIO | 
-| B1_28 | 28 | PWM 1, GPIO | 
-| B1_30 | 30 | PWM 2, GPIO | 
-| B1_32 | 32 | PWM 3, GPIO | 
-| B1_35 | 35 | GPIO |
-| B2_11 | 51 | GPIO |
-| B2_13 | 53 | GPIO |
-| B2_15 | 55 | GPIO |
-| B2_17 | 57 | GPIO |
-| B2_19 | 59 | GPIO |
-| B2_21 | 61 | GPIO |
-| B2_22 | 62 | GPIO |
-| B2_23 | 63 | GPIO |
-| B2_24 | 64 | GPIO |
-| B2_25 | 65 | GPIO |
-| B2_26 | 66 | GPIO |
-| B2_27 | 67 | GPIO |
-| B2_28 | 68 | UART 0 RX, GPIO | 
-| B2_29 | 69 | GPIO |
-| B2_30 | 70 | GPIO |
-| B2_31 | 71 | I2C 1 SDA, GPIO | 
-| B2_32 | 72 | GPIO |
-| B2_33 | 73 | I2C 1 SCL, GPIO | 
-| B2_34 | 74 | UART 1 TX, GPIO | 
-| B2_35 | 75 | I2C 2 SDA, GPIO | 
-| B2_36 | 76 | UART 1 RX, GPIO | 
-| B2_37 | 77 | I2C 1 SCL, GPIO | 
-| B2_39 | 79 | GPIO |
-| B2_40 | 80 | GPIO |
-| L0, GP100 | 100 | LED100 |
-| L1, GP101 | 101 | LED101 |
-| L2, GP102 | 102 | LED102 |
-| L3, GP103 | 103 | LED103 |
+| Breakout Name | Pin Number | Capability      |
+| ------------- | ---------- | --------------- |
+| B1_1          | 1          | GPIO            |
+| B1_2          | 2          | GPIO            |
+| B1_4          | 4          | GPIO            |
+| B1_5          | 5          | GPIO            |
+| B1_6          | 6          | GPIO            |
+| B1_7          | 7          | GPIO, UART 0 TX | 
+| B1_8          | 8          | GPIO            |
+| B1_10         | 10         | GPIO            |
+| B1_11         | 11         | GPIO, I2C 0 SDA | 
+| B1_12         | 12         | GPIO            |
+| B1_13         | 13         | GPIO, I2C 0 SCL | 
+| B1_14         | 14         | GPIO            |
+| B1_15         | 15         | GPIO, I2C 1 SDA | 
+| B1_16         | 16         | GPIO            |
+| B1_17         | 17         | GPIO, I2C 1 SCL | 
+| B1_18         | 18         | GPIO            |
+| B1_19         | 19         | GPIO, I2C 2 SDA | 
+| B1_20         | 20         | GPIO            |
+| B1_21         | 21         | GPIO, I2C 2 SCL | 
+| B1_22         | 22         | GPIO, UART 1 TX | 
+| B1_24         | 24         | GPIO, UART 1 RX | 
+| B1_26         | 26         | GPIO, PWM 0     | 
+| B1_28         | 28         | GPIO, PWM 1     | 
+| B1_30         | 30         | GPIO, PWM 2     | 
+| B1_32         | 32         | GPIO, PWM 3     | 
+| B1_35         | 35         | GPIO            |
+| B2_11         | 51         | GPIO            |
+| B2_13         | 53         | GPIO            |
+| B2_15         | 55         | GPIO            |
+| B2_17         | 57         | GPIO            |
+| B2_19         | 59         | GPIO            |
+| B2_21         | 61         | GPIO            |
+| B2_22         | 62         | GPIO            |
+| B2_23         | 63         | GPIO            |
+| B2_24         | 64         | GPIO            |
+| B2_25         | 65         | GPIO            |
+| B2_26         | 66         | GPIO            |
+| B2_27         | 67         | GPIO            |
+| B2_28         | 68         | GPIO, UART 0 RX | 
+| B2_29         | 69         | GPIO            |
+| B2_30         | 70         | GPIO            |
+| B2_31         | 71         | GPIO, I2C 1 SDA | 
+| B2_32         | 72         | GPIO            |
+| B2_33         | 73         | GPIO, I2C 1 SCL | 
+| B2_34         | 74         | GPIO, UART 1 TX | 
+| B2_35         | 75         | GPIO, I2C 2 SDA | 
+| B2_36         | 76         | GPIO, UART 1 RX | 
+| B2_37         | 77         | GPIO, I2C 1 SCL | 
+| B2_39         | 79         | GPIO            |
+| B2_40         | 80         | GPIO            |
+| L0, GP100     | 100        | LED100          |
+| L1, GP101     | 101        | LED101          |
+| L2, GP102     | 102        | LED102          |
+| L3, GP103     | 103        | LED103          |
 
 
 **NOTES** 
 
-- At the time of this writing, LED100, LED101 and LED102 do not work correctly. This is a known issue in the platform itself, with fixes in progress.
-- The default I2C bus 0 is assumed when no bus is explicitly provided.
-- When using I2C bus 1 or 2, you must explicitly provide that bus to the component being initialized.
+- **LED100, LED101 and LED102 do not work correctly.** This is a known issue in the platform itself, with work in progress to fix the issues.
+- **I2C Bus 0 is used by default** when no bus is explicitly provided.
+- **I2C Bus 1 or 2 must be specified explicitly** by providing a `bus: ...` property to the instantiation options (see "BLINKM" example below).
 
 
 
