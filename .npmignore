@@ -16,3 +16,4 @@ stop-xdk
 .gitignore
 *.jpg
 *.png
+Gruntfile.js
