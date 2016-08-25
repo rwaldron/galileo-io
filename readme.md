@@ -61,112 +61,77 @@ The [Intel Joule + Carrier Breakout](https://www.sparkfun.com/products/13097) ha
 [![](joule-breakouts.jpg)](joule-breakouts.jpg)
 
 
-The usable pins are shown here: 
+The usable pins and additional capabilities are shown here: 
 
-[![](joule-pins-role-rotated.jpg)](joule-pins-role-rotated.jpg)
-[![](joule-breakout-names-role.jpg)](joule-breakout-names-role.jpg)
-
+[![](joule-breakout-names-pins-role.jpg)](joule-breakout-names-pins-role.jpg)
 
 
 Pins may be addressed by _either_ "Breakout Name" or "Pin Number": 
 
 
-| Breakout Name | Pin Number |
-| ------------- | ---------- |
-| B1_1 | 1 |
-| B1_2 | 2 |
-| B1_4 | 4 |
-| B1_5 | 5 |
-| B1_6 | 6 |
-| B1_7 | 7 |
-| B1_8 | 8 |
-| B1_10 | 10 |
-| B1_11 | 11 |
-| B1_12 | 12 |
-| B1_13 | 13 |
-| B1_14 | 14 |
-| B1_15 | 15 |
-| B1_16 | 16 |
-| B1_17 | 17 |
-| B1_18 | 18 |
-| B1_19 | 19 |
-| B1_20 | 20 |
-| B1_21 | 21 |
-| B1_22 | 22 |
-| B1_24 | 24 |
-| B1_26 | 26 |
-| B1_27 | 27 |
-| B1_28 | 28 |
-| B1_30 | 30 |
-| B1_32 | 32 |
-| B1_35 | 35 |
-| B2_11 | 51 |
-| B2_13 | 53 |
-| B2_15 | 55 |
-| B2_17 | 57 |
-| B2_19 | 59 |
-| B2_21 | 61 |
-| B2_22 | 62 |
-| B2_23 | 63 |
-| B2_24 | 64 |
-| B2_25 | 65 |
-| B2_26 | 66 |
-| B2_27 | 67 |
-| B2_28 | 68 |
-| B2_29 | 69 |
-| B2_30 | 70 |
-| B2_31 | 71 |
-| B2_32 | 72 |
-| B2_33 | 73 |
-| B2_34 | 74 |
-| B2_35 | 75 |
-| B2_36 | 76 |
-| B2_37 | 77 |
-| B2_38 | 78 |
-| B2_39 | 79 |
-| B2_40 | 80 |
-| L0 | 100 |
-| L1 | 101 |
-| L2 | 102 |
-| L3 | 103 |
-| GP100 | 100 |
-| GP101 | 101 |
-| GP102 | 102 |
-| GP103 | 103 |
+| Breakout Name | Pin Number | Capability |
+| ------------- | ---------- | ---------- |
+| B1_1 | 1 | GPIO |
+| B1_2 | 2 | GPIO |
+| B1_4 | 4 | GPIO |
+| B1_5 | 5 | GPIO |
+| B1_6 | 6 | GPIO |
+| B1_7  | 7 | UART 0 TX, GPIO | 
+| B1_8 | 8 | GPIO |
+| B1_10 | 10 | GPIO |
+| B1_11 | 11 | I2C 0 SDA, GPIO | 
+| B1_12 | 12 | GPIO |
+| B1_13 | 13 | I2C 0 SCL, GPIO | 
+| B1_14 | 14 | GPIO |
+| B1_15 | 15 | I2C 1 SDA, GPIO | 
+| B1_16 | 16 | GPIO |
+| B1_17 | 17 | I2C 1 SCL, GPIO | 
+| B1_18 | 18 | GPIO |
+| B1_19 | 19 | I2C 2 SDA, GPIO | 
+| B1_20 | 20 | GPIO |
+| B1_21 | 21 | I2C 2 SCL, GPIO | 
+| B1_22 | 22 | UART 1 TX, GPIO | 
+| B1_24 | 24 | UART 1 RX, GPIO | 
+| B1_26 | 26 | PWM 0, GPIO | 
+| B1_28 | 28 | PWM 1, GPIO | 
+| B1_30 | 30 | PWM 2, GPIO | 
+| B1_32 | 32 | PWM 3, GPIO | 
+| B1_35 | 35 | GPIO |
+| B2_11 | 51 | GPIO |
+| B2_13 | 53 | GPIO |
+| B2_15 | 55 | GPIO |
+| B2_17 | 57 | GPIO |
+| B2_19 | 59 | GPIO |
+| B2_21 | 61 | GPIO |
+| B2_22 | 62 | GPIO |
+| B2_23 | 63 | GPIO |
+| B2_24 | 64 | GPIO |
+| B2_25 | 65 | GPIO |
+| B2_26 | 66 | GPIO |
+| B2_27 | 67 | GPIO |
+| B2_28 | 68 | UART 0 RX, GPIO | 
+| B2_29 | 69 | GPIO |
+| B2_30 | 70 | GPIO |
+| B2_31 | 71 | I2C 1 SDA, GPIO | 
+| B2_32 | 72 | GPIO |
+| B2_33 | 73 | I2C 1 SCL, GPIO | 
+| B2_34 | 74 | UART 1 TX, GPIO | 
+| B2_35 | 75 | I2C 2 SDA, GPIO | 
+| B2_36 | 76 | UART 1 RX, GPIO | 
+| B2_37 | 77 | I2C 1 SCL, GPIO | 
+| B2_39 | 79 | GPIO |
+| B2_40 | 80 | GPIO |
+| L0, GP100 | 100 | LED100 |
+| L1, GP101 | 101 | LED101 |
+| L2, GP102 | 102 | LED102 |
+| L3, GP103 | 103 | LED103 |
 
 
+**NOTES** 
 
-
-Additional Pin Capabilities: 
-
-| Capability | Breakout Name | Pin Number |
-| ---------- | ---------- | ---------- |
-| UART 0 TX | B1_7  | 7  | 
-| I2C 0 SDA | B1_11 | 11 | 
-| I2C 0 SCL | B1_13 | 13 | 
-| I2C 1 SDA | B1_15 | 15 | 
-| I2C 1 SCL | B1_17 | 17 | 
-| I2C 2 SDA | B1_19 | 19 | 
-| I2C 2 SCL | B1_21 | 21 | 
-| UART 1 TX | B1_22 | 22 | 
-| UART 1 RX | B1_24 | 24 | 
-| PWM0 | B1_26 | 26 | 
-| PWM1 | B1_28 | 28 | 
-| PWM2 | B1_30 | 30 | 
-| PWM3 | B1_32 | 32 | 
-| UART 0 RX | B2_28 | 68 | 
-| UART 0 RT | B2_30 | 70 | 
-| I2C 1 SDA | B2_31 | 71 | 
-| I2C 1 SCL | B2_33 | 73 | 
-| UART 1 TX | B2_34 | 74 | 
-| I2C 2 SDA | B2_35 | 75 | 
-| UART 1 RX | B2_36 | 76 | 
-| I2C 1 SCL | B2_37 | 77 | 
-
-
-
-- When using I2C bus 1 or 2, you must explicitly provide that bus to the component being initialized.
+- At the time of this writing, LED100, LED101 and LED102 do not work correctly. This is a known issue in the platform itself, with fixes in progress.
 - The default I2C bus 0 is assumed when no bus is explicitly provided.
+- When using I2C bus 1 or 2, you must explicitly provide that bus to the component being initialized.
 
 
 
@@ -190,6 +155,24 @@ board.on("ready", function() {
 });
 ```
 
+
+```js
+var five = require("johnny-five");
+var Joule = require("joule-io");
+var board = new five.Board({
+  io: new Joule()
+});
+
+board.on("ready", function() {
+  var rgb = new five.Led.RGB({
+    // Specifying an alternate bus: 
+    bus: 1,
+    controller: "BLINKM",
+  });
+
+  rgb.color("red");
+});
+```
 
 
 #### Intel Edison Arduino
