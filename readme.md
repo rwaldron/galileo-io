@@ -1,6 +1,7 @@
 # Galileo/Edison/Joule-IO
 
-[![Build Status](https://travis-ci.org/rwaldron/galileo-io.png?branch=master)](https://travis-ci.org/rwaldron/galileo-io)
+[![Travis Build Status](https://travis-ci.org/rwaldron/galileo-io.svg?branch=master)](https://travis-ci.org/rwaldron/galileo-io)
+
 
 ## Compatible with Intel's Galileo Generation 2 (no longer supports Galileo Generation 1), Edison (Mini and Arduino Board, SparkFun GPIO & Arduino Blocks, Xadow Board, DFRobot Romeo & IO Expansion) and Joule boards.
 
