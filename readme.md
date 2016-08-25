@@ -52,6 +52,8 @@ This module is intended for use as an IO-Plugin for [Johnny-Five](https://github
 #### Intel Joule (Carrier Board)
 
 
+[![](joule.jpg)](joule.jpg)
+
 
 
 The [Intel Joule + Carrier Breakout](https://www.sparkfun.com/products/13097) has two "Breakout connectors": 
@@ -62,9 +64,11 @@ The [Intel Joule + Carrier Breakout](https://www.sparkfun.com/products/13097) ha
 The usable pins are shown here: 
 
 [![](joule-pins-role-rotated.jpg)](joule-pins-role-rotated.jpg)
+[![](joule-breakout-names-role.jpg)](joule-breakout-names-role.jpg)
 
 
-Pins may be addressed by their number shown above, or by their "Breakout" name: 
+
+Pins may be addressed by _either_ "Breakout Name" or "Pin Number": 
 
 
 | Breakout Name | Pin Number |
@@ -121,6 +125,10 @@ Pins may be addressed by their number shown above, or by their "Breakout" name:
 | B2_38 | 78 |
 | B2_39 | 79 |
 | B2_40 | 80 |
+| L0 | 100 |
+| L1 | 101 |
+| L2 | 102 |
+| L3 | 103 |
 | GP100 | 100 |
 | GP101 | 101 |
 | GP102 | 102 |
@@ -131,29 +139,30 @@ Pins may be addressed by their number shown above, or by their "Breakout" name:
 
 Additional Pin Capabilities: 
 
-| Pin Number | Capability |
-| ---------- | ---------- |
-| 7  | UART 0 TX |
-| 11 | I2C 0 SDA |
-| 13 | I2C 0 SCL |
-| 15 | I2C 1 SDA |
-| 17 | I2C 1 SCL |
-| 19 | I2C 2 SDA |
-| 21 | I2C 2 SCL |
-| 22 | UART 1 TX |
-| 24 | UART 1 RX |
-| 26 | PWM0 |
-| 28 | PWM1 |
-| 30 | PWM2 |
-| 32 | PWM3 |
-| 68 | UART 0 RX |
-| 70 | UART 0 RT |
-| 71 | I2C 1 SDA |
-| 73 | I2C 1 SCL |
-| 74 | UART 1 TX |
-| 75 | I2C 2 SDA |
-| 76 | UART 1 RX |
-| 77 | I2C 1 SCL |
+| Capability | Breakout Name | Pin Number |
+| ---------- | ---------- | ---------- |
+| UART 0 TX | B1_7  | 7  | 
+| I2C 0 SDA | B1_11 | 11 | 
+| I2C 0 SCL | B1_13 | 13 | 
+| I2C 1 SDA | B1_15 | 15 | 
+| I2C 1 SCL | B1_17 | 17 | 
+| I2C 2 SDA | B1_19 | 19 | 
+| I2C 2 SCL | B1_21 | 21 | 
+| UART 1 TX | B1_22 | 22 | 
+| UART 1 RX | B1_24 | 24 | 
+| PWM0 | B1_26 | 26 | 
+| PWM1 | B1_28 | 28 | 
+| PWM2 | B1_30 | 30 | 
+| PWM3 | B1_32 | 32 | 
+| UART 0 RX | B2_28 | 68 | 
+| UART 0 RT | B2_30 | 70 | 
+| I2C 1 SDA | B2_31 | 71 | 
+| I2C 1 SCL | B2_33 | 73 | 
+| UART 1 TX | B2_34 | 74 | 
+| I2C 2 SDA | B2_35 | 75 | 
+| UART 1 RX | B2_36 | 76 | 
+| I2C 1 SCL | B2_37 | 77 | 
+
 
 
 - When using I2C bus 1 or 2, you must explicitly provide that bus to the component being initialized.
