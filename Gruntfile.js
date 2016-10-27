@@ -1,3 +1,12 @@
+// System Objects
+var cp = require("child_process");
+var path = require("path");
+
+// Third Party Dependencies
+var tags = require("common-tags");
+var glob = require("glob");
+
+
 module.exports = function(grunt) {
 
   var task = grunt.task;
@@ -104,4 +113,33 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks("grunt-jsbeautifier");
 
   grunt.registerTask("default", ["jshint", "nodeunit"]);
+  grunt.registerTask('nodeunit:file', 'Run a subset of tests by specifying a file name or glob expression. Usage: "grunt nodeunit:file:<file.ext>" or "grunt nodeunit:file:<expr>"', (input) => {
+
+    var config = [];
+
+    if (input) {
+      if (!input.endsWith('.js')) {
+        if (!input.endsWith('*') || !input.endsWith('**/*')) {
+          input = `{${path.normalize(input + '*')},${path.normalize(input + '**/*')}}`;
+        }
+      }
+
+      var expr = 'test/' + input;
+      var inputs = glob.sync(expr).filter((file) => file.endsWith('.js'));
+
+      if (inputs) {
+        inputs.forEach(input => config.push(input));
+        grunt.config('nodeunit.tests', config);
+      }
+    }
+
+    grunt.task.run('nodeunit');
+  });
+
+
+  grunt.registerTask('nodeunit:files', 'Run a subset of tests by specifying a file name, bracket list of file names, or glob expression. Usage: "grunt nodeunit:file:<file.ext>" or "grunt nodeunit:file:<expr>"', (file) => {
+    grunt.task.run('nodeunit:file:' + file);
+  });
 };
+
+
