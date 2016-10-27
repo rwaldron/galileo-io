@@ -2,24 +2,12 @@
 
 global.IS_TEST_ENV = true;
 
+var Emitter = require("events").EventEmitter;
+var sinon = require("sinon");
+
 var Board = require("../");
 var pinMapping = require("../lib/pin-mapping/");
 var edisonPinMapping = pinMapping[2];
-var Emitter = require("events").EventEmitter;
-var sinon = require("sinon");
-var tick = global.setImmediate || process.nextTick;
-
-function restore(target) {
-  for (var prop in target) {
-
-    if (target[prop] != null && typeof target[prop].restore === "function") {
-      target[prop].restore();
-    }
-    if (typeof target[prop] === "object") {
-      restore(target[prop]);
-    }
-  }
-}
 
 var read = Board.__read;
 var IO = Board.__io;
@@ -1101,10 +1089,10 @@ exports["I2C"] = {
       address: sandbox.spy(I2c.prototype, "address")
     };
 
-    this.board = new Board();
-
     this.i2c.read = sandbox.stub(I2c.prototype, "read").returns(new Buffer([0x0, 0x1]));
     this.i2c.readBytesReg = sandbox.stub(I2c.prototype, "readBytesReg").returns(new Buffer([0x0, 0x1]));
+
+    this.board = new Board();
     done();
   },
   tearDown: function(done) {
@@ -1210,7 +1198,7 @@ exports["I2C"] = {
     this.board.i2cConfig({ delay: 1 });
     this.board.i2cRead(0x4, 2, handler);
 
-    this.clock.tick(1);
+    this.clock.tick(10);
 
     test.equal(this.i2c.address.callCount, 1);
     test.equal(this.i2c.read.callCount, 1);
@@ -1229,7 +1217,7 @@ exports["I2C"] = {
     this.board.i2cConfig({ delay: 1 });
     this.board.i2cRead(0x4, 1, 2, handler);
 
-    this.clock.tick(1);
+    this.clock.tick(10);
 
     test.equal(this.i2c.address.callCount, 1);
     test.equal(this.i2c.readBytesReg.callCount, 1);
@@ -1314,7 +1302,7 @@ exports["I2C"] = {
       test.deepEqual(this.warn.lastCall.args, [ "I2C: Could not read %d Bytes from peripheral with address 0x%s", 2, "4" ]);
       test.done();
     }.bind(this));
-    this.clock.tick(1);
+    this.clock.tick(10);
   },
 
   warnReadWithNoRegister: function(test) {
@@ -1329,7 +1317,7 @@ exports["I2C"] = {
       test.deepEqual(this.warn.lastCall.args, [ "I2C: Could not read %d Bytes from peripheral with address 0x%s", 2, "4" ]);
       test.done();
     }.bind(this));
-    this.clock.tick(1);
+    this.clock.tick(10);
   },
 
   writeAndReg: function(test) {
@@ -1377,7 +1365,7 @@ exports["I2C"] = {
 
     this.board.i2cConfig(2);
     this.board.i2cRead(0x4, 2, handler);
-    this.clock.tick(10);
+    this.clock.tick(50);
 
     test.equal(handler.callCount, 5);
     test.equal(handler.getCall(0).args[0].length, 2);
@@ -1396,7 +1384,7 @@ exports["I2C"] = {
 
     this.board.i2cConfig(2);
     this.board.i2cRead(0x4, 1, 2, handler);
-    this.clock.tick(10);
+    this.clock.tick(50);
 
     test.equal(handler.callCount, 5);
     test.equal(handler.getCall(0).args[0].length, 2);
@@ -1411,11 +1399,11 @@ exports["I2C"] = {
   i2cReadOnce: function(test) {
     test.expect(2);
 
-    var handler = sandbox.spy(function() {});
+    var handler = sandbox.spy();
 
-    this.board.i2cConfig(2);
+    this.board.i2cConfig();
     this.board.i2cReadOnce(0x4, 1, 2, handler);
-    this.clock.tick(2);
+    this.clock.tick(1);
 
     test.equal(handler.callCount, 1);
     test.equal(handler.getCall(0).args[0].length, 2);

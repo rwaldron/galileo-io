@@ -2,25 +2,13 @@
 
 global.IS_TEST_ENV = true;
 
-var Board = require("../");
-var pinMapping = require("../lib/pin-mapping/");
-var joulePinMapping = pinMapping[13];
 
 var Emitter = require("events").EventEmitter;
 var sinon = require("sinon");
-var tick = global.setImmediate || process.nextTick;
 
-function restore(target) {
-  for (var prop in target) {
-
-    if (target[prop] != null && typeof target[prop].restore === "function") {
-      target[prop].restore();
-    }
-    if (typeof target[prop] === "object") {
-      restore(target[prop]);
-    }
-  }
-}
+var Board = require("../");
+var pinMapping = require("../lib/pin-mapping/");
+var joulePinMapping = pinMapping[13];
 
 var read = Board.__read;
 var IO = Board.__io;
