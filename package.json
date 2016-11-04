@@ -57,9 +57,11 @@
     "grunt-jsbeautifier": "^0.2.13",
     "sinon": "^1.17.6"
   },
+  "optionalDependencies": {
+    "mraa": "^1.5.1"
+  },
   "scripts": {
-    "test": "grunt",
-    "postinstall": "node scripts/postinstall"
+    "test": "grunt"
   },
   "js-flags": "--harmony"
 }
