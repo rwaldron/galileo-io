@@ -18,124 +18,125 @@ var Pwm = IO.Pwm;
 var I2c = IO.I2c;
 
 var sandbox = sinon.sandbox.create();
+
+var pinModes = [
+  null, // There is no pin with the number 0
+  { modes: [0, 1] },
+  { modes: [0, 1] },
+  null,
+  { modes: [0, 1] },
+  { modes: [0, 1] },
+  { modes: [0, 1] },
+  { modes: [0, 1] },
+  { modes: [0, 1] },
+  null,
+  { modes: [0, 1] },
+  { modes: [0, 1] },
+  { modes: [0, 1] },
+  { modes: [0, 1] },
+  { modes: [0, 1] },
+  { modes: [0, 1] },
+  { modes: [0, 1] },
+  { modes: [0, 1] },
+  { modes: [0, 1] },
+  { modes: [0, 1] },
+  { modes: [0, 1] },
+  { modes: [0, 1] },
+  { modes: [0, 1] },
+  null,
+  { modes: [0, 1] },
+  null,
+  { modes: [0, 1, 3, 4] },
+  { modes: [0, 1] },
+  { modes: [0, 1, 3, 4] },
+  null,
+  { modes: [0, 1, 3, 4] },
+  null,
+  { modes: [0, 1, 3, 4] },
+  null,
+  null,
+  { modes: [0, 1] },
+  null,
+  null,
+  null,
+  null,
+  null,
+  null,
+  null,
+  null,
+  null,
+  null,
+  null,
+  null,
+  null,
+  null,
+  null,
+  { modes: [0, 1] },
+  null,
+  { modes: [0, 1] },
+  null,
+  { modes: [0, 1] },
+  null,
+  { modes: [0, 1] },
+  null,
+  { modes: [0, 1] },
+  null,
+  { modes: [0, 1] },
+  { modes: [0, 1] },
+  { modes: [0, 1] },
+  { modes: [0, 1] },
+  { modes: [0, 1] },
+  { modes: [0, 1] },
+  { modes: [0, 1] },
+  { modes: [0, 1] },
+  { modes: [0, 1] },
+  { modes: [0, 1] },
+  { modes: [0, 1] },
+  { modes: [0, 1] },
+  { modes: [0, 1] },
+  { modes: [0, 1] },
+  { modes: [0, 1] },
+  { modes: [0, 1] },
+  { modes: [0, 1] },
+  { modes: [0, 1] },
+  { modes: [0, 1] },
+  { modes: [0, 1] },
+  null,
+  null,
+  null,
+  null,
+  null,
+  null,
+  null,
+  null,
+  null,
+  null,
+  null,
+  null,
+  null,
+  null,
+  null,
+  null,
+  null,
+  null,
+  null,
+  // These are actually the LEDs
+  { modes: [0, 1] },
+  { modes: [0, 1] },
+  { modes: [0, 1] },
+  { modes: [0, 1] },
+];
+
 exports["Platform Type Joule (Carrier Board)"] = {
   setUp: function(done) {
 
-    this.pinModes = [
-      null, // There is no pin with the number 0
-      { modes: [0, 1] },
-      { modes: [0, 1] },
-      null,
-      { modes: [0, 1] },
-      { modes: [0, 1] },
-      { modes: [0, 1] },
-      { modes: [0, 1] },
-      { modes: [0, 1] },
-      null,
-      { modes: [0, 1] },
-      { modes: [0, 1] },
-      { modes: [0, 1] },
-      { modes: [0, 1] },
-      { modes: [0, 1] },
-      { modes: [0, 1] },
-      { modes: [0, 1] },
-      { modes: [0, 1] },
-      { modes: [0, 1] },
-      { modes: [0, 1] },
-      { modes: [0, 1] },
-      { modes: [0, 1] },
-      { modes: [0, 1] },
-      null,
-      { modes: [0, 1] },
-      null,
-      { modes: [0, 1, 3, 4] },
-      { modes: [0, 1] },
-      { modes: [0, 1, 3, 4] },
-      null,
-      { modes: [0, 1, 3, 4] },
-      null,
-      { modes: [0, 1, 3, 4] },
-      null,
-      null,
-      { modes: [0, 1] },
-      null,
-      null,
-      null,
-      null,
-      null,
-      null,
-      null,
-      null,
-      null,
-      null,
-      null,
-      null,
-      null,
-      null,
-      null,
-      { modes: [0, 1] },
-      null,
-      { modes: [0, 1] },
-      null,
-      { modes: [0, 1] },
-      null,
-      { modes: [0, 1] },
-      null,
-      { modes: [0, 1] },
-      null,
-      { modes: [0, 1] },
-      { modes: [0, 1] },
-      { modes: [0, 1] },
-      { modes: [0, 1] },
-      { modes: [0, 1] },
-      { modes: [0, 1] },
-      { modes: [0, 1] },
-      { modes: [0, 1] },
-      { modes: [0, 1] },
-      { modes: [0, 1] },
-      { modes: [0, 1] },
-      { modes: [0, 1] },
-      { modes: [0, 1] },
-      { modes: [0, 1] },
-      { modes: [0, 1] },
-      { modes: [0, 1] },
-      { modes: [0, 1] },
-      { modes: [0, 1] },
-      { modes: [0, 1] },
-      { modes: [0, 1] },
-      null,
-      null,
-      null,
-      null,
-      null,
-      null,
-      null,
-      null,
-      null,
-      null,
-      null,
-      null,
-      null,
-      null,
-      null,
-      null,
-      null,
-      null,
-      null,
-      // These are actually the LEDs
-      { modes: [0, 1] },
-      { modes: [0, 1] },
-      { modes: [0, 1] },
-      { modes: [0, 1] },
-    ];
-
-    this.noConnections = this.pinModes.reduce(function(accum, value, i) {
+    this.noConnections = pinModes.reduce(function(accum, value, i) {
       if (value === null) {
         accum.push(i);
       }
       return accum;
     }, []);
-    this.connections = this.pinModes.reduce(function(accum, value, i) {
+    this.connections = pinModes.reduce(function(accum, value, i) {
       if (value !== null) {
         accum.push(i);
       }
@@ -143,7 +144,7 @@ exports["Platform Type Joule (Carrier Board)"] = {
     }, []);
 
     Board.__carrierboard(true);
-    Board.__pinmodes(this.pinModes);
+    Board.__pinmodes(pinModes);
     Board.__platformPinMapping(joulePinMapping);
     done();
   },
@@ -277,11 +278,45 @@ exports["Platform Type Joule (Carrier Board)"] = {
     });
   },
 
-  pinModeGP: function(test) {
+  pinModeGP10: function(test) {
     var nameIndexMap = Object.keys(joulePinMapping).reduce(function(accum, key) {
       var index = joulePinMapping[key];
 
-      if (key.startsWith("GP")) {
+      if (key.startsWith("GP10")) {
+        accum[key] = { index: index, mode: 1 };
+      }
+
+      return accum;
+    }, {});
+
+    var keys = Object.keys(nameIndexMap);
+
+    test.expect(keys.length * 2);
+
+    var board = new Board();
+
+    board.on("ready", function() {
+      keys.forEach(function(key) {
+        var mapped = nameIndexMap[key];
+
+        test.equal(this.pins[mapped.index].mode, null);
+
+        // Don"t set pinMode for 0 or 1
+        if (mapped.mode) {
+          this.pinMode(key, mapped.mode);
+        }
+
+        test.equal(this.pins[mapped.index].mode, mapped.mode);
+      }, this);
+
+      test.done();
+    });
+  },
+  pinModeGPIO: function(test) {
+    var nameIndexMap = Object.keys(joulePinMapping).reduce(function(accum, key) {
+      var index = joulePinMapping[key];
+
+      if (key.startsWith("GPIO")) {
         accum[key] = { index: index, mode: 1 };
       }
 
